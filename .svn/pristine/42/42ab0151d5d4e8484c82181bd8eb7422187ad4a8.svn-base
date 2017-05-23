@@ -1,0 +1,193 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+
+import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstae el modelo de negocios de una Convocatoria para el ingreso a la ELD.
+ * 
+ * @author luna
+ *
+ */
+
+@Entity
+@Table(name = "tca05_convocatoria")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteConvocatoria", query = "DELETE FROM tca05_convocatoria WHERE id_convocatoria = :idConvocatoria") })
+@DynamicInsert(value = true)
+public class Convocatoria implements Modelo,Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "id_convocatoria")
+	private Integer id;
+
+	/**
+	 * Calificación minima requerida para la convocatoria de la ELD
+	 */
+	@Column(name = "nu_calificacion")
+	@org.hibernate.annotations.ColumnDefault("")
+	private Double calificacion;
+
+	/**
+	 * Numero de aspirantes a entrevistar en la convocatoria
+	 */
+	@Column(name = "nu_entrevistar")
+	@org.hibernate.annotations.ColumnDefault("")
+	private Integer numeroEntrevistar;
+
+	/**
+	 * Numero de aspirantes a aceptar en la convocatoria
+	 */
+	@Column(name = "nu_aceptar")
+	@org.hibernate.annotations.ColumnDefault("")
+	private Integer numeroAceptar;
+
+	@OneToMany
+	@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", updatable = false, insertable = false)
+	private List<ConvocatoriaRequisito> convocatoriaRequisito;
+
+	@OneToMany
+	@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", updatable = false, insertable = false)
+	private List<ConvocatoriaCriterio> convocatoriaCriterio;
+
+	public Convocatoria() {
+		super();
+	}
+
+	public Convocatoria(Integer id, Double calificacion, Integer numeroEntrevistar, Integer numeroAceptar) {
+		super();
+		this.id = id;
+		this.calificacion = calificacion;
+		this.numeroEntrevistar = numeroEntrevistar;
+		this.numeroAceptar = numeroAceptar;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the calificacion
+	 */
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "%{getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Double getCalificacion() {
+		return calificacion;
+	}
+
+	/**
+	 * 
+	 * @param calificacion
+	 *            the calificacion to set
+	 */
+
+	public void setCalificacion(Double calificacion) {
+		this.calificacion = calificacion;
+	}
+
+	/**
+	 * 
+	 * @return numeroEntrevistar
+	 */
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "%{getText('MSG39')}", type = ValidatorType.FIELD) }, regexFields = {
+					@RegexFieldValidator(message = "%{getText('MSG40')}", type = ValidatorType.FIELD, regexExpression = "[0-9]*") }, conversionErrorFields = {
+							@ConversionErrorFieldValidator(message = "%{getText('MSG40')}", type = ValidatorType.FIELD) })
+	public Integer getNumeroEntrevistar() {
+		return numeroEntrevistar;
+	}
+
+	/**
+	 * 
+	 * @param numeroEntrevistar
+	 *            the numeroEntrevistar to set
+	 */
+	public void setNumeroEntrevistar(Integer numeroEntrevistar) {
+		this.numeroEntrevistar = numeroEntrevistar;
+	}
+
+	/**
+	 * 
+	 * @return numeroAceptar
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "%{getText('MSG39')}", type = ValidatorType.FIELD) }, regexFields = {
+					@RegexFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG40')}", regexExpression = "[0-9]*") }, conversionErrorFields = {
+							@ConversionErrorFieldValidator(message = "%{getText('MSG40')}", type = ValidatorType.FIELD) })
+	public Integer getNumeroAceptar() {
+		return numeroAceptar;
+	}
+
+	/**
+	 * 
+	 * @param numeroAceptar
+	 */
+	public void setNumeroAceptar(Integer numeroAceptar) {
+		this.numeroAceptar = numeroAceptar;
+	}
+
+	/**
+	 * @return the convocatoriaRequisito
+	 */
+	public List<ConvocatoriaRequisito> getConvocatoriaRequisito() {
+		return convocatoriaRequisito;
+	}
+
+	/**
+	 * @param convocatoriaRequisito the convocatoriaRequisito to set
+	 */
+	public void setConvocatoriaRequisito(List<ConvocatoriaRequisito> convocatoriaRequisito) {
+		this.convocatoriaRequisito = convocatoriaRequisito;
+	}
+
+	/**
+	 * @return the convocatoriaCriterio
+	 */
+	public List<ConvocatoriaCriterio> getConvocatoriaCriterio() {
+		return convocatoriaCriterio;
+	}
+
+	/**
+	 * @param convocatoriaCriterio the convocatoriaCriterio to set
+	 */
+	public void setConvocatoriaCriterio(List<ConvocatoriaCriterio> convocatoriaCriterio) {
+		this.convocatoriaCriterio = convocatoriaCriterio;
+	}
+
+}

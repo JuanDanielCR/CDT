@@ -1,0 +1,68 @@
+package mx.edu.eld.admision.bs;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.admision.dao.DireccionDao;
+import mx.edu.eld.admision.mapeo.DireccionAspirante;
+import mx.edu.eld.sepomex.mapeo.CodigoPostal;
+import mx.edu.eld.sepomex.mapeo.Entidad;
+import mx.edu.eld.sepomex.mapeo.Municipio;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+@Service("direccionBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class DireccionBs extends GenericBs<DireccionAspirante> {
+	
+	@Autowired
+	private DireccionDao direccionDao;
+	
+	public Entidad obtenerEntidad(String idCP){
+		CodigoPostal codigoPostal = new CodigoPostal(idCP);
+		List<CodigoPostal> listCodigoPostal = direccionDao.findByExample(codigoPostal);
+		String idEntidad = listCodigoPostal.get(0).getClaveEntidad();
+		return direccionDao.findById(Entidad.class, idEntidad);
+	}
+	
+	public Municipio obtenerMunicipio(String idCP){
+		CodigoPostal codigoPostal = new CodigoPostal(idCP);
+		List<CodigoPostal> listCodigoPostal = direccionDao.findByExample(codigoPostal);
+		String idEntidad = listCodigoPostal.get(0).getClaveEntidad();
+		String idMunicipio = listCodigoPostal.get(0).getClaveMunicipio();		
+		Municipio municipio = new Municipio ();
+		municipio.setIdEntidad(idEntidad);
+		municipio.setIdMunicipio(idMunicipio);
+		List<Municipio> listMunicipios = direccionDao.findByExample(municipio);
+		municipio  = listMunicipios.get(0);
+		return municipio;
+	}
+	
+	public List<CodigoPostal> obtenerColonias(String idCP){
+		CodigoPostal codigoPostal = new CodigoPostal(idCP);
+		List<CodigoPostal> listCodigoPostal = direccionDao.findByExample(codigoPostal);
+		CodigoPostal otraColonia = new CodigoPostal();
+		otraColonia.setId(-2);
+		//TODO:Obtener Sting de colonia de un properties
+		otraColonia.setAsentamiento("Otra Colonia");
+		listCodigoPostal.add(otraColonia);
+		return listCodigoPostal;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public DireccionAspirante agregarDireccion(DireccionAspirante direccion){
+		save(direccion);
+		return direccion;
+	}
+
+	public DireccionDao getDireccionDao() {
+		return direccionDao;
+	}
+
+	public void setDireccionDao(DireccionDao direccionDao) {
+		this.direccionDao = direccionDao;
+	}
+}

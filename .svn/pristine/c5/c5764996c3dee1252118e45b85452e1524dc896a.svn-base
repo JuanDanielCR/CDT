@@ -1,0 +1,47 @@
+/**
+ * 
+ */
+package mx.edu.eld.convocatoria.bs.exception;
+
+/**
+ * Execption: NoExisteConvocatoriaExecption
+ * 
+ * Throw: Sí no existe convocatoria abierta.
+ * 
+ * @author Mauricio Aurioles
+ *
+ */
+public class NoExisteCicloException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8605404081132591749L;
+
+	public NoExisteCicloException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public NoExisteCicloException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public NoExisteCicloException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public NoExisteCicloException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+	public NoExisteCicloException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+}

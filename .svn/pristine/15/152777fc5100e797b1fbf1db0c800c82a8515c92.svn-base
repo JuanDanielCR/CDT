@@ -1,0 +1,30 @@
+$(function(){
+	dataTableEMETH.createResponsiveDataTable("tblActividades");
+});
+
+function cambiarEstado() {
+	$.publish("showEstatusAlumnoCambiar");
+	$("#dlgEstatusAlumno").removeClass("dlgEstatusAlumno");
+}
+
+function closeCambiarEstado() {
+	$.publish("closeEstatusAlumnoCancel");
+}
+
+function cambiarEstadoAcept() {
+	$.publish("showDlgAceptarAlumnos");
+	$("#dlgAceptAlumnos").removeClass("dlgAceptAlumnos");
+}
+
+function closeCambiarEstadoAcept() {
+	$.publish("closeDlgAceptarAlumnos");
+}
+
+function myclickDialog() {
+	$.publish("showDlgDelete");
+	$("#dlgDelete").removeClass("dlgDelete");
+}
+
+function closeDeleteDlg(){
+	$.publish("closeDlgDelete");
+}

@@ -1,0 +1,70 @@
+package mx.edu.eld.entrevistas.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.hibernate.annotations.AttributeAccessor;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import mx.edu.eld.admision.mapeo.ConvocatoriaEntrevistador;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/entrevistas")
+public class GestionarEntrevistadoresAct extends ActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private List<ConvocatoriaEntrevistador> listEntrevistadores;
+	
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	// IU1.8.2-5 Gestionar Entrevistadores
+	public String index() {
+		listEntrevistadores = genericSearchBs.findAll(ConvocatoriaEntrevistador.class);
+		return "index";
+	}
+
+	// IU1.8.2-6 Agregar Entrevistadores
+	public String editNew() {
+		return "editNew";
+	}
+
+	// IU1.8.5-6 Cambiar Entrevistadores
+	public String edit() {
+		return "edit";
+	}
+
+	/**
+	 * @return the listEntrevistadores
+	 */
+	public List<ConvocatoriaEntrevistador> getListEntrevistadores() {
+		return listEntrevistadores;
+	}
+
+	/**
+	 * @param listEntrevistadores the listEntrevistadores to set
+	 */
+	public void setListEntrevistadores(List<ConvocatoriaEntrevistador> listEntrevistadores) {
+		this.listEntrevistadores = listEntrevistadores;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+}

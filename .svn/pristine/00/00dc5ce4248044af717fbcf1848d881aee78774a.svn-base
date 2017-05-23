@@ -1,0 +1,27 @@
+/**
+ * 
+ */
+package mx.edu.eld.bs.rules;
+
+import java.util.List;
+
+/**
+ * @author Miguel Duarte
+ *
+ */
+public class ReglaNegocioS9 implements ReglaNegocio {
+
+	/**
+	 * Regla de negocio que valida que por lo menos haya un elemento
+	 * seleccionado.
+	 *
+	 * @param lista
+	 *            {List} Lista de elementos seleccionados.
+	 * @return {boolean} Retorna true si la regla es valida en caso contrario
+	 *         retorna false.
+	 */
+	public static boolean validate(List<? extends Object> lista) {
+		return (lista != null) ? true : false;
+	}
+
+}

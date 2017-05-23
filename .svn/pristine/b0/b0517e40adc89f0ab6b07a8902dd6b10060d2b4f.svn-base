@@ -1,0 +1,55 @@
+package mx.edu.eld.calendario.dao;
+
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.hibernate.type.IntegerType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+@Service("cicloActividadDao")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class CicloActidadDao extends GenericDao {
+	
+	/*
+	 * proxy para la obtencion de conexion a la BD
+	 */
+	@Autowired
+	SessionFactory sessionFactoryCicloActividad;
+	
+	/*
+	 * Zona de HQL queries
+	 */
+	private static final String QUERY_BUSCAR_TIPO_ACTIVIDAD = "from Actividad as ca where ca.idTipo=:tipo";
+	private static final String QUERY_GENERAR_ID = "select max(cic.idCicloActividad) from CicloActividad as cic where cic.idCiclo=:idCiclo and cic.idActividad=:idActividad";
+	
+	/*
+	 * Se obtienen todas las actividades que tienen el tipoActividad indicado 
+	 */
+	public List<FaseActividad> buscaTipoActividadDao(Integer idTipo){
+		Query<FaseActividad> qActividad = sessionFactoryCicloActividad.getCurrentSession().createQuery(QUERY_BUSCAR_TIPO_ACTIVIDAD, FaseActividad.class); 
+		qActividad.setParameter("tipo", idTipo, IntegerType.INSTANCE); //se define el parametro que se usa en el query
+		
+		return qActividad.getResultList();	
+	}
+	
+	/*
+	 * metodo encargado de devolver el ultimo ciclo_actividad_id ya que esta es la parte de la llave compuesta, que sirve para gregar actividades
+	 *  que puedan tener el mismo nombre y que pertenezcan al mismo id_ciclo y al mismo id_actividad
+	 */
+	public Integer generarId(Integer idCiclo, Integer idActividad){
+		Query<?> qCicloActividad = sessionFactoryCicloActividad.getCurrentSession().createNativeQuery(QUERY_GENERAR_ID);
+		qCicloActividad.setParameter("idCiclo", idCiclo, IntegerType.INSTANCE);
+		qCicloActividad.setParameter("idActividad", idActividad, IntegerType.INSTANCE);
+		Integer res = (Integer) qCicloActividad.getSingleResult();
+		return res != null ? res : Numeros.CERO.getValorInteger();
+		
+	}
+}

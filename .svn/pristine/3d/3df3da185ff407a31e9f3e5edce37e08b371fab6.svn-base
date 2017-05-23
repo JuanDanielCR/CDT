@@ -1,0 +1,48 @@
+/**
+ * 
+ */
+package mx.edu.eld.convocatoria.dao;
+
+import javax.persistence.Query;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+/**
+ * @author
+ *
+ */
+@Repository("convocatoriaDao")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaDao extends GenericDao {
+
+	public static final String CONVOCATORIA_ANTERIOR = "(select max(id_convocatoria) " + "from tca05_convocatoria "
+			+ "where id_convocatoria < :idConvocatoria)";
+
+	public static final String CONVOCATORIA_SUPERIOR = "(select min(id_convocatoria) " + "from tca05_convocatoria "
+			+ "where id_convocatoria > :idConvocatoria)";
+
+	public Convocatoria obtenerConvocatoriaAnterior(Convocatoria convocatoria) {
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(CONVOCATORIA_ANTERIOR);
+		query.setParameter("idConvocatoria", convocatoria.getId());
+		Short idConvocatoria = (Short) query.getSingleResult();
+		if (idConvocatoria != null) {
+			return findById(Convocatoria.class, idConvocatoria.intValue());
+		}
+		return null;
+	}
+
+	public Convocatoria obtenerConvocatoriaSuperior(Convocatoria convocatoria) {
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(CONVOCATORIA_SUPERIOR);
+		query.setParameter("idConvocatoria", convocatoria.getId());
+		Short idConvocatoria = (Short) query.getSingleResult();
+		if (idConvocatoria != null) {
+			return findById(Convocatoria.class, idConvocatoria.intValue());
+		}
+		return null;
+	}
+
+}

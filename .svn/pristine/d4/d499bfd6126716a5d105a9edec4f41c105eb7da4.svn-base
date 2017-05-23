@@ -1,0 +1,22 @@
+$(function() {
+	dataTableEMETH.createResponsiveDataTable("tableAspirantesNoSeleccionados");
+	dataTableEMETH.createSortedDataTable("tableAspirantesSeleccionados",5,"asc");
+});
+
+function cambiarEstado() {
+	$.publish("showEstatusAlumnoCambiar");
+	$("#dlgEstatusAlumno").removeClass("dlgEstatusAlumno");
+}
+
+function closeCambiarEstado() {
+	$.publish("closeEstatusAlumnoCancel");
+}
+
+function cambiarEstadoAcept() {
+	$.publish("showDlgAceptarAlumnos");
+	$("#dlgAceptAlumnos").removeClass("dlgAceptAlumnos");
+}
+
+function closeCambiarEstadoAcept() {
+	$.publish("closeDlgAceptarAlumnos");
+}

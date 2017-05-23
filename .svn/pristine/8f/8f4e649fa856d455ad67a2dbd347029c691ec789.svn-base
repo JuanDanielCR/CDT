@@ -1,0 +1,213 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.edu.eld.informacionbase.mapeo.TipoPago;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Contiene la información de aquellos asprantes que realizan el pago por
+ * derechos para el ingreso a la ELD.
+ * 
+ * @author Hermes
+ *
+ */
+public class Pago implements Modelo {
+	/**
+	 * Identificador del pago
+	 */
+	@EmbeddedId
+	private PagoId id;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Aspirante}
+	 */
+	@Column(name = "id_aspirante", insertable = false, updatable = false)
+	private Integer idAspirante;
+
+	/**
+	 * Identificador del {@link TipoPago} con el que se realizó el pago
+	 */
+	@Column(name = "id_tipo")
+	private Integer idTipo;
+
+	/**
+	 * Fecha en la que se realizó el pago
+	 */
+	@Column(name = "fh_pago")
+	private Date fecha;
+
+	/**
+	 * Monto por el cual se realizó el pago
+	 */
+	@Column(name = "nu_monto")
+	private Float monto;
+
+	/**
+	 * {@link TipoPago} del pago
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_tipo", referencedColumnName = "id_tipo", insertable = false, updatable = false)
+	private TipoPago tipo;
+
+	/**
+	 * {@link Aspirante} que realiza el pago
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false)
+	private Aspirante aspirante;
+
+	/**
+	 * {@link Convocagtoria} para la cual se realiza el pago
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", insertable = false, updatable = false)
+	private Convocatoria convocatoria;
+
+	/**
+	 * @return the id
+	 */
+	public PagoId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(PagoId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/**
+	 * @return the fecha
+	 */
+	public Date getFecha() {
+		return fecha;
+	}
+
+	/**
+	 * @param fecha
+	 *            the fecha to set
+	 */
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	/**
+	 * @return the monto
+	 */
+	public Float getMonto() {
+		return monto;
+	}
+
+	/**
+	 * @param monto
+	 *            the monto to set
+	 */
+	public void setMonto(Float monto) {
+		this.monto = monto;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public TipoPago getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(TipoPago tipo) {
+		this.tipo = tipo;
+	}
+
+	/**
+	 * @return the aspirante
+	 */
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+
+	/**
+	 * @param aspirante
+	 *            the aspirante to set
+	 */
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	/**
+	 * @return the convocatoria
+	 */
+	public Convocatoria getConvocatoria() {
+		return convocatoria;
+	}
+
+	/**
+	 * @param convocatoria
+	 *            the convocatoria to set
+	 */
+	public void setConvocatoria(Convocatoria convocatoria) {
+		this.convocatoria = convocatoria;
+	}
+}

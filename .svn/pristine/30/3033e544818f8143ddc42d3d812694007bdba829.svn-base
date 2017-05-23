@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+package mx.edu.eld.ceneval.action;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+/**
+ * @author
+ *
+ */
+@Namespace("/ceneval")
+@AllowedMethods({ RegistrarFolioAct.RESULTADOS, RegistrarFolioAct.SHOW_RESULTADOS })
+public class RegistrarFolioAct extends ActionSupportCDT {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public static final String RESULTADOS = "resultados";
+	public static final String SHOW_RESULTADOS = "showResultados";
+
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	public String resultados() {
+		return RESULTADOS;
+	}
+
+	public String showResultados() {
+		return SHOW_RESULTADOS;
+	}
+
+}

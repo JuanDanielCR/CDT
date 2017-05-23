@@ -1,0 +1,149 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class CicloActividadId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador del ciclo
+	 */
+	@Column(name = "id_ciclo", nullable = false)
+	private Integer idCiclo;
+
+	/**
+	 * id del tipo de {@link Actividad}
+	 **/
+	@Column(name = "id_tipo", insertable = false, updatable = false)
+	private Integer idTipo;
+
+	/**
+	 * id de la fase a la que pertenece la {@link Actividad}
+	 **/
+	@Column(name = "id_fase", insertable = false, updatable = false)
+	private Integer idFase;
+
+	/**
+	 * Identificador de la actividad
+	 */
+	@Column(name = "id_actividad", insertable = false, updatable = false)
+	private Integer idActividad;
+
+	/**
+	 * Identificador de ciclo-actividad, permite agregar mas de una actividad
+	 * con el mismo nombre
+	 */
+	@Column(name = "id_ciclo_actividad", nullable = false)
+	private Integer idCicloActividad;
+
+	/*
+	 * contructor por default
+	 */
+	public CicloActividadId() {
+		super();
+	}
+
+	/*
+	 * constructor con inicializacion de propiedades
+	 */
+	public CicloActividadId(Integer idCiclo, Integer idTipo, Integer idFase, Integer idActividad,
+			Integer idCicloActividad) {
+		super();
+		this.idCiclo = idCiclo;
+		this.idTipo = idTipo;
+		this.idFase = idFase;
+		this.idActividad = idActividad;
+		this.idCicloActividad = idCicloActividad;
+	}
+
+	/**
+	 * @return the idFase
+	 */
+	public Integer getIdFase() {
+		return idFase;
+	}
+
+	/**
+	 * @param idFase
+	 *            the idFase to set
+	 */
+	public void setIdFase(Integer idFase) {
+		this.idFase = idFase;
+	}
+
+	/**
+	 * @return the idCiclo
+	 */
+	public Integer getIdCiclo() {
+		return idCiclo;
+	}
+
+	/**
+	 * @param idCiclo
+	 *            the idCiclo to set
+	 */
+	public void setIdCiclo(Integer idCiclo) {
+		this.idCiclo = idCiclo;
+	}
+
+	/**
+	 * @return the idActividad
+	 */
+	public Integer getIdActividad() {
+		return idActividad;
+	}
+
+	/**
+	 * @param idActividad
+	 *            the idActividad to set
+	 */
+	public void setIdActividad(Integer idActividad) {
+		this.idActividad = idActividad;
+	}
+
+	/**
+	 * @return the idCicloActividad
+	 */
+	public Integer getIdCicloActividad() {
+		return idCicloActividad;
+	}
+
+	/**
+	 * @param idCicloActividad
+	 *            the idCicloActividad to set
+	 */
+	public void setIdCicloActividad(Integer idCicloActividad) {
+		this.idCicloActividad = idCicloActividad;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/*
+	 * el metodo toString nos devuelve el id compuesto
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return idCiclo + "_" + idActividad + "_" + idCicloActividad;
+	}
+}

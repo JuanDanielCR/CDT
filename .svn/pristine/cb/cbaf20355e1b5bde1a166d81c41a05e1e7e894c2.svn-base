@@ -1,0 +1,248 @@
+
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tad18_direccion")
+public class DireccionAspirante implements Modelo {
+
+	/**
+	 * Identificador de direccion
+	 */
+	@Id
+	@SequenceGenerator(name = "tad18_direccion_id_direccion_seq", sequenceName = "tad18_direccion_id_direccion_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad18_direccion_id_direccion_seq")
+	@Column(name = "id_direccion")
+	private Integer id;
+
+	/**
+	 * id de la entidad de la direccion
+	 **/
+	@Column(name = "id_entidad")
+	private String idEntidad;
+
+	/**
+	 * id del municipio
+	 **/
+	@Column(name = "id_municipio")
+	private String idMunicipio;
+
+	/**
+	 * Colondia de la direccion del aspirante
+	 **/
+	@Column(name = "tx_colonia")
+	private String colonia;
+
+	/**
+	 * Calle de la direccion del aspirante
+	 */
+	@Column(name = "tx_calle")
+	private String calle;
+
+	/**
+	 * Numero exterior de la direccion del aspirante
+	 **/
+	@Column(name = "tx_numero_ext")
+	private String numeroExterior;
+
+	/**
+	 * Numero interior de la direccion del aspirante
+	 **/
+	@Column(name = "tx_numero_int")
+	private String numeroInterior;
+
+	/**
+	 * codigo postal del aspirante
+	 **/
+	@Column(name = "tx_cp")
+	private String codigoPostal;
+
+	public DireccionAspirante() {
+		super();
+	}
+
+	/**
+	 * @param id
+	 * @param idEntidad
+	 * @param idMunicipio
+	 * @param colonia
+	 * @param calle
+	 * @param numeroExterior
+	 * @param numeroInterior
+	 * @param codigoPostal
+	 */
+	public DireccionAspirante(Integer id, String idEntidad, String idMunicipio, String colonia, String calle,
+			String numeroExterior, String numeroInterior, String codigoPostal) {
+		super();
+		this.id = id;
+		this.idEntidad = idEntidad;
+		this.idMunicipio = idMunicipio;
+		this.colonia = colonia;
+		this.calle = calle;
+		this.numeroExterior = numeroExterior;
+		this.numeroInterior = numeroInterior;
+		this.codigoPostal = codigoPostal;
+	}
+
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "calle", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "([a-zA-Z 0-9 ñÑáéíóú])*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "100", trim = true, message = "%{getText('MSG41',{'100'})}"),
+							@StringLengthFieldValidator(minLength = "2", trim = true, message = "%{getText('MSG41',{'2'})}") })
+	public String getCalle() {
+		return calle;
+	}
+
+	public void setCalle(String calle) {
+		this.calle = calle;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "idEntidad", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "([a-zA-Z 0-9 ñÑáéíóú#\\-$%&() ])*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "100", trim = true, message = "%{getText('MSG41',{'100'})}"),
+							@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the idMunicipio
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "idMunicipio", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "[0-9]*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "3", trim = true, message = "%{getText('MSG41',{'3'})}"),
+							@StringLengthFieldValidator(minLength = "3", trim = true, message = "%{getText('MSG41',{'3'})}") })
+	public String getIdMunicipio() {
+		return idMunicipio;
+	}
+
+	/**
+	 * @param idMunicipio
+	 *            the idMunicipio to set
+	 */
+	public void setIdMunicipio(String idMunicipio) {
+		this.idMunicipio = idMunicipio;
+	}
+
+	/**
+	 * @return the colonia
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "colonia", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "([a-zA-Z 0-9 ñÑáéíóú])*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "100", trim = true, message = "%{getText('MSG41',{'100'})}"),
+							@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getColonia() {
+		return colonia;
+	}
+
+	/**
+	 * @param colonia
+	 *            the colonia to set
+	 */
+	public void setColonia(String colonia) {
+		this.colonia = colonia;
+	}
+
+	/**
+	 * @return the numeroExterior
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "numeroExterior", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "([a-zA-Z 0-9 ñÑáéíóú])*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "10", trim = true, message = "%{getText('MSG41',{'10'})}"),
+							@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getNumeroExterior() {
+		return numeroExterior;
+	}
+
+	/**
+	 * @param numeroExterior
+	 *            the numeroExterior to set
+	 */
+	public void setNumeroExterior(String numeroExterior) {
+		this.numeroExterior = numeroExterior;
+	}
+
+	/**
+	 * @return the numeroInterior
+	 */
+	@Validations(regexFields = {
+			@RegexFieldValidator(regex = "([a-zA-Z 0-9 ñÑáéíóú])*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+					@StringLengthFieldValidator(maxLength = "10", trim = true, message = "%{getText('MSG41',{'10'})}"),
+					@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getNumeroInterior() {
+		return numeroInterior;
+	}
+
+	/**
+	 * @param numeroInterior
+	 *            the numeroInterior to set
+	 */
+	public void setNumeroInterior(String numeroInterior) {
+		this.numeroInterior = numeroInterior;
+	}
+
+	/**
+	 * @return the codigoPostal
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "codigoPostal", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "[0-9]*", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "5", trim = true, message = "%{getText('MSG41',{'5'})}"),
+							@StringLengthFieldValidator(minLength = "5", trim = true, message = "%{getText('MSG41',{'5'})}") })
+	public String getCodigoPostal() {
+		return codigoPostal;
+	}
+
+	/**
+	 * @param codigoPostal
+	 *            the codigoPostal to set
+	 */
+	public void setCodigoPostal(String codigoPostal) {
+		this.codigoPostal = codigoPostal;
+	}
+}

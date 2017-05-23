@@ -1,0 +1,29 @@
+package mx.edu.eld.entrevistas.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+@Namespace("/entrevistas")
+public class GestionarPeriodoEntrevistaAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	// IU1.8.2-1 Gestionar Periodos de Entrevistas
+	public String index() {
+		return INDEX;
+	}
+
+	// IU1.8.2-2 Registrar Periodo de Entrevistas
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	// IU1.8.2-3 Editar Periodo de Entrevistas
+	public String edit() {
+		return EDIT;
+	}
+}

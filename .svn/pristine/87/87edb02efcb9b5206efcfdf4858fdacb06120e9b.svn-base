@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<s:actionmessage theme="%{getText('mx.edu.eld.defaulTheme')}" />
+			<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+		</div>
+	</div>
+
+	<!-- tabla -->
+	<s:set var="listRequisitos"
+		value="{{'Acta de Nacimiento','si','si'},
+					{'CURP','si','si'}}" />
+	<s:set var="showDeleteIcon"
+		value="%{ciclo.idEstatus neq @mx.edu.eld.calendario.mapeo.EstatusCiclo$EstatusCicloEnum@EDICION.getEstatus()}" />
+
+	<div class="form-section form-horizontal form-max text-justify">
+		<table id="tblRequisitos" class="table table-striped">
+			<thead>
+				<tr>
+					<th data-priority="1"><s:text name="IU1.2-2_LBL8" /></th>
+					<th data-priority="3"><s:text name="IU1.2-2_LBL9" /></th>
+					<th data-priority="4"><s:text name="IU1.2-2_LBL10" /></th>
+					<th data-priority="2"><s:text name="IU1.2-2_LBL11" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<s:iterator value="listConvocatoriaRequisitos" var="req">
+					<tr>
+						<td>${req.requisito.nombre}</td>
+						<s:if test="%{#req.obligatorio eq true}">
+							<td>Sí</td>
+						</s:if>
+						<s:else>
+							<td>No</td>
+						</s:else>
+						<s:if test="%{#req.adjunto eq true}">
+							<td>Sí</td>
+						</s:if>
+						<s:else>
+							<td>No</td>
+						</s:else>
+						<td><a
+							href="${pageContext.request.contextPath}/convocatoria/gestionar-requisito/${req.idConvocatoria}_${req.idRequisito}/edit"><i
+								class="material-icons md-24 md-eld">mode_edit</i></a> <s:if
+								test="%{#showDeleteIcon}">
+								<a
+									onclick="openDlgDelete('${req.idConvocatoria}_${req.idRequisito}')">
+									<i class="material-icons md-24 md-eld">delete</i>
+								</a>
+							</s:if></td>
+					</tr>
+				</s:iterator>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Dialogo -->
+	<sj:dialog id="dlgDelete" modal="true" title="Eliminar Requisito"
+		autoOpen="false" openTopics="showDlgDelete"
+		closeTopics="closeDlgDelete" resizable="false" draggable="false">
+		<div class="row">
+			<div class="col-md-12">
+				<s:text name="IU1.2-2C_LBL8" />
+			</div>
+		</div>
+		<!-- Botones de aceptar y cancelar -->
+		<div class="row">
+			<div class="text-right col-md-12">
+				<s:form id="frmEliminarConvocatoriaRequisito" action="">
+					<s:hidden id="_method" name="_method" value="DELETE" />
+					<s:hidden id="idConvocatoriaSel" name="idConvocatoriaSel" />
+				</s:form>
+				<a onclick="submitForm()" class="btn btn-default btn-default-eld">
+					<s:text name="IU1.2-2C_LBL9" />
+				</a> <a onclick="closeDeleteDlg()"
+					class="btn btn-default btn-default-eld"><s:text
+						name="IU1.2-2C_LBL10" /></a>
+			</div>
+		</div>
+	</sj:dialog>
+	<!-- Botones de agregar -->
+	<div class="row">
+		<div class="outter-section">
+			<div class="buttons-right col-md-12">
+				<a class="btn btn-default btn-default-eld" id="btnAgregar"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-requisito/new?idConvocatoriaSel=${idConvocatoriaSel}">
+					<s:text name="IU1.2-3_BTN3" />
+				</a>
+			</div>
+		</div>
+	</div>
+</jsp:root>

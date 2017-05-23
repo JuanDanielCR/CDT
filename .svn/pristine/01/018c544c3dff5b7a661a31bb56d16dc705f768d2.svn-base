@@ -1,0 +1,113 @@
+package mx.edu.eld.admision.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/admision")
+@Results({ @Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"../admision/registrar-aspirante" }) })
+@AllowedMethods({"registrarAspirante"})
+public class GestionarAspirantesAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private GenericSearchBs genericSearchBs;
+
+	private Aspirante model;
+	private Aspirante aspirante2;
+
+	private List<Aspirante> listAspirante;
+	private Integer idAspiranteSel;
+
+	public String index() {
+		listAspirante = genericSearchBs.findAll(Aspirante.class);
+		System.err.println("Asp:" + listAspirante);
+		// listAspirante = new ArrayList<Aspirante>();
+		// Aspirante aspirante = new Aspirante("Eduardo", "Espino", "Maldonado",
+		// "CALJ950703MMCMPM06");
+		// Aspirante aspirante2 = new Aspirante("Jimena", "Espino", "Maldonado",
+		// "CALJ950703MMCMPM06");
+		// listAspirante.add(aspirante);
+		// listAspirante.add(aspirante2);
+		// System.err.println("lista"+aspirante2);
+		return INDEX;
+	}
+
+	public String edit() {
+		return EDIT;
+	}
+	
+	@SkipValidation
+	public String  registrarAspirante(){
+		return SUCCESS;
+	}
+
+	public List<Aspirante> getListAspirante() {
+		return listAspirante;
+	}
+
+	public void setListAspirante(List<Aspirante> listAspirante) {
+		this.listAspirante = listAspirante;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+	/**
+	 * @return the model
+	 */
+	public Aspirante getModel() {
+		return model;
+	}
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(Aspirante model) {
+		this.model = model;
+	}
+
+	public Aspirante getAspirante2() {
+		return aspirante2;
+	}
+
+	public void setAspirante2(Aspirante aspirante2) {
+		this.aspirante2 = aspirante2;
+	}
+
+	/**
+	 * @return the idAspiranteSel
+	 */
+	public Integer getIdAspiranteSel() {
+		return idAspiranteSel;
+	}
+
+	/**
+	 * @param idAspiranteSel the idAspiranteSel to set
+	 */
+	public void setIdAspiranteSel(Integer idAspiranteSel) {
+		if(idAspiranteSel!=null){
+			SessionManager.put(NombreObjetosSesion.ASPIRANTE_MODEL, genericSearchBs.findById(Aspirante.class, idAspiranteSel));
+		}
+		this.idAspiranteSel = idAspiranteSel;
+	}
+
+}

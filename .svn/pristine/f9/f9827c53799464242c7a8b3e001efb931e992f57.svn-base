@@ -1,0 +1,177 @@
+package mx.edu.eld.admision.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
+import mx.edu.eld.admision.bs.AspiranteBs;
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.edu.eld.admision.mapeo.ConvocatoriaAspirante;
+import mx.edu.eld.admision.mapeo.Entrevista;
+import mx.edu.eld.admision.mapeo.EntrevistaRubro;
+import mx.edu.eld.admision.mapeo.EstatusAspirante.estatusAspiratenEnum;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/admision")
+public class AspirantesAceptarAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer idSel;
+
+	private ConvocatoriaAspirante model;
+
+	@Autowired
+	private AspiranteBs aspiranteBs;
+
+	private List<ConvocatoriaAspirante> listConvocatoriaAspirante;
+
+	private List<List<Entrevista>> listEntrevista;
+	
+	private Aspirante aspirante;
+	
+	private EntrevistaRubro entrevistaRubro;
+
+	private List<EntrevistaRubro> listRubros;
+
+	private List<Float> listPromedios;
+	
+	private Integer numeroAspirantes;
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	public String index() {
+		ConvocatoriaAspirante convocatoriaAspirante = new ConvocatoriaAspirante();
+		Integer calificacion=0;
+		float promedio=0;
+		
+		listEntrevista = new ArrayList<>();
+		listPromedios=new ArrayList<>();
+		convocatoriaAspirante.setIdEstatus(estatusAspiratenEnum.ACEPTADO.getEstatus());
+		aspirante =new Aspirante();
+		listConvocatoriaAspirante = genericSearchBs.findByExample(convocatoriaAspirante);
+		System.err.println("tamanio de lista: " + listConvocatoriaAspirante.size() + " Con estatus "
+				+ convocatoriaAspirante.getIdEstatus() + "Informacion Escolar Tamanio "
+				+ listConvocatoriaAspirante.get(0).getAspirante().getInformacionEscolar().size());
+		numeroAspirantes=listConvocatoriaAspirante.size();
+		
+		for (ConvocatoriaAspirante convocatoriaAspirante2 : listConvocatoriaAspirante) {
+			Entrevista entrevista=new Entrevista(convocatoriaAspirante2.getIdConvocatoria(),convocatoriaAspirante2.getIdAspirante());
+			List<Entrevista> listEntrevistas2 = genericSearchBs.findByExample(entrevista);
+			entrevistaRubro=new EntrevistaRubro(listEntrevistas2.get(0).getId());
+			listRubros=genericSearchBs.findByExample(entrevistaRubro);
+			System.err.println("NUmero de rubros encontrados: "+listRubros.size());
+				for (EntrevistaRubro rubro : listRubros) {					
+					calificacion+=rubro.getCalificacionEntrevista().getCalificacion();
+				}
+				System.err.println("calificacion sumada: "+calificacion);
+				promedio=calificacion/listRubros.size();
+			
+			convocatoriaAspirante2.setPromedioEntrevista(promedio);
+			
+			calificacion=0;
+			promedio=0;
+		}
+		
+		return INDEX;
+	}
+
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+	public ConvocatoriaAspirante getModel() {
+		return model;
+	}
+
+	public void setModel(ConvocatoriaAspirante model) {
+		this.model = model;
+	}
+
+	public AspiranteBs getAspiranteBs() {
+		return aspiranteBs;
+	}
+
+	public void setAspiranteBs(AspiranteBs aspiranteBs) {
+		this.aspiranteBs = aspiranteBs;
+	}
+
+	public List<ConvocatoriaAspirante> getListConvocatoriaAspirante() {
+		return listConvocatoriaAspirante;
+	}
+
+	public void setListConvocatoriaAspirante(List<ConvocatoriaAspirante> listConvocatoriaAspirante) {
+		this.listConvocatoriaAspirante = listConvocatoriaAspirante;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public List<List<Entrevista>> getListEntrevista() {
+		return listEntrevista;
+	}
+
+	public void setListEntrevista(List<List<Entrevista>> listEntrevista) {
+		this.listEntrevista = listEntrevista;
+	}
+
+	public List<Float> getListPromedios() {
+		return listPromedios;
+	}
+
+	public void setListPromedios(List<Float> listPromedios) {
+		this.listPromedios = listPromedios;
+	}
+
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	public EntrevistaRubro getEntrevistaRubro() {
+		return entrevistaRubro;
+	}
+
+	public void setEntrevistaRubro(EntrevistaRubro entrevistaRubro) {
+		this.entrevistaRubro = entrevistaRubro;
+	}
+
+	public List<EntrevistaRubro> getListRubros() {
+		return listRubros;
+	}
+
+	public void setListRubros(List<EntrevistaRubro> listRubros) {
+		this.listRubros = listRubros;
+	}
+
+	public Integer getNumeroAspirantes() {
+		return numeroAspirantes;
+	}
+
+	public void setNumeroAspirantes(Integer numeroAspirantes) {
+		this.numeroAspirantes = numeroAspirantes;
+	}	
+}

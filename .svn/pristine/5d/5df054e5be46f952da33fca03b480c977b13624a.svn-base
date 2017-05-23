@@ -1,0 +1,49 @@
+package mx.edu.eld.calendario.dao;
+
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+@Service("actividadDao")
+@Scope(value= BeanDefinition.SCOPE_SINGLETON)
+public class ActividadDao extends GenericDao{
+	
+	/*
+	 * proxy para la obtencion de conexion a la BD
+	 */
+	@Autowired
+	private SessionFactory sessionFactoryActividad;
+	
+	private static final String QUERY_BUSCAR_ACTIVIDAD = "Select * from tca07_actividad as a where a.nb_actividad =:actividad";
+	
+	/*
+	 * Este metododo me permite realizar la busqueda de una actividad en especifico
+	 */
+	@SuppressWarnings("unchecked")
+	public Boolean buscarExistenciaActividad(String actividad){
+		
+		Query<FaseActividad> qActividad = sessionFactoryActividad.getCurrentSession().createNativeQuery(QUERY_BUSCAR_ACTIVIDAD);
+		qActividad.setParameter("actividad", actividad);
+		List<FaseActividad> listActividad = qActividad.getResultList();
+		return (listActividad.isEmpty());
+	}
+	
+	/*
+	 * metodo que elimina la asociacion de actividades del ciclo (para poder eliminar las actividades estas deben estar unicamente
+	 * asociadas al ciclo actual)
+	 */
+	@SuppressWarnings("rawtypes")
+	public void eliminarActividad(Integer idActividad){
+		Query q = sessionFactoryActividad.getCurrentSession().createNamedQuery("deleteActividad");
+		q.setParameter("idActividad", idActividad);
+		q.executeUpdate();
+	}
+}

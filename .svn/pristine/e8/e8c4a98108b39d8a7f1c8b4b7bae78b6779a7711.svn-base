@@ -1,0 +1,14 @@
+$(function (){
+	var fecha = document.getElementById['dpInicio'].value;
+	var hora = document.getElementById['hora'].value;
+
+	var fechaHoraInicio = new Date(document.getElementById['fechaHoraInicio'].value = fecha+" "+hora);
+	
+	alert(fechaHoraInicio);
+
+});
+
+
+	
+	
+

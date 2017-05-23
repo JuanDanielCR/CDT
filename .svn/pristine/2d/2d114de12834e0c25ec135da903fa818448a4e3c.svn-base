@@ -1,0 +1,46 @@
+package mx.edu.eld.informacionbase.dao;
+
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.admision.mapeo.Contacto;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+@Service("contactoDao")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ContactoDao extends GenericDao{
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	/**
+	 * @param sessionFactory
+	 *            the sessionFactory to set
+	 */
+	
+	private final static String BUSCAR_CONTACTOS_PERSONA = "SELECT * FROM tad20_contacto WHERE id_aspirante = :idUsuario";
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public List<Contacto> obtenerContactos(Integer id) {
+			Query<Contacto> query = sessionFactory.getCurrentSession().createNativeQuery(BUSCAR_CONTACTOS_PERSONA, Contacto.class);
+			query.setParameter("idUsuario", id);
+			List <Contacto> listContactos = (List <Contacto>)query.getResultList();
+			return listContactos;
+	}
+}

@@ -1,0 +1,64 @@
+package mx.edu.eld.calendario.action;
+
+import java.util.List;
+
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+public class GestionarFasesAct extends ActionSupportCDT{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<FaseActividad> listFaseActividad;
+	
+	private GenericSearchBs genericSearchBs;
+
+	public String index(){
+		return INDEX;
+	}
+	
+	public String editNew(){
+		return EDITNEW;
+	}
+	
+	public void validateCreate(){
+		
+	}
+	
+	public String create(){
+		return SUCCESS;
+	}
+	
+	public String edit(){
+		return EDIT;
+	}
+	
+	public void validateUpdate(){
+		
+	}
+	
+	public String update(){
+		return SUCCESS;
+	}
+
+	public List<FaseActividad> getListFaseActividad() {
+		return listFaseActividad;
+	}
+
+	public void setListFaseActividad(List<FaseActividad> listFaseActividad) {
+		this.listFaseActividad = listFaseActividad;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+		
+}

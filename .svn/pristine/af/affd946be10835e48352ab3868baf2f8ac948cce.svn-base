@@ -1,0 +1,13 @@
+$(document).ready(function() {
+	$("#btnAceptar").click(function() {
+		if ($("#checkterminos").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTerm').val());
+		}
+	});
+});  
+ 
+
+
+
+
+

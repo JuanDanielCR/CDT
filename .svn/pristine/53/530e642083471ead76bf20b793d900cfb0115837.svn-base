@@ -1,0 +1,98 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Abstrae la relación de una {link Persona} con sus {@link Direccion}
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tib04_direccion_persona")
+public class DireccionPersona {
+	/**
+	 * Llave compuesta de la dirección de una persona
+	 */
+	@EmbeddedId
+	private DireccionPersonaId id;
+
+	/**
+	 * Identificador de la {@link Direccion}
+	 */
+	@Column(name = "", insertable = false, updatable = false)
+	private Integer idDireccion;
+
+	/**
+	 * Identificador de la {@link Persona}
+	 */
+	private Integer idPersona;
+
+	/**
+	 * Identificador del {@link TipoDireccion}
+	 */
+	private Integer idTipo;
+
+	/**
+	 * @return the id
+	 */
+	public DireccionPersonaId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(DireccionPersonaId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idDireccion
+	 */
+	public Integer getIdDireccion() {
+		return idDireccion;
+	}
+
+	/**
+	 * @param idDireccion
+	 *            the idDireccion to set
+	 */
+	public void setIdDireccion(Integer idDireccion) {
+		this.idDireccion = idDireccion;
+	}
+
+	/**
+	 * @return the idPersona
+	 */
+	public Integer getIdPersona() {
+		return idPersona;
+	}
+
+	/**
+	 * @param idPersona
+	 *            the idPersona to set
+	 */
+	public void setIdPersona(Integer idPersona) {
+		this.idPersona = idPersona;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+}

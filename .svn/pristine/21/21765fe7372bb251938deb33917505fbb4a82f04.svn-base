@@ -1,0 +1,17 @@
+$(document).ready(function(){
+	var select1 = $("#hdaMes").val();
+	var select2 = $("#hdaAnio").val();
+	//$("#slcMes option").filter(function() {
+	    //may want to use $.trim in here
+	//    return $(this).text(select2); 
+	//}).attr('selected', true);
+	//$("#slcAnio option").filter(function() {
+	    //may want to use $.trim in here
+	 //   return $(this).text(select1); 
+	//}).attr('selected', true);
+
+});
+
+
+
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<!--Variable con el tipo de usuario-->
+	<s:set var="usuario2" value="%{#session['usuario']}" />
+
+	<div class="row title">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU1.1-1_TITLE" />
+			</h1>
+		</div>
+	</div>
+
+	<!-- label mensajes obligatorios -->
+	<div class="row">
+		<div class="col-md-12">
+			<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<s:actionmessage theme="%{getText('mx.edu.eld.defaulTheme')}" />
+		</div>
+	</div>
+	
+	<!--Validad el tipo de usuario y tipo de pantalla-->
+	<s:if test="#usuario2 eq 'asistente_s_a'">
+		<s:include value="./indexAsistenteSA.jsp" />
+	</s:if>
+	<s:elseif test="#usuario2 eq 'secretaria_administracion'">
+		<s:include value="./indexSecretaria.jsp" />
+	</s:elseif>
+</jsp:root>

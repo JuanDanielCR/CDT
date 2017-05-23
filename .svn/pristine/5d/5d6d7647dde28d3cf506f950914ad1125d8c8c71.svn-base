@@ -1,0 +1,18 @@
+$(function() {
+	dataTableEMETH.createResponsiveDataTable("tblSalones");
+});
+
+function mostrarMensajeAceptar() {
+	$.publish("showDlgAceptar");
+
+}
+
+function cerrarMensajeGuardar() {
+	$.publish("closeDlgAceptar");
+
+}
+
+function cerrarMensajeCancelar() {
+	$.publish("closeDlgCancelar");
+
+}

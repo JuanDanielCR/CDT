@@ -1,0 +1,52 @@
+.navbar-eld {
+	background: #9C002F !important;
+	/* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(#9C002F, #590016) !important;
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#9C002F, #590016) !important;
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#9C002F, #590016) !important;
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#9C002F, #590016) !important;
+	/* Standard syntax (must be last) */
+}
+
+.nav, .nav>* {
+	background-color: none !important;
+}
+
+li.dropdown>a {
+	color: white !important;
+	text-shadow: none !important;
+	text-decoration: none !important;
+}
+
+li.dropdown:hover {
+	background: #9C002F !important;
+}
+
+.nav .open>a {
+	background: #9C002F !important;
+}
+
+.nav .dropdown-menu {
+	background: white !important;
+}
+
+.dropdown-menu {
+	border-radius: 0 px !important;
+}
+/*
+.navbar-collapse.in>* {
+	background-color: white !important;
+	color: black !important;
+}
+.navbar-collapse.collapse>* {
+	background-color: white !important;
+	color: black !important;
+}
+
+.navbar-collapse.collapsing>* {
+	background-color: white !important;
+	color: black !important;
+}*/

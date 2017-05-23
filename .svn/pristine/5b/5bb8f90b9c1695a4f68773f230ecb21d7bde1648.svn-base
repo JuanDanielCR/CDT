@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+          xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+    <jsp:directive.page language="java"
+                        contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"/>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <jsp:text>
+            <![CDATA[
+	<script type="text/javascript" src="${pageContext.request.contextPath}/pages/entrevistas/gestionar-entrevistas/js/index-editNew.js"></script>
+	]]>
+        </jsp:text>
+    </head>
+    <body>
+    <s:set var="varHeaderKey"
+           value="%{getText('COM.ELD.DEFAULT_HEADER_KEY')}"/>
+    <s:set var="varHeaderValue"
+           value="%{getText('COM.ELD.DEFAULT_HEADER_VALUE')}"/>
+
+    <s:set var="listNombres"
+           value="{'Ricardo Ruiz Maldonado', 'Liliana Flores Sanchez', 'Antony Brando Vargas Duran'}"/>
+    <s:set var="listOpciones" value="{0 , 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10}"/>
+    <s:set var="listOpciones2" value="{'Si','No'}"/>
+    <s:set var="listOpciones3" value="{'Aceptado','No Aceptado','Aceptado con Reserva'}"/>
+
+    <s:set var="varEdad" value="22"/>
+    <s:set var="varFecha" value="'12/08/2017'"/>
+    <s:set var="secundaria" value="'Gral. Arnulfo Gómez'"/>
+    <s:set var="entidad" value="'México'"/>
+    <s:set var="promedioGeneral" value="'8.1'"/>
+    <s:set var="institucion" value="'Pública'"/>
+    <s:set var="promedio" value="'8.0'"/>
+    <s:set var="bachillerato" value="'CECyT 8 \'Narciso Bassols\''"/>
+    <s:set var="entidad" value="'México'"/>
+    <s:set var="institucion" value="'Pública'"/>
+    <s:set var="promedio" value="'8.2'"/>
+    <s:set var="txCampos" value="%{getText('1.8.5-3_LBL15')}"/>
+    <s:set var="varEntrevistador" value="'Lic. Renata L. Sandoval Sánchez'"/>
+
+    <!-- Evaluacion de la entrevista -->
+    <div class="row title">
+        <div class="col-md-12">
+            <h1 class="title">
+                <s:text name="1.8.5-3_TITLE"/>
+            </h1>
+        </div>
+    </div>
+
+    <s:form id="frmEvaluacionEntrevista" enctype="multipart/form-data"
+            action="%{#pageContext.request.contextPath}/entrevistas/gestionar-entrevistas"
+            theme="simple" method="post">
+
+        <!-- Nombre -->
+
+        <div class="form-group">
+            <div class="col-md-4 col-xs-12">
+                <label class="col-md-2 col-xs-12 control-label" for=""> <s:text
+                        name="1.8.5-3_LBL1"/>
+                </label>
+                <div class="col-md-8 col-xs-12">
+                    <s:text name="%{#listNombres[0]}"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-xs-12">
+                <label class="col-md-4 col-xs-6 control-label text-xs-right" for="">
+                    <s:text name="1.8.5-3_LBL2"/>
+                </label>
+                <div class="col-md-8 col-xs-6 text-md-left text-xs-left">
+                    <span> ${varFecha} </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-xs-12">
+                <label class="col-md-4 col-xs-6 control-label text-xs-right" for="">
+                    <s:text name="1.8.5-3_LBL3"/>
+                </label>
+                <div class="col-md-8 col-xs-6 text-md-left text-xs-left">
+                    <span> ${varEdad} </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seccion: Antecedentes Escolares -->
+        <fieldset class="form-section form-horizontal">
+            <legend class="form-section">
+                <s:text name="1.8.5-3_SECCION1"/>
+            </legend>
+
+            <div class="form-group">
+                <div class="row">
+                    <!-- Secundaria -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL4"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${secundaria} </span>
+                        </div>
+                    </div>
+                    <!-- entidad -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL5"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${entidad} </span>
+                        </div>
+                    </div>
+                    <!-- institucion publica -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL7"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${institucion} </span>
+                        </div>
+                    </div>
+                    <!-- promedio -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL8"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${promedio} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <!-- Bachillerato -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL9"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${bachillerato} </span>
+                        </div>
+                    </div>
+                    <!-- Entidad -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL10"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${entidad} </span>
+                        </div>
+                    </div>
+                    <!-- institucion -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL11"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${institucion} </span>
+                        </div>
+                    </div>
+                    <!-- promedio -->
+                    <div class="col-md-6 col-xs-12">
+                        <label class="col-md-4 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL12"/>
+                        </label>
+                        <div class="col-md-8 col-xs-8 text-md-left text-xs-left">
+                            <span> ${promedio} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <!-- Promedio General -->
+                    <div class="col-md-12 col-xs-12">
+                        <label class="col-md-6 col-xs-4 control-label text-xs-right"
+                               for=""> <s:text name="1.8.5-3_LBL6"/>
+                        </label>
+                        <div class="col-md-6 col-xs-8 text-md-left text-xs-left">
+                            <span> ${promedioGeneral} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- ******************************* Seccion: CENEVAL y Psicométrico ******************************* -->
+        <div class="col-md-6">
+            <fieldset class="form-section form-horizontal">
+                <legend class="form-section">
+                    <s:text name="1.8.5-3_SECCION2"/>
+                </legend>
+                <div class="form-group">
+                    <div class="row">
+                        <!-- Promedio -->
+                        <label class="col-md-6 control-label text-xs-right" for="">
+                            <s:text name="1.8.5-3_LBL13"/>
+                        </label>
+                        <div class="col-md-6 text-md-left">
+                            <span> ${promedio} </span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="col-md-6">
+            <fieldset class="form-section form-horizontal">
+                <legend class="form-section">
+                    <s:text name="1.8.5-3_SECCION5"/>
+                </legend>
+                <div class="form-group">
+                    <div class="row">
+                        <!-- Promedio -->
+                        <label class="col-md-6 control-label text-xs-right" for="">
+                            <s:text name="1.8.5-3_LBL13"/>
+                        </label>
+                        <div class="col-md-6 text-md-left">
+                            <span> 8.1 </span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+
+        <!-- Seccion: Evaluacion de la entrevista -->
+        <fieldset class="form-section form-horizontal">
+            <legend class="form-section">
+                <s:text name="1.8.5-3_SECCION3"/>
+            </legend>
+            <!-- Leyenda de campos obligatorios -->
+            <div class="col-md-12 text-left">
+                <label>${txCampos}</label>
+            </div>
+            <div class="form-group">
+                <!-- Vocacion -->
+                <div class="col-md-6">
+                    <label class="col-md-4 control-label label-obligatorio" for="">
+                        <s:text name="1.8.5-3_LBL16"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:select id="slcEE-Vocacion" name="model.idAspirante"
+                                  headerKey="%{#varHeaderKey}" headerValue="%{#varHeaderValue}"
+                                  cssClass="form-control" list="listOpciones"/>
+                        <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+                <!-- Interes ELD -->
+                <div class="col-md-6">
+                    <label class="col-md-4 control-label label-obligatorio" for="">
+                        <s:text name="1.8.5-3_LBL17"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:select id="slcEE-Interes" headerKey="%{#varHeaderKey}"
+                                  headerValue="%{#varHeaderValue}"
+                                  cssClass="form-control input-min" list="listOpciones"/>
+                        <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <!-- Caracter -->
+                <div class="col-md-6">
+                    <label class="col-md-4 control-label label-obligatorio" for="">
+                        <s:text name="1.8.5-3_LBL19"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:select id="slcEE-Caracter" headerKey="%{#varHeaderKey}"
+                                  headerValue="%{#varHeaderValue}" cssClass="form-control"
+                                  list="listOpciones"/>
+                        <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+                <!-- Aptitudes verbales -->
+                <div class="col-md-6">
+                    <label class="col-md-4 control-label label-obligatorio" for="">
+                        <s:text name="1.8.5-3_LBL20"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:select id="slcEE-Aptitudes" name="model.idAspirante"
+                                  headerKey="%{#varHeaderKey}" headerValue="%{#varHeaderValue}"
+                                  cssClass="form-control" list="listOpciones"/>
+                        <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promedio -->
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="col-md-6 control-label" for=""> <s:text
+                            name="1.8.5-3_LBL18"/>
+                    </label>
+                    <div class="col-md-6 text-md-left text-xs-center">
+                        <p id="idPromedioEvEntr">0</p>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <!-- Seccion: Recomendacion del entrevistador -->
+        <fieldset class="form-section form-horizontal">
+            <legend class="form-section">
+                <s:text name="1.8.5-3_SECCION4"/>
+            </legend>
+            <div class="form-group">
+                <div class="row">
+                    <!-- Entrevistador -->
+                    <div class="col-md-6">
+                        <label class="col-md-4 control-label label-obligatorio" for="">
+                            <s:text name="1.8.5-3_LBL24"/>
+                        </label>
+                        <div class="col-md-8 text-left">
+                            <span> ${varEntrevistador} </span>
+                        </div>
+                    </div>
+
+                    <!-- Resultado -->
+                    <div class="col-md-6">
+                        <label class="col-md-4 control-label label-obligatorio" for="">
+                            <s:text name="1.8.5-3_LBL25"/>
+                        </label>
+                        <div class="col-md-8">
+                            <s:select id="slcVocacion" name="model.idAspirante"
+                                      cssClass="form-control" list="listOpciones3" listKey="id"/>
+                            <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                          theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <!-- Recomendado Por -->
+                    <div class="col-md-6">
+                        <label class="col-md-4 control-label" for=""> <s:text
+                                name="1.8.5-3_LBL27"/>
+                        </label>
+                        <div class="col-md-8 text-left">
+                            <s:textfield cssClass="form-control"/>
+                        </div>
+                    </div>
+
+                    <!-- ¿Es profesor de la ELD? -->
+                    <div class="col-md-6">
+                        <label class="col-md-4 control-label" for=""> <s:text
+                                name="1.8.5-3_LBL28"/>
+                        </label>
+                        <div class="col-md-8">
+                            <s:select id="slcVocacion" name="model.idAspirante"
+                                      cssClass="form-control" list="listOpciones2" listKey="id"/>
+                            <s:fielderror fieldName="model.idAspirante" cssClass="error"
+                                          theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <!-- Observaciones -->
+                <label class="col-md-2 control-label" for="txObservaciones">
+                    <s:text name="1.8.5-3_LBL26"/>
+                </label>
+                <div class="col-md-10">
+                    <s:textarea id="txObservaciones" name="model.observaciones"
+                                cssClass="form-control" maxlength="200"
+                                cssErrorClass="field-error"/>
+                    <s:fielderror fieldName="model.observaciones" cssClass="error"
+                                  theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                </div>
+            </div>
+        </fieldset>
+        <!-- Botones de aceptar y cancelar -->
+        <div class="col-md-12 text-right">
+            <a
+                    href="${pageContext.request.contextPath}/entrevistas/gestionar-entrevistas"
+                    class="btn btn-default btn-default-eld" id="btnAceptar">Aceptar</a>
+            <a
+                    href="${pageContext.request.contextPath}/entrevistas/gestionar-entrevistas"
+                    class="btn btn-default btn-default-eld" id="btnAceptar">Cancelar</a>
+        </div>
+    </s:form>
+    </body>
+    </html>
+</jsp:root>

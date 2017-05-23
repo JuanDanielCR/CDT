@@ -1,0 +1,429 @@
+package mx.edu.eld.informacionbase.mapeo.util;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.struts2.json.annotations.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.ipn.escom.cdt.util.Constantes;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.action.Error;
+import mx.edu.eld.informacionbase.mapeo.CategoriaContacto.EnumCategoriaContacto;
+import mx.edu.eld.informacionbase.mapeo.Contacto;
+import mx.edu.eld.informacionbase.mapeo.TipoContacto.EnumTipoContacto;
+
+public class ContactoController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContactoController.class);
+	private List<Contacto> listContactos;
+	private Contacto contacto;
+	private static final Properties properties;
+	private Error error;
+	private static final Integer MAX_DEFAULT_NUMBER_OF_CONTACTS = 10;
+	private static final Integer MIN_DEFAULT_NUMBER_OF_CONTACTS = 0;
+	private Integer maxNumberOfContacts;
+	private Integer minNumberOfContacts;
+
+	static {
+		properties = new Properties();
+		try {
+			properties.load(
+					ContactoController.class.getClassLoader().getResourceAsStream("mx/edu/eld/package_es_MX.properties"));
+			properties.load(ContactoController.class.getClassLoader().getResourceAsStream("global.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ContactoController() {
+		this.listContactos = new ArrayList<>();
+		this.contacto = new Contacto();
+		this.error = new Error();
+		try {
+			Integer maxNumberOfContactsProps = Integer
+					.valueOf(properties.getProperty("mx.edu.eld.maxNumberOfContacts"));
+			Integer minNumberOfContactsProps = Integer
+					.valueOf(properties.getProperty("mx.edu.eld.minNumberOfContacts"));
+			this.maxNumberOfContacts = maxNumberOfContactsProps;
+			this.minNumberOfContacts = minNumberOfContactsProps;
+		} catch (NumberFormatException nfe) {
+			this.maxNumberOfContacts = MAX_DEFAULT_NUMBER_OF_CONTACTS;
+			this.minNumberOfContacts = MIN_DEFAULT_NUMBER_OF_CONTACTS;
+		}
+	}
+
+	// TODO: Delete validation
+	public Boolean isValid() {
+		int size = listContactos.size();
+		return size >= minNumberOfContacts && size <= maxNumberOfContacts;
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean addContacto(Contacto contacto) {
+		this.error.clear();
+		Boolean valido = false;
+		if (listContactos == null) {
+			listContactos = new ArrayList<>();
+			LOGGER.error("Empty Contacts");
+		}
+		if (listContactos.size() <= maxNumberOfContacts) {
+			if (validarContacto(contacto)) {
+				contacto.getId();
+				Boolean duplicated = false;
+				for (Contacto c : listContactos) {
+					if (c.getId() != contacto.getId() && contacto.equalsValues(c)) {
+						duplicated = true;
+					}
+				}
+				if (!duplicated) {
+					contacto.setText(contactoToString(contacto));
+					listContactos.add(contacto);
+					valido = true;
+				} else {
+					error.add("globalHidden", properties.getProperty("MSG6"));
+					valido = false;
+				}
+			}
+		} else {
+			error.add("globalHidden", properties.getProperty("MSG7"));
+			valido = false;
+		}
+		return valido;
+	}
+
+	public Boolean editContacto(Contacto contacto) {
+		this.error.clear();
+		Boolean valido = false;
+		if (listContactos == null) {
+			listContactos = new ArrayList<>();
+		}
+		if (validarContacto(contacto)) {
+			int index = listContactos.indexOf(contacto);
+			Boolean duplicated = false;
+			for (Contacto c : listContactos) {
+				if (!c.getId().equals(contacto.getId()) && contacto.equalsValues(c)) {
+					duplicated = true;
+				}
+			}
+			if (!duplicated) {
+				contacto.setText(contactoToString(contacto));
+				contacto.getId();
+				listContactos.set(index, contacto);
+			} else {
+				error.add("globalHidden", properties.getProperty("MSG6"));
+				valido = false;
+			}
+		}
+		return valido;
+	}
+
+	public Boolean deleteContacto(Contacto contacto) {
+		int index = listContactos.indexOf(contacto);
+		if (index != Numeros.UNO_NEGATIVO.getValor()) {
+			listContactos.remove(index);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private Boolean validarContacto(Contacto contacto) {
+		Boolean valido = false, validoEmergencia = false;
+		if (contacto != null && !(contacto.getIdTipo() == null
+				|| contacto.getIdTipo().equals(Numeros.UNO_NEGATIVO.getValorInteger()))) {
+			if (contacto.getIdTipo().equals(EnumTipoContacto.TELEFONO.getIdTipo())
+					|| contacto.getIdTipo().equals(EnumTipoContacto.FAX.getIdTipo())) {
+				valido = validarTelefono(contacto);
+			} else if (contacto.getIdTipo().equals(EnumTipoContacto.CELULAR.getIdTipo())) {
+				valido = validarMobil(contacto);
+			} else if (contacto.getIdTipo().equals(EnumTipoContacto.EMAIL.getIdTipo())) {
+				valido = validarEmail(contacto);
+			} else if (contacto.getIdTipo().equals(EnumTipoContacto.LINKEDIN.getIdTipo())) {
+				valido = validarLinkedIn(contacto);
+			} else if (contacto.getIdTipo().equals(EnumTipoContacto.FACEBOOK.getIdTipo())) {
+				valido = validarFacebook(contacto);
+			} else if (contacto.getIdTipo().equals(EnumTipoContacto.TWITTER.getIdTipo())) {
+				valido = validarTwitter(contacto);
+			} else {
+				valido = false;
+			}
+		} else {
+			error.add("idTipoFalse", properties.getProperty("MSG2"));
+		}
+		if (contacto.getIdCategoria() == null) {
+			error.add("categoriaHidden", properties.getProperty("MSG2"));
+			valido = false;
+		} else {
+			if (contacto.getIdCategoria().equals(EnumCategoriaContacto.EMERGENCIA.getIdCategoria())) {
+				validoEmergencia = validarEmergencia(contacto);
+			} else {
+				validoEmergencia = true;
+			}
+		}
+		return valido && validoEmergencia;
+	}
+
+	private Boolean validarEmergencia(Contacto contacto) {
+		Boolean valido = false;
+		if (contacto.getEmergencia() == null || Constantes.CADENA_VACIA.equals(contacto.getEmergencia())) {
+			error.add("emergencia", properties.getProperty("MSG2"));
+			valido = false;
+		} else {
+			if (!contacto.getEmergencia().matches(properties.getProperty("mx.ipn.escom.cdt.emergencia"))) {
+				error.add("emergencia", properties.getProperty("MSG3_LETTERS"));
+				valido = false;
+			} else if (contacto.getEmergencia().length() > Numeros.CIEN.getValor()) {
+				String mensaje = properties.getProperty("MSG4_LESS");
+				mensaje = mensaje.replace("{0}", "100");
+				error.add("emergencia", mensaje);
+			} else if (contacto.getEmergencia().length() <= Numeros.DOS.getValor()) {
+				String mensaje = properties.getProperty("MSG4_MORE");
+				mensaje = mensaje.replace("{0}", "2");
+				error.add("emergencia", mensaje);
+			} else {
+				valido = true;
+			}
+		}
+		if (contacto.getRelacion() == null || Constantes.CADENA_VACIA.equals(contacto.getRelacion())) {
+			error.add("relation", properties.getProperty("MSG2"));
+			valido = false;
+		} else {
+			if (!contacto.getRelacion().matches(properties.getProperty("mx.ipn.escom.cdt.relationShip"))) {
+				error.add("relation", properties.getProperty("MSG3_LETTERS"));
+				valido = false;
+			} else if (contacto.getRelacion().length() > Numeros.CINCUENTA.getValor()) {
+				String mensaje = properties.getProperty("MSG4_LESS");
+				mensaje = mensaje.replace("{0}", "50");
+				error.add("relation", mensaje);
+			} else if (contacto.getRelacion().length() <= Numeros.DOS.getValor()) {
+				String mensaje = properties.getProperty("MSG4_MORE");
+				mensaje = mensaje.replace("{0}", "2");
+				error.add("relation", mensaje);
+			} else {
+				valido = true;
+			}
+		}
+		return valido;
+	}
+
+	private Boolean validarURL(String url) {
+		Boolean valido = true;
+		if (url == null || Constantes.CADENA_VACIA.equals(url)) {
+			error.add("contacto", properties.getProperty("MSG2"));
+			valido = false;
+		} else {
+			System.err.println(properties.getProperty("mx.ipn.escom.cdt.url"));
+			if (!url.matches(properties.getProperty("mx.ipn.escom.cdt.url"))) {
+				error.add("contacto", properties.getProperty("MSG3_URL"));
+				valido = false;
+			}
+		}
+		return valido;// error.isEmpty();
+	}
+
+	private Boolean validarTwitter(Contacto contacto) {
+		return validarURL(contacto.getContacto());
+	}
+
+	private Boolean validarFacebook(Contacto contacto) {
+		return validarURL(contacto.getContacto());
+	}
+
+	private Boolean validarLinkedIn(Contacto contacto) {
+		return validarURL(contacto.getContacto());
+	}
+
+	private Boolean validarEmail(Contacto contacto) {
+		if (contacto.getContacto() == null || Constantes.CADENA_VACIA.equals(contacto.getContacto())) {
+			error.add("contacto", properties.getProperty("MSG2"));
+		} else {
+			if (!contacto.getContacto().matches(properties.getProperty("mx.ipn.escom.cdt.email"))) {
+				error.add("contacto", properties.getProperty("MSG3_MAIL"));
+			}
+		}
+		return error.isEmpty();
+	}
+
+	private Boolean validarMobil(Contacto contacto) {
+		return validarCodeAreaAndTelephone(contacto);
+	}
+
+	private Boolean validarCodeAreaAndTelephone(Contacto contacto) {
+		if (contacto.getContactoA() == null || Constantes.CADENA_VACIA.equals(contacto.getContactoA())) {
+			error.add("auxiliar", properties.getProperty("MSG2"));
+		} else {
+			if (!contacto.getContactoA().matches(properties.getProperty("mx.ipn.escom.cdt.codeArea"))) {
+				error.add("auxiliar", properties.getProperty("MSG3_NUMBERS"));
+			} else if (contacto.getContactoA().length() > Numeros.TRES.getValor()) {
+				String mensaje = properties.getProperty("MSG4_LESS");
+				mensaje = mensaje.replace("{0}", "3");
+				error.add("auxiliar", mensaje);
+			} else if (contacto.getContactoA().length() < Numeros.DOS.getValor()) {
+				String mensaje = properties.getProperty("MSG4_MORE");
+				mensaje = mensaje.replace("{0}", "2");
+				error.add("auxiliar", mensaje);
+			}
+		}
+		if (contacto.getContacto() == null || Constantes.CADENA_VACIA.equals(contacto.getContacto())) {
+			error.add("contacto", properties.getProperty("MSG2"));
+		} else {
+			if (!contacto.getContacto().matches(properties.getProperty("mx.ipn.escom.cdt.telephone"))) {
+				error.add("contacto", properties.getProperty("MSG3_NUMBERS"));
+			} else {
+				if (contacto.getIdTipo().equals(EnumTipoContacto.CELULAR.getIdTipo())) {
+					if (contacto.getContacto().length() != Numeros.DIEZ.getValor()) {
+						String mensaje = properties.getProperty("MSG4");
+						mensaje = mensaje.replace("{0}", "10");
+						error.add("contacto", mensaje);
+					}
+				} else {
+					if (contacto.getContacto().length() > Numeros.OCHO.getValor()) {
+						String mensaje = properties.getProperty("MSG4_LESS");
+						mensaje = mensaje.replace("{0}", "8");
+						error.add("contacto", mensaje);
+					} else if (contacto.getContacto().length() < Numeros.SIETE.getValor()) {
+						String mensaje = properties.getProperty("MSG4_MORE");
+						mensaje = mensaje.replace("{0}", "7");
+						error.add("contacto", mensaje);
+					}
+				}
+			}
+		}
+		return error.isEmpty();
+	}
+
+	private Boolean validarTelefono(Contacto contacto) {
+		validarCodeAreaAndTelephone(contacto);
+		if (contacto.getContactoB() != null && !Constantes.CADENA_VACIA.equals(contacto.getContactoB())) {
+			if (Constantes.CADENA_VACIA.equals(contacto.getContactoB())) {
+				error.add("auxiliarA", properties.getProperty("MSG2"));
+			} else {
+				if (contacto.getContactoB() != null && contacto.getContactoB().equals(Constantes.CADENA_VACIA)
+						&& !contacto.getContactoB().matches(properties.getProperty("mx.ipn.escom.cdt.extension"))) {
+					error.add("auxiliarA", properties.getProperty("MSG3_NUMBERS"));
+				} else if (contacto.getContactoB().length() > Numeros.CINCO.getValor()) {
+					String mensaje = properties.getProperty("MSG4_LESS");
+					mensaje = mensaje.replace("{0}", "5");
+					error.add("auxiliarA", mensaje);
+				} else if (contacto.getContactoB().length() < Numeros.UNO.getValor()) {
+					String mensaje = properties.getProperty("MSG4_MORE");
+					mensaje = mensaje.replace("{0}", "1");
+					error.add("auxiliarA", mensaje);
+				}
+			}
+		}
+		return error.isEmpty();
+	}
+
+	/**
+	 * @return the listContactos
+	 */
+	public List<Contacto> getListContactos() {
+		return listContactos;
+	}
+
+	/**
+	 * @param listContactos
+	 *            the listContactos to set
+	 */
+	public void setListContactos(List<Contacto> listContactos) {
+		this.listContactos = new ArrayList<>();
+		try {
+			for (Contacto c : listContactos) {
+				this.listContactos.add((Contacto) c.clone());
+			}
+		} catch (CloneNotSupportedException cnse) {
+
+		}
+	}
+
+	/**
+	 * @return the contacto
+	 */
+	@JSON(serialize = false)
+	public Contacto getContacto() {
+		return contacto;
+	}
+
+	/**
+	 * @param contacto
+	 *            the contacto to set
+	 */
+	public void setContacto(Contacto contacto) {
+		this.contacto = contacto;
+	}
+
+	/**
+	 * @return the error
+	 */
+	public Error getError() {
+		return error;
+	}
+
+	/**
+	 * @param error
+	 *            the error to set
+	 */
+	public void setError(Error error) {
+		this.error = error;
+	}
+
+	public String contactoToString(Contacto contacto) {
+		String emergenciaIndicator = Constantes.CADENA_VACIA, emergencia = Constantes.CADENA_VACIA;
+		if (contacto.getIdCategoria().equals(EnumCategoriaContacto.EMERGENCIA.getIdCategoria())) {
+			// Contacto de emergencia
+			emergenciaIndicator = properties.getProperty("CU1_LBL_EMERGENCIA");
+			emergencia += Constantes.COMA + contacto.getRelacion() + Constantes.ESPACIO + contacto.getEmergencia();
+		}
+		if (contacto.getIdTipo().equals(EnumTipoContacto.TELEFONO.getIdTipo())) {
+			// Telefono
+			String ext = (contacto.getContactoB() != null && !contacto.getContactoB().isEmpty())
+					? properties.getProperty("CU1_LBL_EXTENSION") : Constantes.CADENA_VACIA;
+			return String.format(properties.getProperty("MX.EDU.ELD.TELEPHONE_STRING"),
+					properties.getProperty("CUG3.1_LBL_TELEPHONE"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), ext, contacto.getContactoB(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.FAX.getIdTipo())) {
+			// Fax
+			String ext = (contacto.getContactoB() != null && !contacto.getContactoB().isEmpty())
+					? properties.getProperty("CU1_LBL_EXTENSION") : Constantes.CADENA_VACIA;
+			return String.format(properties.getProperty("MX.EDU.ELD.FAX_STRING"),
+					properties.getProperty("CUG3.1_LBL_FAX"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), ext, contacto.getContactoB(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.CELULAR.getIdTipo())) {
+			// Mobile
+			return String.format(properties.getProperty("MX.EDU.ELD.MOBILE_STRING"),
+					properties.getProperty("CUG3.1_LBL_MOBILE"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.EMAIL.getIdTipo())) {
+			// Email
+			return String.format(properties.getProperty("MX.EDU.ELD.EMAIL_STRING"),
+					properties.getProperty("CUG3.1_LBL_EMAIL"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.LINKEDIN.getIdTipo())) {
+			// Linkedin
+			return String.format(properties.getProperty("MX.EDU.ELD.LINKEDIN_STRING"),
+					properties.getProperty("CUG3.1_LBL_LINKEDIN"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.FACEBOOK.getIdTipo())) {
+			// Facebook
+			return String.format(properties.getProperty("MX.EDU.ELD.FACEBOOK_STRING"),
+					properties.getProperty("CUG3.1_LBL_FACEBOOK"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.TWITTER.getIdTipo())) {
+			// Twitter
+			return String.format(properties.getProperty("MX.EDU.ELD.TWITTER_STRING"),
+					properties.getProperty("CUG3.1_LBL_TWITTER"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else {
+			return Constantes.CADENA_VACIA;
+		}
+	}
+
+	public void clearError() {
+		this.error.clear();
+	}
+}

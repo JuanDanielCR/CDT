@@ -1,0 +1,10 @@
+$(function() {
+	
+	
+});
+
+
+		
+function cerrarMensajeAceptar(){
+	$.publish("closeDlgCancelar");	
+}

@@ -1,0 +1,306 @@
+@CHARSET "UTF-8";
+
+/*
+Estilos para el fondo, tamaño y marco de un formulario
+*/
+.form {
+	background-color: #FFFFFF;
+	border: 2px solid;
+	border-color: rgb(80, 0, 20);
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.form-min {
+	width: 50%;
+}
+
+.form-small {
+	width: 50%;
+}
+
+.form-medium {
+	width: 70%;
+}
+
+.form-large {
+	width: 90%;
+}
+
+.form-group {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+
+.form-group:last-child {
+	margin-bottom: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+/*
+Titulos y secciones
+*/
+.title {
+	margin: 0px 0px 20px 0px;
+	color: #590016;
+}
+
+fieldset.form-section {
+	border: 2px solid rgb(80, 0, 20) !important;
+	padding: 10px 20px 20px 20px !important;
+	margin: 20px auto !important;
+	-webkit-box-shadow: 0px 0px 0px 0px #500014;
+	box-shadow: 0px 0px 0px 0px #000;
+	border-radius: 10px;
+	color: #500014
+}
+
+div.outter-section {
+	margin: 20px auto !important;
+}
+
+div.form-section {
+    border: 2px solid rgb(80, 0, 20) !important;
+    border-radius: 10px;
+    box-shadow: 0 0 0 0 #000;
+    color: #500014;
+    margin: 0 0 20px !important;
+    padding: 0 20px 20px !important;
+    padding-top: 20px !important;
+}
+
+fieldset .dataTables_wrapper {
+	padding-top: 20px !important;
+}
+
+legend.form-section {
+	/*font-size: 1.2em !important;*/
+	font-size: medium;
+	font-weight: bold !important;
+	text-align: left !important;
+	width: auto;
+	padding: 0px 0px 0px 0px;
+	margin-bottom: 0px;
+	border-bottom: none;
+	color: #590016;
+}
+
+.section.first {
+	border-radius: 8px 8px 0px 0px;
+	margin: -20px -20px 20px -20px !important;
+}
+
+.section {
+	background-color: rgba(130, 26, 20, 0.4);
+	color: white;
+	text-align: left;
+	font-size: large;
+	font-weight: bold;
+	padding: 10px 10px 0px 10px;
+	margin: 0px -20px 20px -20px !important;
+}
+
+/*
+Botones
+*/
+.buttons {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.btn {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.btn-default-eld {
+	background-color: #9C002F;
+	background-image: linear-gradient(to bottom, #9C002F 0%, #590016 100%);
+	background-repeat: repeat-x;
+	text-shadow: none;
+	color: white !important;
+	border-color: #590016;
+}
+
+.btn-default-eld:active {
+	background-color: #9C002F !important;
+	/*background-image: linear-gradient(to top, #9C002F 0%, #590016 100%);
+	background-repeat: repeat-x;*/
+	color: white !important;
+}
+
+.btn-default-eld:hover {
+	background-color: #9C002F;
+	background-image: linear-gradient(to top, #9C002F 0%, #590016 100%);
+	background-repeat: repeat-x;
+	text-shadow: none;
+	color: white;
+	border-color: #590016;
+}
+
+.btn-default-eld-grid {
+	height: 70px !important;
+	vertical-align: middle !important;
+	display: table-cell;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	text-align: center;
+}
+
+a.btn-grid {
+	min-width: 80%;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center !important;
+}
+
+a.btn-grid>* {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto !important;
+	margin-bottom: auto !important;
+}
+
+/*
+Spinner
+*/
+.ui-spinner-input {
+	margin: 0px;
+}
+
+.ui-spinner.ui-widget-content {
+	border: none;
+}
+
+/*
+Datepicker
+*/
+.input-group-addon {
+	background-color: #9C002F;
+	border-color: #590016;
+	border: 1px 1px 1px 1px solid;
+}
+
+.glyphicon {
+	color: white;
+}
+
+.ui-datepicker-month, .ui-datepicker-year {
+	color: #590016;
+}
+
+/*
+Progressbar
+*/
+.ui-progressbar-value {
+	border-top: 0px;
+	border-bottom: 0px;
+	border-left: 0px;
+	margin-top: 0px !important;
+}
+
+.imagen-tarjetas {
+	max-height: 6em;
+	max-width: 6.5em;
+	padding-left: 1em;
+}
+
+/*LABEL*/
+.control-label {
+	padding-top: 0px !important;
+	padding-right: 5px;
+}
+
+.control-label:after {
+	content: ':';
+}
+
+.control-label ~ * {
+	padding-left: 5px;
+}
+
+.label-obligatorio:before {
+	content: '*';
+	color: red;
+}
+
+/****/
+.dropdown-submenu {
+	position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+	top: 0;
+	left: 100%;
+	margin-top: -6px;
+	margin-left: -1px;
+	-webkit-border-radius: 0 6px 6px 6px;
+	-moz-border-radius: 0 6px 6px;
+	border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+	display: block;
+}
+
+.dropdown-submenu>a:after {
+	display: block;
+	content: " ";
+	float: right;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+	border-width: 5px 0 5px 5px;
+	border-left-color: #ccc;
+	margin-top: 5px;
+	margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+	border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+	float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+	left: -100%;
+	margin-left: 10px;
+	-webkit-border-radius: 6px 0 6px 6px;
+	-moz-border-radius: 6px 0 6px 6px;
+	border-radius: 6px 0 6px 6px;
+}
+
+/* ---------- ESTILOS PARA LOS DIALOGS ---------- */
+.buttons-right {
+	margin-top: 20px;
+}
+
+.cell-full {
+	max-width: 1px;
+	width
+	=100%;
+}
+
+.cell-romper {
+	overflow: hidden;
+	white-space: nowwrap;
+	text-overflow: ellipsis;
+}
+
+.progress-step-eld {
+	height: 100px;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color:  #EFEFEF !important;
+}

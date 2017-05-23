@@ -1,0 +1,39 @@
+package mx.edu.eld.entrevistas.action;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Namespace("/entrevistas")
+@AllowedMethods({ "reprogramar" })
+public class GestionarListaAspirantesAct extends ActionSupport{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer idSel;
+	
+	public String index(){
+		return "index";
+	}
+	
+	public String reprogramar(){
+		return "reprogramar";
+	}
+	
+	public String show(){
+		return "show";
+	}
+
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+}

@@ -1,0 +1,76 @@
+$(function() {
+	var fhInicio;
+	var fhFinal;
+	var yI;
+	var yF;
+	var conjunto;
+	var conjunto2;
+	
+	/*
+	 * En esta parte se realiza la obtencion de la fecha desde el campo de inicio y fin de ciclo 
+	 */
+	
+conjunto=$("#valorFechaPasar").val();
+	
+	if(conjunto==null || conjunto==="Unavailable"){
+	fhInicio = $("#dpInicio").val().split("/");
+	fhFinal = $("#dpFin").val().split("/");
+
+	yI = fhInicio[2];
+	yF = fhFinal[2];
+	conjunto = yI + "-" + yF;
+	}
+		
+
+	$('#dpInicio').change(function() {
+		fhInicio = $("#dpInicio").val().split("/");
+		yI = fhInicio[2];
+		fhFinal=$("#dpFin").val().split("/");
+		yF = fhFinal[2];
+		if(yF==null){
+			conjunto2=yI+"-"+" ";
+			$("label#valorFecha").text(conjunto2);
+			$("#valorFechaPasar").val("");
+		}else{
+			if(yI<=yF){
+				conjunto2=yI+"-"+yF;
+			}else{
+				conjunto2="Invalido";
+			}
+			
+			$("label#valorFecha").text(conjunto2);
+			$("#valorFechaPasar").val(conjunto2);
+		}
+	});
+	
+	/*
+	 *  Esta funcion es lo mismo que la anterior solo que para el campo de fecha de termino el cual sus
+	 *  validaciones sera si la variable yI es nula o no lo es dependiendo de eso se pinta un resultado
+	 */	
+	$('#dpFin').change(function() {
+		fhInicio = $("#dpInicio").val().split("/");
+		yI = fhInicio[2];
+		fhFinal = $("#dpFin").val().split("/");
+		yF = fhFinal[2];
+		if(yI==null){
+			conjunto = " " + "-" + yF;
+			$("label#valorFecha").text(conjunto);
+			$("#valorFechaPasar").val("");
+		}else{
+			if(yI<=yF){
+				conjunto=yI+"-"+yF;
+			}else{
+				conjunto="Invalido";
+			}
+		$("label#valorFecha").text(conjunto);
+		
+			if(conjunto==="Invalido"){
+				$("#valorFechaPasar").val("");
+			}else{
+				$("#valorFechaPasar").val(conjunto);
+			}
+		}
+			
+	});
+
+});

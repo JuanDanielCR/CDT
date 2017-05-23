@@ -1,0 +1,124 @@
+/**
+ * 
+ */
+package mx.edu.eld.convocatoria.bs;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN4;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.edu.eld.convocatoria.dao.ConvocatoriaDao;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * @author
+ *
+ */
+@Service("convocatoriaBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaBs extends GenericBs<Convocatoria> {
+
+	@Autowired
+	private ConvocatoriaDao convocatoriaDao;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	@Autowired
+	private ReglaNegocioN4 reglaNegocioN4;
+
+	@Transactional(readOnly = true)
+	public Convocatoria obtenerConvocatoriaAnterior(Convocatoria convocatoria) {
+		return convocatoriaDao.obtenerConvocatoriaAnterior(convocatoria);
+	}
+
+	@Transactional(readOnly = true)
+	public Convocatoria obtenerConvocatoriaSuperior(Convocatoria convocatoria) {
+		return convocatoriaDao.obtenerConvocatoriaSuperior(convocatoria);
+	}
+
+	public boolean validarFechaConvocatoria(Ciclo ciclo) {
+		Date today = new Date();
+		return ((today.compareTo(ciclo.getInicio()) >= Numeros.CERO.getValor())
+				&& (today.compareTo(ciclo.getFin()) <= Numeros.CERO.getValor()))
+				|| today.compareTo(ciclo.getInicio()) < Numeros.CERO.getValor();
+	}
+	
+
+	/**
+	 * Valida la RN-N4 Ponderacion total de la convocatoria.
+	 * @param idSel
+	 * @return {Boolean} true si cumple la RN, false
+	 * en caso contrario
+	 */
+	public Boolean validarPonderaciones(Integer idSel) {	
+		return reglaNegocioN4.validate(idSel);		
+	}
+
+	/**
+	 * @return the convocatoriaDao
+	 */
+	public ConvocatoriaDao getConvocatoriaDao() {
+		return convocatoriaDao;
+	}
+
+	/**
+	 * @param convocatoriaDao
+	 *            the convocatoriaDao to set
+	 */
+	public void setConvocatoriaDao(ConvocatoriaDao convocatoriaDao) {
+		this.convocatoriaDao = convocatoriaDao;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	
+	/**
+	 * 
+	 * @return the reglaNegocioN4
+	 */
+	public ReglaNegocioN4 getReglaNegocioN4() {
+		return reglaNegocioN4;
+	}
+
+	/**
+	 * 
+	 * @param reglaNegocioN4
+	 * 			the reglaNegocioN4
+	 */
+	public void setReglaNegocioN4(ReglaNegocioN4 reglaNegocioN4) {
+		this.reglaNegocioN4 = reglaNegocioN4;
+	}
+
+	public void validarConfiguracion(Convocatoria model) throws Exception {
+		if(model.getNumeroEntrevistar() < model.getNumeroAceptar()){
+			throw new Exception();
+		}
+	}
+
+	
+	
+
+}

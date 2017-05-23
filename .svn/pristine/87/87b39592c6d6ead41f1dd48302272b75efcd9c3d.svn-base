@@ -1,0 +1,61 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Mapea la llave compuesta que identifica de forma única el pago de derechos
+ * para el proceso de admisión a la ELD.
+ * 
+ * @author Hermes
+ *
+ */
+@Embeddable
+public class PagoId implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la convocatoria
+	 */
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+	
+	/**
+	 * Identificador del aspirante
+	 */
+	@Column(name = "id_aspirante", nullable = false)
+	private Integer idAspirante;
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+}

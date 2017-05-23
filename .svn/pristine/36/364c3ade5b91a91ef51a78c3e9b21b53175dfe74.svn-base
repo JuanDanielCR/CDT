@@ -1,0 +1,156 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tad12_entrevista_rubro")
+public class EntrevistaRubro implements Modelo {
+
+	@EmbeddedId
+	private EntrevistaRubroId entrevistaRubroId;
+
+	/**
+	 * Id de la entrevista a realizar
+	 **/
+	@Column(name = "id_entrevista", updatable = false, insertable = false)
+	private Integer idEntrevista;
+
+	/**
+	 * id del rubro a evaluar
+	 **/
+	@Column(name = "id_rubro", updatable = false, insertable = false)
+	private Integer idRubro;
+
+	/**
+	 * calificacion obtenida por un aspirante en un determinado rubro de una
+	 * entrevista
+	 **/
+	@Column(name = "id_calificacion")
+	private Integer idCalificacion;
+
+	@ManyToOne
+	@JoinColumn(name = "id_calificacion", referencedColumnName = "id_calificacion", insertable = false, updatable = false)
+	private CalificacionEntrevista calificacionEntrevista;
+
+	@ManyToOne
+	@JoinColumn(name = "id_rubro", referencedColumnName = "id_rubro", insertable = false, updatable = false)
+	private RubroEntrevista rubroEntrevista;
+	
+	
+
+	public EntrevistaRubro(Integer idEntrevista) {
+		super();
+		this.idEntrevista = idEntrevista;
+	}
+
+	public EntrevistaRubro(EntrevistaRubroId entrevistaRubroId, Integer idEntrevista, Integer idRubro,
+			Integer idCalificacion) {
+		super();
+		this.entrevistaRubroId = entrevistaRubroId;
+		this.idEntrevista = idEntrevista;
+		this.idRubro = idRubro;
+		this.idCalificacion = idCalificacion;
+	}
+
+	public EntrevistaRubro() {
+		super();
+	}
+
+	/**
+	 * @return the entrevistaRubroId
+	 */
+	public EntrevistaRubroId getEntrevistaRubroId() {
+		return entrevistaRubroId;
+	}
+
+	/**
+	 * @param entrevistaRubroId
+	 *            the entrevistaRubroId to set
+	 */
+	public void setEntrevistaRubroId(EntrevistaRubroId entrevistaRubroId) {
+		this.entrevistaRubroId = entrevistaRubroId;
+	}
+
+	/**
+	 * @return the idEntrevista
+	 */
+	public Integer getIdEntrevista() {
+		return idEntrevista;
+	}
+
+	/**
+	 * @param idEntrevista
+	 *            the idEntrevista to set
+	 */
+	public void setIdEntrevista(Integer idEntrevista) {
+		this.idEntrevista = idEntrevista;
+	}
+
+	/**
+	 * @return the idRubro
+	 */
+	public Integer getIdRubro() {
+		return idRubro;
+	}
+
+	/**
+	 * @param idRubro
+	 *            the idRubro to set
+	 */
+	public void setIdRubro(Integer idRubro) {
+		this.idRubro = idRubro;
+	}
+
+	/**
+	 * @return the idCalificacion
+	 */
+	public Integer getIdCalificacion() {
+		return idCalificacion;
+	}
+
+	/**
+	 * @param idCalificacion
+	 *            the idCalificacion to set
+	 */
+	public void setIdCalificacion(Integer idCalificacion) {
+		this.idCalificacion = idCalificacion;
+	}
+
+	/**
+	 * @return the calificacionEntrevista
+	 */
+	public CalificacionEntrevista getCalificacionEntrevista() {
+		return calificacionEntrevista;
+	}
+
+	/**
+	 * @param calificacionEntrevista
+	 *            the calificacionEntrevista to set
+	 */
+	public void setCalificacionEntrevista(CalificacionEntrevista calificacionEntrevista) {
+		this.calificacionEntrevista = calificacionEntrevista;
+	}
+
+	/**
+	 * @return the rubroEntrevista
+	 */
+	public RubroEntrevista getRubroEntrevista() {
+		return rubroEntrevista;
+	}
+
+	/**
+	 * @param rubroEntrevista
+	 *            the rubroEntrevista to set
+	 */
+	public void setRubroEntrevista(RubroEntrevista rubroEntrevista) {
+		this.rubroEntrevista = rubroEntrevista;
+	}
+
+}

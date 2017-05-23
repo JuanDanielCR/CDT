@@ -1,0 +1,356 @@
+package mx.edu.eld.calendario.action;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+import com.sun.media.jfxmedia.logging.Logger;
+
+import mx.edu.eld.calendario.bs.ActividadBs;
+import mx.edu.eld.calendario.bs.exception.ActividadDuplicatedException;
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.edu.eld.calendario.mapeo.TipoActividad;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/calendario")
+@Results({ @Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"gestionar-actividad" }) })
+@AllowedMethods({"deleteConfirm" })
+public class GestionarGrupoActividadAct extends ActionSupportCDT implements ModelDriven<FaseActividad> {
+	
+	
+	/**
+	 * propiedad para obtener el id de la actividad con la que se esta trabajando 
+	 */
+	private Integer idSel;
+	
+	
+	/**
+	 * propiedad para obtener el modelo de actividad
+	 */
+	private FaseActividad model;
+	
+	
+	/*
+	 * propiedad para obtener la lista de actividades 
+	 */
+	private List<FaseActividad> listaActividades;
+	
+	
+	/*
+	 * propiedad para obtener el catalogo de tipos de actividades
+	 */
+	private List<TipoActividad> tiposActividades;
+	
+	
+	/*
+	 * propiedad que ayuda a guardar el nombre de la actividad que se esta editando
+	 */
+	private String nomActiEdit;
+	
+	
+	/*
+	 * esta propiedad guarda la verificacion que indica si una actividad es editable ono
+	 */
+	private Boolean editable;
+
+	
+	/**
+	 * proxy de negocio para operaciones de busqueda generales 
+	 */
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	
+	/*
+	 * proxy dao para trabajo con el modelo Actividad
+	 */
+	@Autowired
+	private ActividadBs actividadBs;
+	/**
+	 * 
+	 */
+	
+	private static final long serialVersionUID = 1L;
+
+	
+	/*
+	 * metodo index encargado de mostrar la lista de actividades, utilizando el proxy de negocio para ello
+	 */
+	public String index() {
+		// se listan las actividades
+		listaActividades = genericSearchBs.findAll(FaseActividad.class);
+		return INDEX;
+	}
+
+	
+	/*
+	 *metodo editNew encargado de obtener la lista del tipo de actividades, ademas de redirigir al formulario de creacion de actividades  
+	 *utilizando el proxy de negocio para ello 
+	 */
+	public String editNew() {
+		// se recuperan los tipos de actividades ya que es un combobox que debe
+		// estar lleno al crearse la vista
+		tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+		return EDITNEW;
+	}
+
+	
+	/*
+	 * metodo encargado de verificar que no existan errores de validaciones tanto en el modelo como validaciones de negocio
+	 * y encargado de realizar la persistencia de la actividad
+	 */
+	public void validateCreate() {
+		if (!hasErrors()) {
+			try {
+				actividadBs.guardar(model);
+			} catch (ActividadDuplicatedException e) {
+				Logger.logMsg(Logger.INFO, e.getMessage());
+				addFieldError("model.nombre", getText("MSG55", Arrays.asList(model.getNombre())));
+				tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+			}
+		} else {
+			tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+		}
+	}
+
+	
+	/*
+	 * metodo encargado de redirigir al index indicando el status de la operacion de persistencia
+	 */
+	public String create() {
+		addActionMessage(getText("MSG1", Arrays.asList(getText("IU1.1-9_LBL1"), getText("IU1.1-9_LBL2"))));
+		return SUCCESS;
+	}
+
+	
+	/*
+	 * metodo encargado de obtener el catalogo de tipo de actividades y de facilitar los datos de la actividad seleccionada
+	 */
+	public String edit() {
+		tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+		// Se subio a session el nombre de la actividad, para compararlo con el
+		// nuevo nombre de la
+		// actividad en caso de de que sea actualizado, para validar que el
+		// nuevo nombre no exista
+		setNomActiEdit(model.getNombre());
+		return EDIT;
+	}
+
+	
+	/*
+	 * metodo encargado de realizar la validacion de modelo y de negocio cuando se esta editando una actividad
+	 */
+	public void validateUpdate() {
+
+		if (!hasErrors()) {
+			try {
+				// Valido que la actividad a editar no exista ya en la BD, y
+				// esta validacion solo se aplica en caso de que el nombre haya
+				// sido modificado
+				actividadBs.editar(model.getNombre(), getNomActiEdit());
+			} catch (ActividadDuplicatedException e) {
+				Logger.logMsg(Logger.INFO, e.getMessage());
+				tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+				addFieldError("model.nombre", getText("MSG55", Arrays.asList(model.getNombre())));
+			}
+		} else {
+			tiposActividades = genericSearchBs.findAll(TipoActividad.class);
+		}
+	}
+
+	
+	/*
+	 * metodo encargado de realizar la actualizacion de informacion de la actividad, utilizando el proxy de negocio para ello
+	 * */
+	public String update() {
+		clearActionErrors();
+		clearErrorsAndMessages();
+		actividadBs.update(model);
+		return SUCCESS;
+	}
+
+	
+	/*
+	 * metodo encargado de solicitar confirmacion al usuario para realizar la eliminacion de la actividad
+	 * */
+	public String deleteConfirm() {
+		return DELETECONFIRM;
+	}
+
+	
+	/*
+	 * metodo encargado de verificar que no existan errores a la hora de la eliminacion de la actividad
+	 */
+	public void validateDestroy() {
+		if(hasErrors()){
+			Logger.logMsg(Logger.ERROR, getActionErrors().toString());
+			Logger.logMsg(Logger.ERROR, getActionMessages().toString());
+			Logger.logMsg(Logger.ERROR, getFieldErrors().toString());
+		}
+	}
+
+	
+	/*
+	 * metodo encargado de realizar el borrado de la actividad, utilizando el proxy de negocio para ello
+	 */
+	public String destroy(){
+		actividadBs.borrar(model);
+		addActionMessage(getText("MSG1", Arrays.asList(getText("IU1.1-11_LBL1"),getText("IU1.1-11_LBL2"))));
+		return SUCCESS;
+	}
+
+
+	/**
+	 * @return the idSel
+	 */
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+
+	/**
+	 * @param idSel the idSel to set
+	 */
+	public void setIdSel(Integer idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(FaseActividad.class, idSel);
+		} else {
+			model = new FaseActividad();
+		}
+		this.idSel = idSel;
+	}
+
+	/**
+	 * @return the model
+	 */
+	@Override
+	@VisitorFieldValidator
+	public FaseActividad getModel() {
+		if (model == null) {
+			model = new FaseActividad();
+		}
+		return model;
+	}
+
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(FaseActividad model) {
+		this.model = model;
+	}
+
+
+	/**
+	 * @return the listaActividades
+	 */
+	public List<FaseActividad> getListaActividades() {
+		return listaActividades;
+	}
+
+
+	/**
+	 * @param listaActividades the listaActividades to set
+	 */
+	public void setListaActividades(List<FaseActividad> listaActividades) {
+		this.listaActividades = listaActividades;
+	}
+
+
+	/**
+	 * @return the tiposActividades
+	 */
+	public List<TipoActividad> getTiposActividades() {
+		return tiposActividades;
+	}
+
+
+	/**
+	 * @param tiposActividades the tiposActividades to set
+	 */
+	public void setTiposActividades(List<TipoActividad> tiposActividades) {
+		this.tiposActividades = tiposActividades;
+	}
+
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+
+	/**
+	 * @param genericSearchBs the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+
+	/**
+	 * @return the actividadBs
+	 */
+	public ActividadBs getActividadBs() {
+		return actividadBs;
+	}
+
+
+	/**
+	 * @return the nomActiEdit
+	 */
+	public String getNomActiEdit() {
+		return nomActiEdit;
+	}
+
+
+	/**
+	 * @param nomActiEdit the nomActiEdit to set
+	 */
+	public void setNomActiEdit(String nomActiEdit) {
+		this.nomActiEdit = nomActiEdit;
+	}
+
+
+	/**
+	 * @return the editable
+	 */
+	public Boolean getEditable() {
+		return editable;
+	}
+
+
+	/**
+	 * @param editable the editable to set
+	 */
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+	}
+
+
+	/**
+	 * @param actividadBs the actividadBs to set
+	 */
+	public void setActividadBs(ActividadBs actividadBs) {
+		this.actividadBs = actividadBs;
+	}
+
+	/**
+	 * @param actividadBs
+	 *            the actividadBs to set
+	 */
+	
+
+}

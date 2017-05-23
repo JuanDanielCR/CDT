@@ -1,0 +1,23 @@
+package mx.edu.eld.entrevistas.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+@Namespace("/entrevistas")
+public class GestionarCalendarizacionEntrevistaAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public String index(){
+		return INDEX;
+	}
+	
+	public String show(){
+		return SHOW;
+	}
+
+}

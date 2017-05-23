@@ -1,0 +1,27 @@
+var idPeriodoCriterio = "";
+
+$(function() {
+
+	dataTableEMETH.createResponsiveDataTable("tblCriterios");
+	dataTableEMETH.createSortedDataTable("tblPeriodos", 2, "desc");
+
+	$('.clockpicker').clockpicker();
+
+	$("#submitForm").click(
+			function() {
+				var action = $("#hdnRutaContexto").val()
+						+ "/convocatoria/gestionar-periodo-criterio/"
+						+ idPeriodoCriterio;
+				$("#frmEliminarPeriodo").prop("action", action);
+				$("#frmEliminarPeriodo").submit();
+			});
+});
+
+function openDlgDelete(_idPeriodoCriterio) {
+	idPeriodoCriterio = _idPeriodoCriterio;
+	$.publish('showDlgDelete');
+}
+
+function closeDeleteDlg() {
+	$.publish('closeDlgDelete');
+}

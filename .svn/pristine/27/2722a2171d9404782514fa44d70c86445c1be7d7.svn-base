@@ -1,0 +1,182 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Un tipo de pago es una forma concreta de realizar un pago, por ejemplo: pago
+ * con tarjeta de crédito visa, mastercard, oxxo, etc. Un tipo de pago deberá
+ * pertenecer a una {@link TipoPago} de pago.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tib10_tipo_pago")
+public class TipoPago implements Catalogo {
+	/**
+	 * Identificador del tipo de pago
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_tipo")
+	private Integer id;
+
+	/**
+	 * Identificador de la categoría a la que pertenece el tipo de pago
+	 */
+	@Column(name = "id_categoria")
+	private Integer idCategoria;
+
+	/**
+	 * Nombre del tipo de pago
+	 */
+	@Column(name = "nb_tipo")
+	private String nombre;
+
+	/**
+	 * Descripción del tipo de pago
+	 */
+	@Column(name = "ds_tipo")
+	private String descripcion;
+
+	/**
+	 * Estadod el elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * {@link CategoriaPago} a la que pertenece el tipo de pago
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", insertable = false, updatable = false)
+	private CategoriaPago categoria;
+
+	public enum tipoPagoEnum {
+		SPEI(1, "SPEI"), AMERICANEXPRESS(2, "American Express"), VISA(3, "Visa"), MASTERCARD(4, "Master Card"), OXXO(5,
+				"Oxxo");
+		private Integer tipo;
+		private String nombre;
+
+		private tipoPagoEnum(Integer tipo, String nombre) {
+			this.tipo = tipo;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the tipo
+		 */
+		public Integer getTipo() {
+			return tipo;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idCategoria
+	 */
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	/**
+	 * @param idCategoria
+	 *            the idCategoria to set
+	 */
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	/**
+	 * @return the categoria
+	 */
+	public CategoriaPago getCategoria() {
+		return categoria;
+	}
+
+	/**
+	 * @param categoria
+	 *            the categoria to set
+	 */
+	public void setCategoria(CategoriaPago categoria) {
+		this.categoria = categoria;
+	}
+}

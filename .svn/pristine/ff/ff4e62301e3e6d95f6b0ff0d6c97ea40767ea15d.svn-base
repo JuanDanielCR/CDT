@@ -1,0 +1,109 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+/**
+ * Abstrae el modelo para el mapeo de un día con base en los días de la semana.
+ * El primer día de la semana será el Domingo y su identificador será el 1. De
+ * igual manera, el último día de la semana será el Sábado y su identificador
+ * será el 7.
+ * 
+ * @author hermes
+ */
+
+@Entity
+@Table(name = "tib08_dia")
+public class Dia {
+	/**
+	 * Identificador del elemento del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_dia")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catálogo
+	 */
+	@Column(name = "nb_dia")
+	private String nombre;
+
+	/**
+	 * Descripción del elemento del catálogo
+	 */
+	@Column(name = "ds_dia")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

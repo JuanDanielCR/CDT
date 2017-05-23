@@ -1,0 +1,61 @@
+/**
+ * 
+ */
+package mx.edu.eld.bs.rules;
+
+import java.io.Serializable;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * @author Miguel Duarte
+ *
+ */
+@Service("reglaNegocioN48")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN48 implements ReglaNegocio {
+	/**
+	 * Dao generico utilizado para em metodo unicidad
+	 */
+	@Autowired
+	private GenericDao genericDao;
+
+	/**
+	 * Verifica  la unicidad del modelo por la  propiedad  especificada por medio del metodo unicidad de GenericDao.
+	 * @param clazz
+	 *            {Class} Clase del modelo.
+	 * @param propiedad
+	 *            {String} Propiedad a validar.
+	 * @param valor
+	 *            {Object} Objeto a validar.
+	 * @param id
+	 *            {Serializable} Id del modelo a validar, se utiliza en caso de
+	 *            modificaciones en el modelo.
+	 * @return {Boolean} True si la propiedad ya persisten false si no persiste.
+	 */
+	public <C extends Modelo> boolean validate(Class<C> clazz, String propiedad, Object valor, Serializable id) {
+		return genericDao.unicidad(clazz, propiedad, valor, id);
+	}
+
+	/**
+	 * @return the genericDao
+	 */
+	public GenericDao getGenericDao() {
+		return genericDao;
+	}
+
+	/**
+	 * @param genericDao
+	 *            the genericDao to set
+	 */
+	public void setGenericDao(GenericDao genericDao) {
+		this.genericDao = genericDao;
+	}
+
+}

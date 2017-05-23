@@ -1,0 +1,258 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Formula;
+
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae el modelo de negocio que permite a la ELD definir y acotar las
+ * actividades que se realizarán durante el periodo escolar a desarrollar. Por
+ * lo tanto, las actividades a desarrollar durante el periodo escolar están
+ * enmarcadas dentro de un ciclo.
+ * 
+ * Además, no deberán existir ciclos escolares registrados en el sistema en los
+ * cuales se tengan traslapes. Es decir ca.inicio<=cb.fin && ca.fin>=cb.inicio
+ * debe ser falsa.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca01_ciclo")
+public class Ciclo implements Modelo {
+	/**
+	 * Identificador del ciclo
+	 */
+	@Id
+	@SequenceGenerator(name = "tca01_ciclo_id_ciclo_seq", sequenceName = "tca01_ciclo_id_ciclo_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tca01_ciclo_id_ciclo_seq")
+	@Column(name = "id_ciclo")
+	private Integer id;
+
+	/**
+	 * Estado en el que se encuentra el ciclo escolar
+	 */
+	@Column(name = "id_estatus")
+	private Integer idEstatus;
+
+	/**
+	 * Nombre único del ciclo escolar
+	 */
+	@Column(name = "nb_ciclo")
+	private String nombre;
+
+	/**
+	 * Fecha de inicio del ciclo escolar.
+	 */
+	@Column(name = "fh_inicio")
+	private Date inicio;
+
+	/**
+	 * Fecha de termino del ciclo escolar
+	 */
+	@Column(name = "fh_fin")
+	private Date fin;
+
+	/**
+	 * Fecha de publicación del calendario de actividades del ciclo escolae.
+	 */
+	@Column(name = "fh_publicacion")
+	private Date publicacion;
+
+	// TODO: Documentar, revisar si el nombre de la propiedad es correcto (debe
+	// ser eliminable)
+	// TODO: La propiedad eliminable tiene logica si me responde con true o
+	// false, por lo que deberia ser boolean, por lo cual se sugiere cambiar el
+	// query por el sitiente: SELECT COUNT(* ) as eliminable, CASE WHEN
+	// eliminable>0 THEN false ELSE false END FROM tca07_actividad a WHERE
+	// a.id_ciclo=id_ciclo;
+	@Formula(value = "(SELECT count(*) <= 0 from tca11_ciclo_actividad a where a.id_ciclo =id_ciclo)")
+	private Boolean eliminable;
+
+	// TODO: Documentar
+	@ManyToOne
+	@JoinColumn(name = "id_estatus", referencedColumnName = "id_estatus", insertable = false, updatable = false)
+	private EstatusCiclo estatus;
+
+	// TODO: Documentar, revisar si el nombre de la propiedad es correcto
+	@OneToMany
+	@JoinColumn(name = "id_ciclo", referencedColumnName = "id_ciclo", insertable = false, updatable = false)
+	private List<FaseActividad> listActividades;
+
+	public Ciclo() {
+		super();
+	}
+
+	public Ciclo(Integer id, Integer idEstatus, String nombre, Date inicio, Date fin, Date publicacion) {
+		this.id = id;
+		this.idEstatus = idEstatus;
+		this.nombre = nombre;
+		this.inicio = inicio;
+		this.fin = fin;
+		this.publicacion = publicacion;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idEstatus
+	 */
+	public Integer getIdEstatus() {
+		return idEstatus;
+	}
+
+	/**
+	 * @param idEstatus
+	 *            the idEstatus to set
+	 */
+	public void setIdEstatus(Integer idEstatus) {
+		this.idEstatus = idEstatus;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(type = ValidatorType.FIELD, message = "Default message") })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the inicio
+	 */
+	@Validations(requiredFields = { @RequiredFieldValidator(type = ValidatorType.FIELD, key = "Campo requerido") })
+	public Date getInicio() {
+		return inicio;
+	}
+
+	/**
+	 * @param inicio
+	 *            the inicio to set
+	 */
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	/**
+	 * @return the fin
+	 */
+	@Validations(requiredFields = { @RequiredFieldValidator(type = ValidatorType.FIELD, key = "Campo requerido") })
+	public Date getFin() {
+		return fin;
+	}
+
+	/**
+	 * @param fin
+	 *            the fin to set
+	 */
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
+
+	/**
+	 * @return the publicacion
+	 */
+	@Validations(requiredFields = { @RequiredFieldValidator(type = ValidatorType.FIELD, key = "Campo requerido") })
+	public Date getPublicacion() {
+		return publicacion;
+	}
+
+	/**
+	 * @param publicacion
+	 *            the publicacion to set
+	 */
+	public void setPublicacion(Date publicacion) {
+		this.publicacion = publicacion;
+	}
+
+	public List<FaseActividad> getListActividades() {
+		return listActividades;
+	}
+
+	public void setListActividades(List<FaseActividad> listActividades) {
+		this.listActividades = listActividades;
+	}
+
+	/**
+	 * @return the eliminable
+	 */
+	public Boolean getEliminable() {
+		return eliminable;
+	}
+
+	/**
+	 * @param eliminable
+	 *            the eliminable to set
+	 */
+	public void setEliminable(Boolean eliminable) {
+		this.eliminable = eliminable;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public EstatusCiclo getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(EstatusCiclo estatus) {
+		this.estatus = estatus;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Ciclo [id=" + id + ", idEstatus=" + idEstatus + ", nombre=" + nombre + ", inicio=" + inicio + ", fin="
+				+ fin + ", publicacion=" + publicacion + "]";
+	}
+
+}

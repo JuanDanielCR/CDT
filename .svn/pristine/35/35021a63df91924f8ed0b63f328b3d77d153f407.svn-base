@@ -1,0 +1,99 @@
+package mx.edu.eld.admision.bs.exception;
+
+public class InfEscolarRegexException extends Exception{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public enum campoErroneo{
+		NOMBRE_ESCUELA(1);
+		
+		private Integer id;
+		
+		private campoErroneo(Integer id){
+			this.id = id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+	}
+	
+	private campoErroneo campoErroneo;
+
+	/**
+	 * @param campoErroneo
+	 */
+	public InfEscolarRegexException(campoErroneo campoErroneo) {
+		super();
+		this.campoErroneo = campoErroneo;
+	}
+	
+	/**
+	 * 
+	 */
+	public InfEscolarRegexException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @param message
+	 * @param cause
+	 * @param enableSuppression
+	 * @param writableStackTrace
+	 */
+	public InfEscolarRegexException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public InfEscolarRegexException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @param message
+	 */
+	public InfEscolarRegexException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @param cause
+	 */
+	public InfEscolarRegexException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public campoErroneo getCampoErroneo() {
+		return campoErroneo;
+	}
+
+	public void setCampoErroneo(campoErroneo campoErroneo) {
+		this.campoErroneo = campoErroneo;
+	}	
+
+}

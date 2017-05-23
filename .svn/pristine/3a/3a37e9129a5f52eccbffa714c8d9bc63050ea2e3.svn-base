@@ -1,0 +1,273 @@
+var minTime;
+var maxTime;
+var horaMinTime;
+var horaMaxTime;
+var minClassTime;
+var maxClassTime;
+var intervalo;
+var formatoIntervalo;
+var idCoach;
+var eventos = new Array();
+var MSG2;
+var MSG46;
+var MSGRango;
+var MSGRangoHoras;
+var MSGTraslape;
+
+$(function() {
+	eventos = new Array();
+	horarioJson = $("#hdnHorario").val();
+	if (horarioJson != null && horarioJson != undefined && horarioJson != "") {
+		eventos = JSON.parse(horarioJson);
+	}
+	$("#btnAddEvent").bind("click", agregarEvento);
+	$("#btnCancelAddEvent").bind("click", cancelarAgregarEvento);
+	$("#btnRemoveEvent").bind("click", eliminarEvento);
+	$("#btnCancelRemoveEvent").bind("click", cancelarEliminarEvento);
+	idCoach = $("#hdnIdCoach").val();
+	var dpk = $(".form-group.has-error.has-feedback");
+	if (dpk.length > 0) {
+		dpk.removeClass("has-error");
+		dpk.removeClass("has-feedback");
+		dpk.find(".glyphicon.glyphicon-remove.form-control-feedback").remove();
+		dpk.find(".help-block.alert-danger").remove();
+		dpk.find(".input-group-addon").addClass("error");
+	}
+	minTime = $("#hdnMinTime").val();
+	maxTime = $("#hdnMaxTime").val();
+	horaMinTime = crearHora(minTime);
+	horaMaxTime = crearHora(maxTime);
+	minClassTime = parseInt($("#hdnMinClassTime").val());
+	maxClassTime = parseInt($("#hdnMaxClassTime").val());
+	intervalo = $("#hdnIntervalo").val();
+	formatoIntervalo = $("#hdnFormatoIntervalo").val();
+	var btnAdd = $("#hdnAdd").val();
+	var btnDelete = $("#hdnDelete").val();
+	var lblHeaderKey = $("#hdnHeaderKey").val();
+	var lblHeaderValue = $("#hdnHeaderValue").val();
+	MSG2 = $("#hdnMSG2").val();
+	MSG46 = $("#hdnMSG46").val();
+	MSGRango = $("#hdnMSGRango").val();
+	MSGRangoHoras = $("#hdnMSGRangoHoras").val();
+	MSGTraslape = $("#hdnMSGTraslape").val();
+	$("#calendar")
+			.fullCalendar(
+					{
+						locale : 'es',
+						minTime : minTime,
+						maxTime : maxTime,
+						defaultView : 'agendaWeek',
+						slotDuration : intervalo,
+						slotLabelFormat : formatoIntervalo,
+						slotEventOverlap : false,
+						allDaySlot : false,
+						columnFormat : 'ddd',
+						editable : false,
+						events : eventos,
+						header : {
+							left : '',
+							center : '',
+							right : 'addEvent removeEvent'
+						},
+						customButtons : {
+							addEvent : {
+								text : btnAdd,
+								click : function() {
+									$("#dlgAddEvent").removeClass("hidden");
+									$.publish("showNewEventDialog");
+								}
+							},
+							removeEvent : {
+								text : btnDelete,
+								click : function() {
+									$("#slcEventos").remove();
+									var select = $(
+											'<select id="slcEventos" class="form-control">')
+											.appendTo('#divEliminarEvento');
+									select.append($("<option>").attr('value',
+											lblHeaderKey).text(lblHeaderValue));
+									$(eventos)
+											.each(
+													function() {
+														var text = $(
+																"#slcDia option[value="
+																		+ (this.idDia + 1)
+																		+ "]")
+																.text();
+														select
+																.append($(
+																		"<option>")
+																		.attr(
+																				'value',
+																				this.id)
+																		.text(
+																				text
+																						+ " - "
+																						+ this.title));
+													});
+									$("#dlgRemoveEvent").removeClass("hidden");
+									$.publish("showRemoveEventDialog");
+								}
+							}
+						},
+						eventResize : function(event, delta, revertFunc) {
+							alert(event.title + " - " + event.id
+									+ " end is now " + event.end.format());
+							if (!confirm("is this okay?")) {
+								revertFunc();
+							}
+						}
+					});
+
+});
+
+function agregarEvento() {
+	var start = $("#dpkInicio").val();
+	var end = $("#dpkFin").val();
+	var day = $("#slcDia").val() - 1;
+	if (validarFormularioAgregar(day, start, end)) {
+		var evento = new Object({
+			id : new String(eventos.length + 1),
+			idHorario : new String(eventos.length + 1),
+			idDia : new String(day),
+			start : start,
+			end : end,
+			dow : [ day ]
+		});
+		eventos.push(evento);
+		$('#calendar').fullCalendar('renderEvent', evento);
+		$.publish("closeNewEventDialog");
+		limpiarFormulario();
+	}
+}
+
+function cancelarAgregarEvento() {
+	$.publish("closeNewEventDialog");
+	limpiarFormulario();
+}
+
+function eliminarEvento() {
+	var idEvento = $("#slcEventos").val();
+	$('#calendar').fullCalendar('removeEvents', idEvento);
+	var i = 0;
+	for (var x = 0; x < eventos.length; x++) {
+		if (idEvento == eventos[x].id) {
+			i = x;
+			break;
+		}
+	}
+	eventos.splice(i, 1);
+	$.publish("closeRemoveEventDialog");
+}
+
+function cancelarEliminarEvento() {
+	$.publish("closeRemoveEventDialog");
+}
+
+function guardar() {
+	// var eventosJSON = JSON.stringify(eventos);
+	// $("#hdnHorario").val(eventosJSON);
+	// var frmHorario = $("#frmRegistrarHorario");
+	frmHorario.submit();
+}
+
+function validarFormularioAgregar(day, start, end) {
+	var listErrores = {};
+	var keys = new Array();
+	var valido = true;
+	if (!(day != null && day != undefined && day >= 0)) {
+		keys.push("idDia");
+		listErrores.idDia = [ MSG2 ];
+		$("#slcDia").addClass("field-error");
+		valido = false;
+	} else {
+		$("#slcDia").removeClass("field-error");
+	}
+	var fechaValida = true;
+	if (!(start != null && start != undefined && start != "")) {
+		keys.push("dpkInicio");
+		listErrores.dpkInicio = [ MSG2 ];
+		$("#dpkInicio").addClass("field-error");
+		valido = false;
+		fechaValida = false;
+	} else {
+		$("#dpkInicio").removeClass("field-error");
+	}
+	if (!(end != null && end != undefined && end != "")) {
+		keys.push("dpkFin");
+		listErrores.dpkFin = [ MSG2 ];
+		$("#dpkFin").addClass("field-error");
+		valido = false;
+		fechaValida = false;
+	} else {
+		$("#dpkFin").removeClass("field-error");
+	}
+	if (fechaValida) {
+		var horaInicio = crearHora($("#dpkInicio").val());
+		var horaFin = crearHora($("#dpkFin").val());
+		if (horaInicio < horaMinTime || horaInicio > horaMaxTime) {
+			keys.push("dpkInicio");
+			listErrores.dpkInicio = [ MSGRangoHoras ];
+			valido = false;
+		}
+		if (horaFin < horaMinTime || horaFin > horaMaxTime) {
+			keys.push("dpkFin");
+			listErrores.dpkFin = [ MSGRangoHoras ];
+			valido = false;
+		}
+		if (horaInicio > horaFin) {
+			keys.push("dpkFin");
+			listErrores.dpkFin = [ MSG46 ];
+			valido = false;
+		} else {
+			var diferencia = horaFin - horaInicio;
+			diferencia = diferencia / 1000 / 60;
+			if (!(diferencia >= minClassTime && diferencia <= maxClassTime)) {
+				keys.push("dpkFin");
+				listErrores.dpkFin = [ MSGRango ];
+				valido = false;
+			}
+		}
+		if (valido) {
+			var i = 0;
+			for (var j = 0; j < eventos.length; j++) {
+				var eIdDia = eventos[j].idDia;
+				var eHoraInicio = crearHora(eventos[j].start);
+				var eHoraFin = crearHora(eventos[j].end);
+				if (eventos[j].idDia == day && eHoraInicio >= horaInicio
+						&& eHoraInicio <= horaFin && eHoraFin >= horaInicio
+						&& eHoraFin <= horaFin) {
+					keys.push("dpkFin");
+					listErrores.dpkFin = [ MSGTraslape ];
+					valido = false;
+				}
+			}
+		}
+
+	}
+	if (!valido) {
+		var error = {
+			"keys" : keys,
+			"listErrores" : listErrores
+		}
+		gestionarErrores(error, "", "frmAgregarEvento")
+	}
+	return valido;
+}
+
+function limpiarFormulario() {
+	$("#slcDia").removeClass("field-error");
+	$("#slcDia").val(-1);
+	$("#dpkInicio").removeClass("field-error");
+	$("#dpkInicio").val("");
+	$("#dpkFin").removeClass("field-error");
+	$("#dpkFin").val("");
+	limpiarErrores("frmAgregarEvento");
+}
+
+function crearHora(horaString) {
+	var hora = new Date();
+	var horaSplit = horaString.split(":");
+	hora.setHours(parseInt(horaSplit[0]), parseInt(horaSplit[1]), 0, 0);
+	return hora;
+}

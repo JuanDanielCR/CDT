@@ -1,0 +1,135 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+/**
+ * Abstrae el catálogo de calificaciones que se pueden asignar a los distintos
+ * {@link RubroEntrevista}.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tad11_calificacion_entrevista")
+public class CalificacionEntrevista {
+	/**
+	 * Identificador del elemento del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "tad11_calificacion_entrevista_id_calificacion_seq", sequenceName = "tad11_calificacion_entrevista_id_calificacion_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad11_calificacion_entrevista_id_calificacion_seq")
+	@Column(name = "id_calificacion")
+	private Integer id;
+
+
+	/**
+	 * Valor cuantitativo que pondera la percepción del entrevistador
+	 */
+	@Column(name = "nu_calificacion")
+	private Integer calificacion;
+	
+	/**
+	 * descripcion del elemento del catálogo
+	 */
+	@Column(name = "ds_calificacion")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_calificacion")
+	private Boolean activo;
+
+	public enum calificacionEntrevistaEnum{
+		CERO(0,"Cero"),UNO(1,"Uno"),DOS(2,"Dos"),TRES(3,"Tres"),CUATRO(4,"CUATRO"),CINCO(5,"Cinco"),SEIS(6,"Seis")
+		,SIETE(7,"Siete"),OCHO(8,"Ocho"),NUEVE(9,"Nueve"),DIEZ(10,"Diez");
+		
+		private Integer numero;
+        private String nombre;
+        
+		private calificacionEntrevistaEnum(Integer numero, String nombre) {
+			this.numero = numero;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the numero
+		 */
+		public Integer getNumero() {
+			return numero;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * 
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the calificacion
+	 */
+	public Integer getCalificacion() {
+		return calificacion;
+	}
+
+	/**
+	 * @param calificacion
+	 *            the calificacion to set
+	 */
+	public void setCalificacion(Integer calificacion) {
+		this.calificacion = calificacion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

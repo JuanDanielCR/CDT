@@ -1,0 +1,267 @@
+/**
+ * 
+ */
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Informacion escolar de un aspirante, contiene el nombre de la escuela, si es
+ * nacional o extranjera, las materias que adeuda y el promedio obtenido
+ * 
+ * @author Ricardo
+ *
+ */
+
+@Entity
+@Table(name = "tad06_informacion_escolar")
+public class InformacionEscolar implements Modelo {
+
+	/**
+	 * Identificador de la informacion escolar de un aspirante
+	 */
+	@Id
+	@SequenceGenerator(name = "tad06_informacion_escolar_id_informacion_seq", sequenceName = "tad06_informacion_escolar_id_informacion_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad06_informacion_escolar_id_informacion_seq")
+	@Column(name = "id_informacion")
+	private Integer id;
+
+	/**
+	 * Identificador del aspirante
+	 **/
+	@Column(name = "id_aspirante")
+	private Integer idAspirante;
+
+	/**
+	 * identificador del nivel escolar
+	 **/
+	@Column(name = "id_nivel")
+	private Integer idNivel;
+
+	/**
+	 * Nombre de la escuela en la que el aspirante concluyo los estudios de un
+	 * cierto nivel academico
+	 **/
+	@Column(name = "tx_nombre")
+	private String nombre;
+
+	/**
+	 * Estatus que indica si el aspirante realizo sus estudios dentro del
+	 * territorio mexicano o en el extranjero
+	 **/
+	@Column(name = "st_nacional")
+	private Boolean nacional;
+
+	/**
+	 * Estatus que indica si la escuela es privada o publica
+	 **/
+	@Column(name = "st_oficial")
+	private Boolean oficial;
+
+	/**
+	 * Enunciado que contiene las materias que un {@link Aspirante} adeuda en el
+	 * nivel especificado
+	 **/
+	@Column(name = "tx_adeudo")
+	private String adeudo;
+
+	/**
+	 * Promedio obtenido por el aspirante, debe ser mayor a 8 para ser candidato
+	 * a ingresar a la ELD
+	 **/
+	@Column(name = "nu_promedio")
+	private Float promedio;
+
+	@ManyToOne
+	@JoinColumn(name = "id_nivel", referencedColumnName = "id_nivel", insertable = false, updatable = false)
+	private Nivel nivel;
+
+	/**
+	 * TODO: Documentar
+	 */
+	public InformacionEscolar() {
+		super();
+	}
+
+	/**
+	 * TODO: Documetar
+	 * 
+	 * @param id
+	 * @param idAspirante
+	 * @param idNivel
+	 * @param nombre
+	 * @param nacional
+	 * @param oficial
+	 * @param adeudo
+	 * @param promedio
+	 */
+	public InformacionEscolar(Integer id, Integer idAspirante, Integer idNivel, String nombre, Boolean nacional,
+			Boolean oficial, String adeudo, Float promedio) {
+		super();
+		this.id = id;
+		this.idAspirante = idAspirante;
+		this.idNivel = idNivel;
+		this.nombre = nombre;
+		this.nacional = nacional;
+		this.oficial = oficial;
+		this.adeudo = adeudo;
+		this.promedio = promedio;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idNivel
+	 */
+	public Integer getIdNivel() {
+		return idNivel;
+	}
+
+	/**
+	 * @param idNivel
+	 *            the idNivel to set
+	 */
+	public void setIdNivel(Integer idNivel) {
+		this.idNivel = idNivel;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "nombre", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "^([a-zA-Z0-9ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ# \\$%&()]*)$", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+							@StringLengthFieldValidator(maxLength = "100", trim = true, message = "%{getText('MSG41',{'100'})}"),
+							@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the nacional
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG39')}") })
+	public Boolean getNacional() {
+		return nacional;
+	}
+
+	/**
+	 * @param nacional
+	 *            the nacional to set
+	 */
+	public void setNacional(Boolean nacional) {
+		this.nacional = nacional;
+	}
+
+	/**
+	 * @return the oficial
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG39')}") })
+	public Boolean getOficial() {
+		return oficial;
+	}
+
+	/**
+	 * @param oficial
+	 *            the oficial to set
+	 */
+	public void setOficial(Boolean oficial) {
+		this.oficial = oficial;
+	}
+
+	/**
+	 * @return the adeudo
+	 */
+
+	@Validations(regexFields = {
+			@RegexFieldValidator(regex = "^([a-zA-Z 0-9 ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ#\\-$%&() ])$", type = ValidatorType.FIELD, trim = true, key = "MSG40") }, stringLengthFields = {
+					@StringLengthFieldValidator(maxLength = "500", trim = true, message = "%{getText('MSG41',{'500'})}"),
+					@StringLengthFieldValidator(minLength = "1", trim = true, message = "%{getText('MSG41',{'1'})}") })
+	public String getAdeudo() {
+		return adeudo;
+	}
+
+	/**
+	 * @param adeudo
+	 *            the adeudo to set
+	 */
+	public void setAdeudo(String adeudo) {
+		this.adeudo = adeudo;
+	}
+
+	/**
+	 * @return the promedio
+	 */
+	// Necesita manejarse una exepcion en caso de que se envie una cifra seguida
+	// de un punto
+	// debe validarse en codigo que la cifra se encuentre en un rango de 0 - 10
+	@Validations(regexFields = {
+			@RegexFieldValidator(regex = "([+-]?([0-9]*[.])?[0-9]+){1}", type = ValidatorType.FIELD, trim = true, key = "MSG40") })
+	public Float getPromedio() {
+		return promedio;
+	}
+
+	/**
+	 * @param promedio
+	 *            the promedio to set
+	 */
+	public void setPromedio(Float promedio) {
+		this.promedio = promedio;
+	}
+
+}

@@ -1,0 +1,13 @@
+$(function() {
+	dataTableEMETH.createResponsiveDataTable("tableAspirantesSeleccionados");
+	dataTableEMETH.createResponsiveDataTable("tableAspirantesNoSeleccionados");
+});
+
+function AceptAlumnos() {
+	$.publish("showDlgAceptarAlumnos");
+	$("#dlgAceptAlumnos").removeClass("dlgAceptAlumnos");
+}
+
+function closeAceptAlumnos(){
+	$.publish("closeDlgAceptarAlumnos");
+}

@@ -1,0 +1,163 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Nivel escolar que tiene un aspirante de la ELD, por ejemplo: Secundaria y
+ * Bachillerato
+ * 
+ * @author ricardo
+ *
+ */
+@Entity
+@Table(name = "tad05_nivel")
+public class Nivel implements Modelo {
+
+	public enum EnumNivel {
+		SECUNDARIA(1), BACHILLERATO(2);
+
+		private Integer idNivel;
+
+		private EnumNivel(Integer idNivel) {
+			this.idNivel = idNivel;
+		}
+
+		public Integer getIdNivel() {
+			return idNivel;
+		}
+	}
+	
+	/**
+	 * Identificador de nivel academico
+	 */
+	@Id
+	@SequenceGenerator(name = "tad05_nivel_id_nivel_seq", sequenceName = "tad05_nivel_id_nivel_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad05_nivel_id_nivel_seq")
+	@Column(name = "id_nivel")
+	private Integer id;
+
+	/**
+	 * Nombre del nivel
+	 **/
+	@Column(name = "nb_nivel")
+	private String nombre;
+
+	/**
+	 * Descripcion del nivel
+	 **/
+	@Column(name = "ds_nivel")
+	private String descripcion;
+
+	/**
+	 * Estatus del nivel
+	 **/
+	@Column(name = "st_activo")
+	private Boolean estatus;
+	
+	public enum nivelEnum{
+     SECUNDARIA(1,"Secundaria"),BACHILLERATO(2,"Bachillerato");
+	
+		private Integer nivel;
+		
+		private String nombre;
+		
+		private nivelEnum(Integer nivel,String nombre){
+			this.nivel=nivel;
+			this.nombre=nombre;
+		}
+
+		/**
+		 * @return the nivel
+		 */
+		public Integer getNivel() {
+			return nivel;
+		}
+
+		/**
+		 * @param nivel the nivel to set
+		 */
+		public void setNivel(Integer nivel) {
+			this.nivel = nivel;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+		/**
+		 * @param nombre the nombre to set
+		 */
+		public void setNombre(String nombre) {
+			this.nombre = nombre;
+		}
+		
+		
+	}
+
+	public Nivel() {
+		super();
+ 	}
+
+	public Nivel(String nombre, String descripcion, Boolean estatus) {
+		super();
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public Boolean getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
+	}
+}

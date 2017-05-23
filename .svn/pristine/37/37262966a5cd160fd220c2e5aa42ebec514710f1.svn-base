@@ -1,0 +1,8 @@
+$(function() {
+	dataTableEMETH.createDataTable("tblEntrevistadores");
+	dataTableEMETH.createDataTable("tblEntrevistadores2");
+});
+
+function cerrarDialogEntrevistador() {
+	$("#myclickdialog").dialog("close");
+}

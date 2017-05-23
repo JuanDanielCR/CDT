@@ -1,0 +1,31 @@
+package mx.edu.eld.converters;
+
+import java.util.Map;
+
+import org.apache.struts2.util.StrutsTypeConverter;
+
+import com.opensymphony.xwork2.conversion.TypeConversionException;
+
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+
+public class ConvocatoriaCriterioIdConverter extends StrutsTypeConverter {
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Object convertFromString(Map arg0, String[] arg1, Class arg2) {
+		String[] idString = arg1[0].split("_");
+		if (idString.length == 2) {
+			Integer idConvocatoria = Integer.valueOf(idString[0]);
+			Integer idCriterio = Integer.valueOf(idString[1]);
+			return new ConvocatoriaCriterioId(idConvocatoria, idCriterio);
+		}
+		throw new TypeConversionException();
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public String convertToString(Map arg0, Object arg1) {
+		return arg1.toString();
+	}
+
+}

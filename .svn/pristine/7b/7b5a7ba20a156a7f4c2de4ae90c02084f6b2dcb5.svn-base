@@ -1,0 +1,93 @@
+package mx.edu.eld.admision.bs.exception;
+
+public class InfEscolarCampoObligatorioException extends Exception{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public enum campoObligatorio{
+		NOMBRE_ESCUELA(1),PROMEDIO(2);
+		
+		private Integer id;
+		
+		private campoObligatorio(Integer id){
+			this.id = id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+		
+	}
+	
+	private campoObligatorio campoObligatorio;	
+	
+	
+
+	/**
+	 * @param campoObligatorio
+	 */
+	public InfEscolarCampoObligatorioException(campoObligatorio campoObligatorio) {
+		super();
+		this.campoObligatorio = campoObligatorio;
+	}
+
+	/**
+	 * 
+	 */
+	public InfEscolarCampoObligatorioException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 * @param enableSuppression
+	 * @param writableStackTrace
+	 */
+	public InfEscolarCampoObligatorioException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public InfEscolarCampoObligatorioException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 */
+	public InfEscolarCampoObligatorioException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param cause
+	 */
+	public InfEscolarCampoObligatorioException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public campoObligatorio getCampoObligatorio() {
+		return campoObligatorio;
+	}
+
+	public void setCampoObligatorio(campoObligatorio campoObligatorio) {
+		this.campoObligatorio = campoObligatorio;
+	}
+}

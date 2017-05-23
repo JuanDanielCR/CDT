@@ -1,0 +1,191 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la relación de los requisitos de ingreso con una convocatoria
+ * específica de la ELD.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca08_convocatoria_requisito")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteConvocatoriaRequisito", query = "DELETE FROM tca08_convocatoria_requisito WHERE id_convocatoria = :idConvocatoriaR") })
+public class ConvocatoriaRequisito implements Modelo,Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Llave compuesta de la relación
+	 */
+	@EmbeddedId
+	private ConvocatoriaRequisitoId id;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Requisito}
+	 */
+	@Column(name = "id_requisito", insertable = false, updatable = false)
+	private Integer idRequisito;
+
+	/**
+	 * Especifica si el requisito es obligatorio en la {@link Convocatoria}
+	 * especificada
+	 */
+	@Column(name = "st_obligatorio")
+	private Boolean obligatorio;
+
+	/**
+	 * Especifica si se requiere que se adjunte documentación para el requisito
+	 * es obligatorio en la {@link Convocatoria} especificada
+	 */
+	@Column(name = "st_adjunto")
+	private Boolean adjunto;
+
+	@ManyToOne
+	@JoinColumn(name = "id_requisito", referencedColumnName = "id_requisito", insertable = false, updatable = false)
+	private Requisito requisito;
+
+	public ConvocatoriaRequisito(ConvocatoriaRequisitoId id) {
+		super();
+		this.id = id;
+	}
+
+	public ConvocatoriaRequisito(Integer idConvocatoria) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	public ConvocatoriaRequisito(Integer idConvocatoria, Integer idRequisito, Boolean obligatorio, Boolean adjunto) {
+		super();
+		this.id.setIdConvocatoria(idConvocatoria);
+		this.id.setIdRequisito(idRequisito);
+		this.idConvocatoria = idConvocatoria;
+		this.idRequisito = idRequisito;
+		this.obligatorio = obligatorio;
+		this.adjunto = adjunto;
+	}
+
+	public ConvocatoriaRequisito() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ConvocatoriaRequisitoId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(ConvocatoriaRequisitoId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idRequisito
+	 */
+	public Integer getIdRequisito() {
+		return idRequisito;
+	}
+
+	/**
+	 * @param idRequisito
+	 *            the idRequisito to set
+	 */
+	public void setIdRequisito(Integer idRequisito) {
+		this.idRequisito = idRequisito;
+	}
+
+	/**
+	 * @return the obligatorio
+	 */
+	@RequiredFieldValidator(message = "%{getText('MSG39')}")
+	public Boolean getObligatorio() {
+		return obligatorio;
+	}
+
+	/**
+	 * @param obligatorio
+	 *            the obligatorio to set
+	 */
+	public void setObligatorio(Boolean obligatorio) {
+		this.obligatorio = obligatorio;
+	}
+
+	/**
+	 * @return the adjunto
+	 */
+	@RequiredFieldValidator(message = "%{getText('MSG39')}")
+	public Boolean getAdjunto() {
+		return adjunto;
+	}
+
+	/**
+	 * @param adjunto
+	 *            the adjunto to set
+	 */
+	public void setAdjunto(Boolean adjunto) {
+		this.adjunto = adjunto;
+	}
+
+	public Requisito getRequisito() {
+		return requisito;
+	}
+
+	public void setRequisito(Requisito requisito) {
+		this.requisito = requisito;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ConvocatoriaRequisito [idConvocatoria=" + idConvocatoria + ", idRequisito=" + idRequisito
+				+ ", obligatorio=" + obligatorio + ", adjunto=" + adjunto + ", requisito=" + requisito + "]";
+	}
+
+}

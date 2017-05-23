@@ -1,0 +1,91 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class PeriodoCriterioId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "id_periodo", nullable = false)
+	private Integer idPeriodo;
+
+	/**
+	 * Identificador de la {@link Convocatoria} asociada
+	 */
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Criterio} asociado
+	 */
+	@Column(name = "id_criterio", nullable = false)
+	private Integer idCriterio;
+
+	public PeriodoCriterioId(Integer idPeriodo, Integer idConvocatoria, Integer idCriterio) {
+		super();
+		this.idPeriodo = idPeriodo;
+		this.idConvocatoria = idConvocatoria;
+		this.idCriterio = idCriterio;
+	}
+
+	public PeriodoCriterioId() {
+		super();
+	}
+
+	/**
+	 * @return the idPeriodo
+	 */
+	public Integer getIdPeriodo() {
+		return idPeriodo;
+	}
+
+	/**
+	 * @param idPeriodo
+	 *            the idPeriodo to set
+	 */
+	public void setIdPeriodo(Integer idPeriodo) {
+		this.idPeriodo = idPeriodo;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idCriterio
+	 */
+	public Integer getIdCriterio() {
+		return idCriterio;
+	}
+
+	/**
+	 * @param idCriterio
+	 *            the idCriterio to set
+	 */
+	public void setIdCriterio(Integer idCriterio) {
+		this.idCriterio = idCriterio;
+	}
+
+	@Override
+	public String toString() {
+		return idPeriodo + "_" + idConvocatoria + "_" + idCriterio;
+	}
+
+}

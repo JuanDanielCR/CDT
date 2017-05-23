@@ -1,0 +1,250 @@
+package mx.edu.eld.convocatoria.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN48;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterio;
+import mx.edu.eld.calendario.mapeo.Criterio;
+import mx.edu.eld.calendario.mapeo.FuenteCriterio;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaCriterioBs;
+import mx.edu.eld.convocatoria.bs.CriterioBs;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/convocatoria")
+@Results({ @Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"asociar-criterios/new?idConvocatoriaSel=${idConvocatoriaSel}" }) })
+@AllowedMethods({ GestionarCriterioAct.MOSTRAR_CRITERIOS, GestionarCriterioAct.ASIGNAR_PERIODO,
+		GestionarCriterioAct.ASOCIAR })
+public class GestionarCriterioAct extends ActionSupportCDT implements ModelDriven<Criterio> {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public static final String MOSTRAR_CRITERIOS = "mostrarCriterios";
+	public static final String ASOCIAR_CRITERIOS = "asociarCriterios";
+	public static final String ASIGNAR_PERIODO = "asignarPeriodo";
+	public static final String ASOCIAR = "asociar";
+
+	@Autowired
+	private CriterioBs criterioBs;
+
+	@Autowired
+	private ReglaNegocioN48 reglaNegocioN48;
+
+	@Autowired
+	private ConvocatoriaCriterioBs convocatoriaCriterioBs;
+	
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	private Criterio model;
+
+	private List<Criterio> listCriterio;
+
+	private Integer idConvocatoriaSel;
+
+	private Integer idSel;
+	
+	private List<FuenteCriterio> listFuentes;
+
+	/**
+	 * Lista de Criterios asociados a una convocatoria.
+	 */
+	private List<ConvocatoriaCriterio> listConvocatoriaCriterio;
+
+	@SkipValidation
+	public String mostrarCriterios() {
+		listConvocatoriaCriterio = convocatoriaCriterioBs.criteriosConvocatoria(idConvocatoriaSel);
+/**
+ * 		for (ConvocatoriaCriterio c : listConvocatoriaCriterio) {
+
+			Collections.sort(c.getListPeriodos(), new Comparator<PeriodoCriterio>() {
+				public int compare(PeriodoCriterio o1, PeriodoCriterio o2) {
+					if (o1.getInicio() == null || o2.getInicio() == null) {
+						return 0;
+					}
+					return o1.getInicio().compareTo(o2.getInicio());
+				}
+			});
+		}
+ */
+		return MOSTRAR_CRITERIOS;
+	}
+
+	public String asignarPeriodo() {
+		return ASIGNAR_PERIODO;
+	}
+
+	public String editNew() {
+		listFuentes = genericSearchBs.findAll(FuenteCriterio.class);
+		return EDITNEW;
+	}
+
+	public String edit() {
+		return EDIT;
+	}
+
+	public void validateCreate() {
+		if (reglaNegocioN48.validate(Criterio.class, "nombre", model.getNombre(), null)) {
+			addFieldError("model.nombre", getText("MSG55", new String[] { model.getNombre().trim() }));
+		}
+		if (!getFieldErrors().isEmpty()) {
+			addActionError(getText("MSG3"));
+		}
+		listFuentes = genericSearchBs.findAll(FuenteCriterio.class);
+	}
+
+	public String create() {
+		model.setIdOrigen(1);
+		model.setPeriodo(false);
+		criterioBs.save(model);
+		addActionMessage(getText("MSG1", new String[] { "Criterio", "agregado" }));
+		return SUCCESS;
+	}
+
+	@Override
+	@VisitorFieldValidator
+	public Criterio getModel() {
+		if (model == null) {
+			model = new Criterio();
+		}
+		return model;
+	}
+
+	/**
+	 * @param model
+	 *            the model to set
+	 */
+	public void setModel(Criterio model) {
+		this.model = model;
+	}
+
+	/**
+	 * @return the model
+	 */
+
+	/**
+	 * @return the listCriterio
+	 */
+	public List<Criterio> getListCriterio() {
+		return listCriterio;
+	}
+
+	/**
+	 * @param listCriterio
+	 *            the listCriterio to set
+	 */
+	public void setListCriterio(List<Criterio> listCriterio) {
+		this.listCriterio = listCriterio;
+	}
+
+	/**
+	 * @return the criterioBs
+	 */
+	public CriterioBs getCriterioBs() {
+		return criterioBs;
+	}
+
+	/**
+	 * @param criterioBs
+	 *            the criterioBs to set
+	 */
+	public void setCriterioBs(CriterioBs criterioBs) {
+		this.criterioBs = criterioBs;
+	}
+
+	public List<ConvocatoriaCriterio> getListConvocatoriaCriterio() {
+		return listConvocatoriaCriterio;
+	}
+
+	public void setListConvocatoriaCriterio(List<ConvocatoriaCriterio> listConvocatoriaCriterio) {
+		this.listConvocatoriaCriterio = listConvocatoriaCriterio;
+	}
+
+	public Integer getIdConvocatoriaSel() {
+		return idConvocatoriaSel;
+	}
+
+	public void setIdConvocatoriaSel(Integer idConvocatoriaSel) {
+		this.idConvocatoriaSel = idConvocatoriaSel;
+	}
+
+	/**
+	 * @return the idSel
+	 */
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	/**
+	 * @param idSel
+	 *            the idSel to set
+	 */
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+	/**
+	 * @return the convocatoriaCriterioBs
+	 */
+	public ConvocatoriaCriterioBs getConvocatoriaCriterioBs() {
+		return convocatoriaCriterioBs;
+	}
+
+	/**
+	 * @param convocatoriaCriterioBs
+	 *            the convocatoriaCriterioBs to set
+	 */
+	public void setConvocatoriaCriterioBs(ConvocatoriaCriterioBs convocatoriaCriterioBs) {
+		this.convocatoriaCriterioBs = convocatoriaCriterioBs;
+	}
+
+	/**
+	 * @return the reglaNegocioN48
+	 */
+	public ReglaNegocioN48 getReglaNegocioN48() {
+		return reglaNegocioN48;
+	}
+
+	/**
+	 * @param reglaNegocioN48
+	 *            the reglaNegocioN48 to set
+	 */
+	public void setReglaNegocioN48(ReglaNegocioN48 reglaNegocioN48) {
+		this.reglaNegocioN48 = reglaNegocioN48;
+	}
+
+	public List<FuenteCriterio> getListFuentes() {
+		return listFuentes;
+	}
+
+	public void setListFuentes(List<FuenteCriterio> listFuentes) {
+		this.listFuentes = listFuentes;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+	
+	
+	
+	 
+
+}

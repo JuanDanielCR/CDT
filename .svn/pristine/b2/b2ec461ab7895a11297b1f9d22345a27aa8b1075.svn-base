@@ -1,0 +1,126 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la relación los {@link Entrevistador}es que participan en una
+ * {@link Convocatoria} específica. Con base en la relación, a cada
+ * {@link Entrevistador} se le deberá asociar un horario específico.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tad16_convocatoria_entrevistador")
+@NamedNativeQueries({
+    @NamedNativeQuery(
+            name    =   "deleteConvocatoriaEntrevistador",
+            query   =   "DELETE FROM tad16_convocatoria_entrevistador WHERE id_convocatoria = :idConvocatoriaE"
+    )
+})
+public class ConvocatoriaEntrevistador implements Modelo {
+	/**
+	 * Identidicador de la relación
+	 */
+	@EmbeddedId
+	private ConvocatoriaEntrevistadorId id;
+
+	/**
+	 * Identificador de la convocatoria
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del entrevistador
+	 */
+	@Column(name = "id_entrevistador", insertable = false, updatable = false)
+	private Integer idEntrevistador;
+
+	/**
+	 * Entrevistador asociado a la relación
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_entrevistador", referencedColumnName = "id_entrevistador", insertable = false, updatable = false)
+	private Entrevistador entrevistador;
+
+	/**
+	 * Horario del Entevistador en la convocatoria
+	 */
+	@OneToMany
+	@JoinColumns({
+			@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", insertable = false, updatable = false),
+			@JoinColumn(name = "id_entrevistador", referencedColumnName = "id_entrevistador", insertable = false, updatable = false) })
+	private List<Horario> horarios;
+
+	
+	
+	public ConvocatoriaEntrevistador() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	public ConvocatoriaEntrevistador(Integer idConvocatoria) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+	}
+
+
+	/**
+	 * @return the id
+	 */
+	public ConvocatoriaEntrevistadorId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(ConvocatoriaEntrevistadorId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador
+	 *            the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+}

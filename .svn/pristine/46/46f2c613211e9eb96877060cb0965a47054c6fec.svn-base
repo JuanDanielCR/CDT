@@ -1,0 +1,36 @@
+package mx.edu.eld.entrevistas.action;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Namespace("/entrevistas")
+@AllowedMethods({ "resultados" })
+public class GestionarEntrevistasAct extends ActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	// IU1.8.3-2 Resultados de Entrevistas
+	public String index() {
+		return "index";
+	}
+
+	// IU1.8.3-1 Evaluación de Entrevista
+	public String editNew() {
+		return "editNew";
+	}
+
+	// IU1.8.3-3 Ver Evaluación de Entrevista
+	public String show() {
+		return "show";
+	}
+
+	// IU1.8.3-3 Ver Evaluación de Entrevista
+	public String resultados() {
+		return "resultados";
+	}
+}

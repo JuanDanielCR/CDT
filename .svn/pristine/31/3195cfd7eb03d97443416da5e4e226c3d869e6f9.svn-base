@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+    <jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"/>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <!-- Head -->
+        <jsp:text>
+            <![CDATA[
+		        <script type="text/javascript" src="${pageContext.request.contextPath}/pages/admision/gestionar-pasos-proceso/js/index-pasos-proceso.js"></script>
+	        ]]>
+        </jsp:text>
+    </head>
+    <body>
+
+    <!-- Body -->
+    <s:set var="title" value="%{getText('IU1.4-2_TITLE')}"/>
+    <s:set var="phArchivo" value="%{getText('LBL_ARCHIVO')}"/>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="title">${title}</h1>
+        </div>
+    </div>
+
+    <!-- ############################ BARRA DE PASOS DEL PROCESO #################################### -->
+    <s:set var="varPasoProceso" value="0"/>
+    <s:hidden id="idPasoProceso" value="%{#varPasoProceso}"/>
+    <s:set var="varEtapaProceso" value="1"/>
+    <s:hidden id="idEtapaProceso" value="%{#varEtapaProceso}"/>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <s:include value="../gestionar-pasos-proceso/index-pasos-proceso.jsp"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="outter-section form-medium text-left">
+            <s:text name="IU1.4-2_LBL1"/>
+        </div>
+    </div>
+
+    <s:form id="frmDatosPersonales"
+            action="%{#pageContext.request.contextPath}/" theme="simple"
+            method="post">
+
+        <fieldset class="form-section form-horizontal form-medium">
+            <s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+            <!-- TITULO DE LA SECCION -->
+            <legend class="form-section">
+                <s:text name="IU1.4-2_TITLE"/>
+            </legend>
+
+            <div id="datosPersonales">
+
+                <!-- Nombre del aspirante -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label label-obligatorio">
+                        <s:text name="IU1.4-2_LBL2"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:textfield id="txNombre" name="model.nombre" type="text" cssClass="form-control"
+                                     placeholder="%{getText('IU1.4-2_LBL2')}" maxlength="20"
+                                     cssErrorClass="field-error"/>
+                        <s:fielderror fieldName="model.nombre" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+                <!-- Primer apellido del aspirante -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label label-obligatorio">
+                        <s:text name="IU1.4-2_LBL3"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:textfield id="txPrimerApellido" name="model.primerApellido" type="text" maxlength="20"
+                                     cssClass="form-control" placeholder="%{getText('IU1.4-2_LBL3')}"
+                                     cssErrorClass="field-error"/>
+                        <s:fielderror fieldName="model.primerApellido" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+
+                <!-- Segundo Apellido del aspirante -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label label-obligatorio">
+                        <s:text name="IU1.4-2_LBL4"/>
+                    </label>
+                    <div class="col-md-8">
+                        <s:textfield id="txSegundoApellido" name="model.segundoApellido" type="text" maxlength="20"
+                                     cssClass="form-control" placeholder="%{getText('IU1.4-2_LBL4')}"
+                                     cssErrorClass="field-error"/>
+                        <s:fielderror fieldName="model.segundoApellido" cssClass="error"
+                                      theme="%{getText('mx.edu.eld.defaulTheme')}"/>
+                    </div>
+                </div>
+
+                <s:iterator var="listRequisitos" value="req" status="status">
+                    <s:property value="%{#req.nombre}"/>
+                    <!--<div class="form-group">
+                        <label class="col-md-4  control-label label-obligatorio">
+                            <s:text name="IU1.4-2_LBL5"/>
+                        </label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+							<span id="identificacionOficial" class="form-control">
+                                <s:text name="LBL_ARCHIVO"/>
+                            </span>
+                                <span class="input-group-btn" id="loadImage">
+                                    <i class="material-icons md-24 md-eld"
+                                       onclick="selectImage('fileIdentificacion');">
+                                        file_upload
+                                    </i>
+                                </span>
+                                <input type='file' id="fileIdentificacion" name="fileIdentificacion" class="hide"
+                                       accept=".pdf" value=""/>
+                            </div>
+                        </div>
+                    </div> -->
+                </s:iterator>
+            </div>
+        </fieldset>
+        <div class="row">
+            <div class="outter-section form-medium text-right">
+                <a id="btnAceptar" class="btn btn-default btn-default-eld"
+                   href="${pageContext.request.contextPath}/admision/registrar-aspirante"><s:text
+                        name="btnAceptar"/></a> <a id="btnCancelar"
+                                                   class="btn btn-default btn-default-eld"
+                                                   href="${pageContext.request.contextPath}/admision/registrar-aspirante"><s:text
+                    name="btnCancelar"/></a>
+            </div>
+        </div>
+    </s:form>
+    </body>
+    </html>
+</jsp:root>

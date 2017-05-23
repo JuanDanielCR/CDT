@@ -1,0 +1,58 @@
+package mx.edu.eld.convocatoria.dao;
+
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisito;
+import mx.edu.eld.calendario.mapeo.Requisito;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
+import org.hibernate.type.IntegerType;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository("requisitoDao")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class RequisitoDao {
+	SessionFactory sessionFactory;
+
+	private static final String OBTENER_REQUISITOS_DOCUMENTO_CONVOCATORIA = "SELECT req.* "
+			+ "FROM tca08_convocatoria_requisito con_req, tca04_requisito req "
+			+ "WHERE con_req.id_convocatoria = :idConvocatoria AND st_adjunto=true AND con_req.id_requisito=req.id_requisito";
+
+	private static final String QUERY_REQUISITOS_CONVOCATORIA = "select * from tca08_convocatoria_requisito where id_convocatoria=:idConvocatoria";
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	/**
+	 * Obtiene todos los requisitos asociados a una convocatoria mediante el id
+	 * de la convocatoria.
+	 * 
+	 * @param {Integer}
+	 *            Id de la convocatoria
+	 * @return {List<ConvocatoriaRequisito>} Lista de Requisitos asociados a la
+	 *         convocatoria
+	 */
+	public List<ConvocatoriaRequisito> requisitoConvocatoria(Integer idConvocatoriaSel) {
+		NativeQuery<ConvocatoriaRequisito> query = sessionFactory.getCurrentSession()
+				.createNativeQuery(QUERY_REQUISITOS_CONVOCATORIA, ConvocatoriaRequisito.class);
+		query.setParameter("idConvocatoria", idConvocatoriaSel);
+		return query.getResultList();
+	}
+
+	public List<Requisito> obtenerRequisitosDocumento(Ciclo ciclo) {
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(OBTENER_REQUISITOS_DOCUMENTO_CONVOCATORIA,
+				Requisito.class);
+		query.setParameter("idConvocatoria", ciclo.getId(), IntegerType.INSTANCE);
+		List<Requisito> listRequisitos = query.getResultList();
+		return listRequisitos;
+	}
+}

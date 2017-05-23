@@ -1,0 +1,41 @@
+package mx.edu.eld.convocatoria.bs;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.calendario.mapeo.Criterio;
+import mx.edu.eld.convocatoria.dao.CriterioDao;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+@Service("criterioBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class CriterioBs extends GenericBs<Criterio> {
+
+	@Autowired
+	private CriterioDao criterioDao;
+
+	@Transactional(readOnly = true)
+	public boolean validarNombreCriterio(String nombre) {
+		return criterioDao.validarNombreCriterio(nombre);
+	}
+
+	/**
+	 * @return the criterioDao
+	 */
+	public CriterioDao getCriterioDao() {
+		return criterioDao;
+	}
+
+	/**
+	 * @param criterioDao the criterioDao to set
+	 */
+	public void setCriterioDao(CriterioDao criterioDao) {
+		this.criterioDao = criterioDao;
+	}
+	
+	
+
+}

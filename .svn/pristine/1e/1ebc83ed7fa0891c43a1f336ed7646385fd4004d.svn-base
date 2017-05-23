@@ -1,0 +1,300 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la asociación entre actividades y cliclos, es decir, por medio de
+ * ésta entidad se asocian las actividades académicas que se realizarań en un
+ * ciclo.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tca11_ciclo_actividad")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteConvocatoriaActividad", query = "DELETE FROM tca11_ciclo_actividad WHERE id_ciclo = :idCicloA") })
+public class CicloActividad implements Modelo, Catalogo {
+	/**
+	 * Identificador del mapeo
+	 */
+	@EmbeddedId
+	private CicloActividadId id;
+
+	/**
+	 * Identificador del ciclo
+	 */
+	@Column(name = "id_ciclo", insertable = false, updatable = false)
+	private Integer idCiclo;
+
+	/**
+	 * id del tipo de {@link Actividad}
+	 **/
+	@Column(name = "id_tipo", insertable = false, updatable = false)
+	private Integer idTipo;
+
+	/**
+	 * id de la fase a la que pertenece la {@link Actividad}
+	 **/
+	@Column(name = "id_fase", insertable = false, updatable = false)
+	private Integer idFase;
+
+	/**
+	 * Identificador de la actividad
+	 */
+	@Column(name = "id_actividad", insertable = false, updatable = false)
+	private Integer idActividad;
+
+	/*
+	 * Id del ciclo_actividad, permite agregar actividades de un mismo ciclo con
+	 * nombres iguales
+	 */
+	@Column(name = "id_ciclo_actividad", insertable = false, updatable = false)
+	private Integer idCicloActividad;
+
+	/**
+	 * id del {@link Criterio} al que pertenece la actividad
+	 **/
+	@Column(name = "id_criterio")
+	private Integer idCriterio;
+
+	/**
+	 * Decha de inicio de la actividad
+	 */
+	@Column(name = "fh_inicio")
+	private Date inicio;
+
+	/**
+	 * Fecha de termino de la actividad
+	 */
+	@Column(name = "fh_fin")
+	private Date fin;
+
+	/**
+	 * indica si el calendario de actividades es publicable
+	 **/
+	@Column(name = "st_publicable")
+	private Boolean publicable;
+
+	/**
+	 * Ciclo en el que se realiza la actividad
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_ciclo", referencedColumnName = "id_ciclo", insertable = false, updatable = false)
+	private Ciclo ciclo;
+
+	/**
+	 * Actividad realizada en el ciclo
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_actividad", referencedColumnName = "id_actividad", insertable = false, updatable = false)
+	private Actividad actividad;
+
+	public CicloActividad() {
+		super();
+	}
+
+	/**
+	 * @return the publicable
+	 */
+	public Boolean getPublicable() {
+		return publicable;
+	}
+
+	/**
+	 * @param publicable
+	 *            the publicable to set
+	 */
+	public void setPublicable(Boolean publicable) {
+		this.publicable = publicable;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public CicloActividadId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(CicloActividadId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idCiclo
+	 */
+	public Integer getIdCiclo() {
+		return idCiclo;
+	}
+
+	/**
+	 * @param idCiclo
+	 *            the idCiclo to set
+	 */
+	public void setIdCiclo(Integer idCiclo) {
+		this.idCiclo = idCiclo;
+	}
+
+	/**
+	 * @return the idActividad
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(fieldName = "idActividad", type = ValidatorType.FIELD, message = "${getText('MSG39')}") }, intRangeFields = {
+					@IntRangeFieldValidator(type = ValidatorType.FIELD, message = "${getText('MSG47')}", min = "1") })
+	public Integer getIdActividad() {
+		return idActividad;
+	}
+
+	/**
+	 * @param idActividad
+	 *            the idActividad to set
+	 */
+	public void setIdActividad(Integer idActividad) {
+		this.idActividad = idActividad;
+	}
+
+	/**
+	 * @return the inicio
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(fieldName = "inicio", type = ValidatorType.FIELD, message = "${getText('MSG39')}") })
+	public Date getInicio() {
+		return inicio;
+	}
+
+	/**
+	 * @param inicio
+	 *            the inicio to set
+	 */
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	/**
+	 * @return the fin
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(fieldName = "fin", type = ValidatorType.FIELD, message = "${getText('MSG39')}") })
+	public Date getFin() {
+		return fin;
+	}
+
+	/**
+	 * @param fin
+	 *            the fin to set
+	 */
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
+
+	/**
+	 * @return the ciclo
+	 */
+	public Ciclo getCiclo() {
+		return ciclo;
+	}
+
+	/**
+	 * @param ciclo
+	 *            the ciclo to set
+	 */
+	public void setCiclo(Ciclo ciclo) {
+		this.ciclo = ciclo;
+	}
+
+	/**
+	 * @return the idCicloActividad
+	 */
+	public Integer getIdCicloActividad() {
+		return idCicloActividad;
+	}
+
+	/**
+	 * @param idCicloActividad
+	 *            the idCicloActividad to set
+	 */
+	public void setIdCicloActividad(Integer idCicloActividad) {
+		this.idCicloActividad = idCicloActividad;
+	}
+
+	/**
+	 * @return the actividad
+	 */
+	public Actividad getActividad() {
+		return actividad;
+	}
+
+	/**
+	 * @param actividad
+	 *            the actividad to set
+	 */
+	public void setActividad(Actividad actividad) {
+		this.actividad = actividad;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/**
+	 * @return the idFase
+	 */
+	public Integer getIdFase() {
+		return idFase;
+	}
+
+	/**
+	 * @param idFase
+	 *            the idFase to set
+	 */
+	public void setIdFase(Integer idFase) {
+		this.idFase = idFase;
+	}
+
+	/**
+	 * @return the idCriterio
+	 */
+	public Integer getIdCriterio() {
+		return idCriterio;
+	}
+
+	/**
+	 * @param idCriterio
+	 *            the idCriterio to set
+	 */
+	public void setIdCriterio(Integer idCriterio) {
+		this.idCriterio = idCriterio;
+	}
+}

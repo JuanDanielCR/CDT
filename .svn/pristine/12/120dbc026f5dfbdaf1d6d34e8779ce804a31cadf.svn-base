@@ -1,0 +1,33 @@
+package mx.edu.eld.calendario.bs.exception;
+
+public class CicloEliminableException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public CicloEliminableException() {
+		super();
+	}
+
+	public CicloEliminableException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public CicloEliminableException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public CicloEliminableException(String message) {
+		super(message);
+	}
+
+	public CicloEliminableException(Throwable cause) {
+		super(cause);
+	}
+	
+	
+
+}

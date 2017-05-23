@@ -1,0 +1,166 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Contiene la información del catálogo de estados por los que puede pasar un
+ * {@link Ciclo}.
+ * 
+ * Además, abstrae el modelo de negocios de la maquina de estados aplicable a un
+ * {@link Ciclo}.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca02_estatus_ciclo")
+public class EstatusCiclo implements Catalogo {
+	public enum EstatusCicloEnum {
+		CREADO(1, "Creado"), EDICION(2, "Edición"), REVISION(3, "Revisión"), APROBADO(4, "Aprobado"), PUBLICADO(5,
+				"Publicado");
+
+		/**
+		 * Identificador del estado
+		 */
+		private Integer estatus;
+
+		/**
+		 * Nombre del estatus de la clase
+		 */
+		private String nombre;
+
+		private EstatusCicloEnum(Integer estatus, String nombre) {
+			this.estatus = estatus;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the estatus
+		 */
+		public Integer getEstatus() {
+			return estatus;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * Identificador del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_estatus")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catálogo
+	 */
+	@Column(name = "nb_estatus")
+	private String nombre;
+
+	/**
+	 * Descripción del elemento del catálogo
+	 */
+	@Column(name = "ds_estatus")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	public EstatusCiclo(Integer id, String nombre, String descripcion, Boolean activo) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.activo = activo;
+	}
+
+	public EstatusCiclo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	@Override
+	public String toString() {
+		return nombre;
+	}
+
+}

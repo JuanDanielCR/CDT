@@ -1,0 +1,45 @@
+package mx.edu.eld.convocatoria.bs.exception;
+
+
+/**
+ *  Execption: RequisitoAgregableExecption
+ *  Throw: Sí el nombre de un requisito ya existe en la base de datos.
+ * @author luis
+ *
+ */
+public class RequisitoAgregableExecption extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public RequisitoAgregableExecption() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public RequisitoAgregableExecption(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public RequisitoAgregableExecption(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public RequisitoAgregableExecption(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+	public RequisitoAgregableExecption(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+
+}

@@ -1,0 +1,89 @@
+package mx.edu.eld.admision.bs;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.admision.mapeo.ConvocatoriaAspirante;
+import mx.edu.eld.bs.rules.ReglaNegocioN50;
+import mx.edu.eld.bs.rules.ReglaNegocioN8;
+import mx.ipn.escom.cdt.util.Numeros;
+
+/**
+ * Bs de la entidad {@link ConvocatoriaAspirante}
+ * @author Luis
+ *
+ */
+@Service("convocatoriaAspiranteBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaAspiranteBs {
+	
+	@Autowired
+	private ReglaNegocioN8 reglaNegocioN8;
+	
+	@Autowired 
+	private ReglaNegocioN50 reglaNegocioN50;
+	
+	/**
+	 * 
+	 * @param aspirante 
+	 * @return
+	 */
+	public float promedioGeneral(ConvocatoriaAspirante aspirante){
+		return reglaNegocioN8.validate(aspirante);
+	}
+	
+	/**
+	 * Obtiene el promedio de secundaria y bachillerato de un aspirante.
+	 * @param aspirante
+	 *         {ConvocatoriaAspirante} Aspirante al cual se le genera el promedio.
+	 * @return {float} Promedio Secundaria Bachillerato.
+	 */
+	public float promedioSecundariaBachillerato(ConvocatoriaAspirante aspirante){
+	return (aspirante.getPromedioBachillerato()+aspirante.getPromedioSecundaria())/Numeros.DOS.getValor();	
+	}
+	/**
+	 * 
+	 * @param aspirantesEsperados
+	 * @param numeroAspirantes
+	 * @return
+	 */
+	public boolean numeroAspirantesEsperados(Integer aspirantesEsperados,Integer numeroAspirantes){
+		return reglaNegocioN50.validate(aspirantesEsperados, numeroAspirantes);
+	}
+	
+
+	/**
+	 * @return the reglaNegocioN8
+	 */
+	public ReglaNegocioN8 getReglaNegocioN8() {
+		return reglaNegocioN8;
+	}
+
+	/**
+	 * @param reglaNegocioN8 the reglaNegocioN8 to set
+	 */
+	public void setReglaNegocioN8(ReglaNegocioN8 reglaNegocioN8) {
+		this.reglaNegocioN8 = reglaNegocioN8;
+	}
+
+	/**
+	 * @return the reglaNegocioN50
+	 */
+	public ReglaNegocioN50 getReglaNegocioN50() {
+		return reglaNegocioN50;
+	}
+
+	/**
+	 * @param reglaNegocioN50 the reglaNegocioN50 to set
+	 */
+	public void setReglaNegocioN50(ReglaNegocioN50 reglaNegocioN50) {
+		this.reglaNegocioN50 = reglaNegocioN50;
+	}
+	
+	
+	
+	
+
+}

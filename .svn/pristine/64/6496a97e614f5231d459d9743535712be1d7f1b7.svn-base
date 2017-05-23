@@ -1,0 +1,61 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Mapea la llave compuesta de la relación entre Entrevistadores y Convocatoria
+ * 
+ * @author Hermes
+ *
+ */
+@Embeddable
+public class ConvocatoriaEntrevistadorId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Identificador de la convocatoria
+	 */
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+	/**
+	 * Identificador del entrevistador
+	 */
+	@Column(name = "id_entrevistador", nullable = false)
+	private Integer idEntrevistador;
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador
+	 *            the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+}

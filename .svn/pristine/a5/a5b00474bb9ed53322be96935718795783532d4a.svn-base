@@ -1,0 +1,110 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Abstrae el modelo de negocio para manejar distintos tipos de direcciones ya
+ * que, por el negocio de la ELD, eventualmente se requerirá manejar domicilio
+ * fical, domicilio personal, etc.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tib01_tipo_direccion")
+public class TipoDireccion implements Catalogo {
+	/**
+	 * Identificador del elemento del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_tipo")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catálogo
+	 */
+	@Column(name = "nb_tipo")
+	private String nombre;
+
+	/**
+	 * Descriprión del elemento del catálogo
+	 */
+	@Column(name = "ds_tipo")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

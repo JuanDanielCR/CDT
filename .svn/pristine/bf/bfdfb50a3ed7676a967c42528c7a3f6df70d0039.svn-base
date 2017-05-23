@@ -1,0 +1,110 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tca12_tipo_requisito")
+public class TipoRequisito implements Modelo {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_tipo")
+	private Integer id;
+
+	/**
+	 * Nombre del tipo de requsiito
+	 **/
+	@Column(name = "nb_tipo")
+	private String nombre;
+
+	/**
+	 * Descripcion del tipo de requsiito
+	 **/
+	@Column(name = "ds_tipo")
+	private String descripcion;
+
+	/**
+	 * estatus del tipo de requsito
+	 **/
+	@Column(name = "st_activo")
+	private Boolean estatus;
+
+	public TipoRequisito(Integer id, String nombre, String descripcion, Boolean estatus) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+	}
+
+	public TipoRequisito() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public Boolean getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+}

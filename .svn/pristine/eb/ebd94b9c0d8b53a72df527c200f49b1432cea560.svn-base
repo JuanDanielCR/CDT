@@ -1,0 +1,154 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import mx.edu.eld.informacionbase.mapeo.Dia;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/*
+ * Horario de la entrevista de un aspirante
+ */
+@Entity
+@Table(name = "tad07_horario")
+@NamedNativeQueries({
+    @NamedNativeQuery(
+            name    =   "deleteConvocatoriaHorario",
+            query   =   "DELETE FROM tad07_horario WHERE id_convocatoria = :idConvocatoriaH"
+    )
+})
+public class Horario implements Modelo {
+
+	@EmbeddedId
+	private HorarioId id;
+
+	/**
+	 * Hora de inicio de la entrevista
+	 **/
+	@Column(name = "tm_inicio")
+	private Date inicio;
+
+	/**
+	 * Hora de termino de la entrevista
+	 **/
+	@Column(name = "tm_fin")
+	private Date fin;
+
+	/**
+	 * Dia de la semana en la que se programa el horario
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_dia", referencedColumnName = "id_dia", insertable = false, updatable = false)
+	private Dia dia;
+
+	/**
+	 * Entrevistador al que pertenece el horario
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_entrevistador", referencedColumnName = "id_entrevistador", insertable = false, updatable = false)
+	private Entrevistador entrevistador;
+
+	/**
+	 * TODO: Documentar
+	 */
+	public Horario() {
+		super();
+	}
+
+	/**
+	 * TODO: Documentar
+	 * 
+	 * @param id
+	 * @param horaInicio
+	 * @param horaTermino
+	 */
+	public Horario(HorarioId id, Date inicio, Date fin) {
+		super();
+		this.id = id;
+		this.inicio = inicio;
+		this.fin = fin;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public HorarioId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(HorarioId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the inicio
+	 */
+	public Date getInicio() {
+		return inicio;
+	}
+
+	/**
+	 * @param inicio
+	 *            the inicio to set
+	 */
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	/**
+	 * @return the fin
+	 */
+	public Date getFin() {
+		return fin;
+	}
+
+	/**
+	 * @param fin
+	 *            the fin to set
+	 */
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
+
+	/**
+	 * @return the dia
+	 */
+	public Dia getDia() {
+		return dia;
+	}
+
+	/**
+	 * @param dia
+	 *            the dia to set
+	 */
+	public void setDia(Dia dia) {
+		this.dia = dia;
+	}
+
+	/**
+	 * @return the entrevistador
+	 */
+	public Entrevistador getEntrevistador() {
+		return entrevistador;
+	}
+
+	/**
+	 * @param entrevistador
+	 *            the entrevistador to set
+	 */
+	public void setEntrevistador(Entrevistador entrevistador) {
+		this.entrevistador = entrevistador;
+	}
+}

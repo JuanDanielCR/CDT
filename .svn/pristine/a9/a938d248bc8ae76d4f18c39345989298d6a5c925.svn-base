@@ -1,0 +1,13 @@
+$(function() {
+	$(document).ready(function() {
+		dataTableEMETH.createResponsiveDataTable("tblCalendario");
+	});
+});
+function myclickDialog() {
+	$.publish("showDlgDelete");
+	$("#dlgDelete").removeClass("dlgDelete");
+}
+
+function closeDeleteDlg(){
+	$.publish("closeDlgDelete");
+}

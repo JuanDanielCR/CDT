@@ -1,0 +1,37 @@
+package mx.edu.eld.converters;
+
+import java.util.Map;
+
+import org.apache.struts2.util.StrutsTypeConverter;
+
+import com.opensymphony.xwork2.conversion.TypeConversionException;
+
+import mx.edu.eld.calendario.mapeo.PeriodoCriterioId;
+import mx.ipn.escom.cdt.util.Numeros;
+
+public class PeriodoCriterioIdConverter extends StrutsTypeConverter {
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Object convertFromString(Map context, String[] values, Class toClass) {
+		String[] idPeriodoCriterio = values[0].split("_");
+		if (idPeriodoCriterio.length == Numeros.TRES.getValor()) {
+			try {
+				Integer idPeriodo = Integer.valueOf(idPeriodoCriterio[0]);
+				Integer idConvocatoria = Integer.valueOf(idPeriodoCriterio[1]);
+				Integer idCriterio = Integer.valueOf(idPeriodoCriterio[2]);
+				return new PeriodoCriterioId(idPeriodo, idConvocatoria, idCriterio);
+			} catch (NumberFormatException exception) {
+				throw new TypeConversionException();
+			}
+		}
+		throw new TypeConversionException();
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public String convertToString(Map context, Object o) {
+		return o.toString();
+	}
+
+}

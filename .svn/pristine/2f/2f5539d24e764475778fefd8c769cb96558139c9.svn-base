@@ -1,0 +1,30 @@
+package mx.edu.eld.admision.bs;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.action.FileUtil;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service("datosPersonalesBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class DatosPersonalesBs extends GenericBs<Aspirante> {
+
+	private AspiranteBs aspiranteBs;
+
+	public void actualizar(Aspirante model, List<FileUtil> listDocumentos) {
+		aspiranteBs.clear();
+		aspiranteBs.update(model);
+	}
+
+	public AspiranteBs getAspiranteBs() {
+		return aspiranteBs;
+	}
+
+	public void setAspiranteBs(AspiranteBs aspiranteBs) {
+		this.aspiranteBs = aspiranteBs;
+	}
+}

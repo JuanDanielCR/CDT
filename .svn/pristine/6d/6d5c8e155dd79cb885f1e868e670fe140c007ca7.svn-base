@@ -1,0 +1,290 @@
+package mx.edu.eld.calendario.action;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.calendario.bs.CicloBs;
+import mx.edu.eld.calendario.bs.exception.CicloEliminableException;
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException;
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException.condicionesCicloIncumplidas;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.EstatusCiclo.EstatusCicloEnum;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * Accion Gestionar Ciclos. Casos de uso relacionados: CUPA1.1-1 GestionarCiclos
+ * CUPA1.1-7 EliminarCiclo
+ * 
+ * @author Cristian,Luis
+ *
+ */
+@Namespace("/calendario")
+@AllowedMethods({ "registroCiclo" })
+@Results({ @Result(name = "success", type = "redirectAction", params = { "actionName",
+		"../calendario/gestionar-ciclos" }) })
+public class GestionarCiclosAct extends ActionSupportCDT implements ModelDriven<Ciclo> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private CicloBs cicloBs;
+	/**
+	 * Bs serach Generico Utilizado para llenar lista listCiclo.
+	 */
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	/**
+	 * Id de {@link Ciclo}
+	 */
+	private Integer idCicloSel;
+	/**
+	 * Modelos de la entidad {@link Ciclo}
+	 */
+	private Ciclo model;
+	/**
+	 * Id de {@link Ciclo} Utilizado para obtener un ciclo
+	 */
+	private Integer idSel;
+
+	/**
+	 * Lista de ciclos
+	 */
+	private List<Ciclo> listCiclo;
+
+	/*
+	 * atributo para comparación de fechas
+	 */
+	private Date today;
+	
+	
+	// private String elCICLO01=getText("AE_EL_CICLO");
+	// private String msg56=getText("MSG56");
+	private String modelPublicacion="model.publicacion";
+	private String msgError="Error";
+	/**
+	 * Metodo index, llena la lista de ciclos
+	 * 
+	 * @return
+	 */
+	public String index() {
+		today = new Date();
+		listCiclo = genericSearchBs.findAll(Ciclo.class);
+		return INDEX;
+	}
+
+	public String edit() {
+		return EDIT;
+	}
+
+	/**
+	 * Metodo validateDestroy, no se validad errores(actionErrors y fieldErros)
+	 */
+
+	public void validateDestroy() {
+		try {
+			cicloBs.cicloEliminable(model);
+		} catch (CicloEliminableException e) {
+			LOG.error(msgError, e);
+			addActionError(getText("MSG3"));
+		}
+	}
+
+	/**
+	 * Metodo destroy, Se obtiene el id del ciclo(idSel) para eliminarlo
+	 * mediante el metodo eliminarCiclo de {@link CicloBs}, posterior a estó se
+	 * vuelve a llenar la lista listCiclo.
+	 * 
+	 * @return SUCCES
+	 */
+	@SkipValidation
+	public String destroy() {
+
+		cicloBs.eliminarCiclo(idSel);
+		listCiclo = genericSearchBs.findAll(Ciclo.class);
+		addActionMessage(getText("MSG1", new String[] {getText("AE_EL_CICLO"), getText("OP_ELIMINADO") }));
+		
+		return SUCCESS;
+	}
+
+	/**
+	 * se realizan las validaciones de comparacion entre las fechas de inicio
+	 * fin y publicacion de un ciclo escolar para despues actualizarlo
+	 */
+
+	public void validateUpdate(){
+		if (!hasActionErrors() && !hasFieldErrors()) {
+			model.setNombre(cicloBs.obtenerNombre(model.getFin(), model.getInicio()));
+			try {
+				cicloBs.actualizarCiclo(model);
+			} catch (IntersectionCyclePeriodException ex) {
+				LOG.error(msgError, ex);
+				if (ex.getCausa().equals(condicionesCicloIncumplidas.FECHA_PERIODO)) {
+					addActionError(getText("MSG53", new String[] { getText("mx.edu.eld.maxCiclo") }));
+				} else if (ex.getCausa().equals(condicionesCicloIncumplidas.FECHA_INICIO)) {
+					addFieldError("model.inicio", getText("MSG51"));
+				} else if (ex.getCausa().equals(condicionesCicloIncumplidas.FECHA_IGUAL)) {
+					addFieldError(modelPublicacion, getText("MSG56"));
+				} else if (ex.getCausa().equals(condicionesCicloIncumplidas.FECHA_PUBLICACION)) {
+					addFieldError(modelPublicacion, getText("MSG56"));
+				} else if(ex.getCausa().equals(condicionesCicloIncumplidas.CICLO_TRASLAPE)){
+					addActionError(getText("MSG66"));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Cumpliendose las validaciones se procede a actualizar el ciclo que se
+	 * encuentra siendo editado en ese momento.
+	 */
+
+	public String update() {
+		cicloBs.update(model);
+		addActionMessage(getText("MSG1", new String[] { getText("AE_EL_CICLO"), getText("OP_ACTUALIZADO") }));
+		return SUCCESS;
+	}
+
+	/**
+	 * Metodo que nos llevara al jsp de la creacion de un ciclo
+	 * 
+	 * @return
+	 */
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	/**
+	 * se validan los diferentes casos de compracion de fechas entre las cuales
+	 * estan la de inicio, final y publicacion del ciclo.
+	 */
+
+	public void validateCreate(){
+		if (!hasActionErrors() && !hasFieldErrors()) {
+
+			model.setNombre(cicloBs.obtenerNombre(model.getFin(), model.getInicio()));
+
+			model.setIdEstatus(EstatusCicloEnum.CREADO.getEstatus());
+			try {
+				cicloBs.registrarCiclo(model);
+			} catch (IntersectionCyclePeriodException e) {
+				LOG.error(msgError, e);
+				if (e.getCausa().equals(condicionesCicloIncumplidas.FECHA_PERIODO)) {
+					addActionError(getText("MSG53", new String[] { getText("mx.edu.eld.maxCiclo") }));
+				} else if (e.getCausa().equals(condicionesCicloIncumplidas.FECHA_INICIO)) {
+					addFieldError("model.inicio", getText("MSG51"));
+				} else if (e.getCausa().equals(condicionesCicloIncumplidas.FECHA_IGUAL)) {
+					addFieldError(modelPublicacion,getText("MSG56"));
+				} else if (e.getCausa().equals(condicionesCicloIncumplidas.FECHA_PUBLICACION)) {
+					addFieldError(modelPublicacion,getText("MSG56"));
+				}else if(e.getCausa().equals(condicionesCicloIncumplidas.CICLO_TRASLAPE)){
+					addActionError(getText("MSG66"));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Al cumplirse las validaciones de registro de ciclos se procede a crear el
+	 * ciclo en la base de dartos teniendo en cuenta que el estado de este sera
+	 * por default la etapa de Creado.
+	 */
+
+	public String create() {
+		addActionMessage(getText("MSG1", new String[] {getText("AE_EL_CICLO"), getText("OP_REGISTRADO") }));
+		return SUCCESS;
+	}
+
+	/**
+	 * @return the idCicloSel
+	 */
+	public Integer getIdCicloSel() {
+		return idCicloSel;
+	}
+
+	/**
+	 * @param idCicloSel
+	 *            the idCicloSel to set
+	 */
+	public void setIdCicloSel(Integer idCicloSel) {
+		this.idCicloSel = idCicloSel;
+	}
+
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(Ciclo.class, idSel);
+		}
+		this.idSel = idSel;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public List<Ciclo> getListCiclo() {
+		return listCiclo;
+	}
+
+	public void setListCiclo(List<Ciclo> listCiclo) {
+		this.listCiclo = listCiclo;
+	}
+
+	@Override
+	@VisitorFieldValidator
+	public Ciclo getModel() {
+		if (this.model == null) {
+			this.model = new Ciclo();
+		}
+		return model;
+	}
+
+	public void setModel(Ciclo model) {
+		this.model = model;
+	}
+
+	public CicloBs getCicloBs() {
+		return cicloBs;
+	}
+
+	public void setCicloBs(CicloBs cicloBs) {
+		this.cicloBs = cicloBs;
+	}
+
+	/**
+	 * @return the today
+	 */
+	public Date getToday() {
+		return today;
+	}
+
+	/**
+	 * @param today
+	 *            the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
+	}
+
+}

@@ -1,0 +1,57 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+/**
+ * Mapea la llave compuesta de la relación entre un {@link Convocatoria} y un {@link Aspirante}
+ * @author luna
+ *
+ */
+@Embeddable
+public class ConvocatoriaAspiranteId implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1698280531054143640L;
+
+	/**
+	 * Id de la convocatoria a la que pertenece un aspirante
+	 **/
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Id del aspirante de una convocatoria
+	 **/
+	@Column(name = "id_aspirante", nullable = false)
+	private Integer idAspirante;
+
+	public ConvocatoriaAspiranteId() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public ConvocatoriaAspiranteId(Integer idConvocatoria, Integer idAspirante) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+}

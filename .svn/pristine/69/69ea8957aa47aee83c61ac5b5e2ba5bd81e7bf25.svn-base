@@ -1,0 +1,118 @@
+/**
+ * 
+ */
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Id Compuesto de un horario
+ *
+ */
+@Embeddable
+public class HorarioId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Id de la convocatoria a la que pertenece una entrevista
+	 **/
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Id del entrevistador asignado a una entrevista
+	 **/
+	@Column(name = "id_entrevistador", nullable = false)
+	private Integer idEntrevistador;
+
+	/**
+	 * id del dia en el que se aplicara una entrevista
+	 **/
+	@Column(name = "id_dia", nullable = false)
+	private Integer idDia;
+
+	/**
+	 * Id que identifica a la entrevista
+	 **/
+	@Column(name = "id_horario", nullable = false)
+	private Integer idHorario;
+
+	public HorarioId(Integer idConvocatoria, Integer idEntrevistador, Integer idDia, Integer idHorario) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+		this.idEntrevistador = idEntrevistador;
+		this.idDia = idDia;
+		this.idHorario = idHorario;
+	}
+
+	public HorarioId() {
+		super();
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador
+	 *            the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+
+	/**
+	 * @return the idDia
+	 */
+	public Integer getIdDia() {
+		return idDia;
+	}
+
+	/**
+	 * @param idDia
+	 *            the idDia to set
+	 */
+	public void setIdDia(Integer idDia) {
+		this.idDia = idDia;
+	}
+
+	/**
+	 * @return the idHorario
+	 */
+	public Integer getIdHorario() {
+		return idHorario;
+	}
+
+	/**
+	 * @param idHorario
+	 *            the idHorario to set
+	 */
+	public void setIdHorario(Integer idHorario) {
+		this.idHorario = idHorario;
+	}
+
+}

@@ -1,0 +1,83 @@
+package mx.edu.eld.convocatoria.bs;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisito;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisitoId;
+import mx.edu.eld.calendario.mapeo.Requisito;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+/**
+ * Bs de la entidad ConvocatoriaRequisito
+ * 
+ * @author Luis
+ *
+ */
+@Service("convocatoriaRequisitoBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaRequisitoBs extends GenericBs<ConvocatoriaRequisito> {
+
+	/**
+	 * requisitoBs: Bs de la entidad {@link Requisito} 
+	 * Atributo requerido para guardar
+	 * el requisito, antes de guardar un ConvocatoriaRequisito
+	 */
+	@Autowired
+	private RequisitoBs requisitoBs;
+
+	/**
+	 * Metodo para guardar nueva {@link ConvocatoriaRequisito}
+	 * @param model 
+	 *          {@link Requisito} Requisito a asociar con una ConvocatoriaRequisito 
+	 * @param id
+	 *          {Integer} Id de la Convocatoria a asociar
+	 *          
+	 * @param convocatoriaRequisito
+	 *         {@link ConvocatoriaRequisito} ConvocatoriaRequisito a guardar      
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void guardarConvocatoriaRequisito(Requisito model, Integer id,
+			ConvocatoriaRequisito convocatoriaRequisito) {
+		ConvocatoriaRequisitoId idConvocatoriaRequisito = new ConvocatoriaRequisitoId(id, requisitoBs.save(model).getId());
+		convocatoriaRequisito.setId(idConvocatoriaRequisito);
+		save(convocatoriaRequisito);
+	}
+
+	/**
+	 * Metodo para actualizar {@link ConvocatoriaRequisito}
+	 * @param model
+	 * {@link Requisito} Requisito asociado con convocatoriaRequisito a actualizar 
+	 * @param id
+	 *        {@link ConvocatoriaRequisitoId} Id de ConvocatoriaRequisito a actualizar
+	 * @param convocatoriaRequisito
+	 * {@link ConvocatoriaRequisito} ConvocatoriaRequisito a actualizar 
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void actualizarConvocatoriaRequisito(Requisito model, ConvocatoriaRequisitoId id,
+			ConvocatoriaRequisito convocatoriaRequisito) {
+		requisitoBs.clear();
+		requisitoBs.update(model);
+		convocatoriaRequisito.setId(id);
+		update(convocatoriaRequisito);
+	}
+
+	/**
+	 * @return the requisitoBs
+	 */
+	public RequisitoBs getRequisitoBs() {
+		return requisitoBs;
+	}
+
+	/**
+	 * @param requisitoBs
+	 *            the requisitoBs to set
+	 */
+	public void setRequisitoBs(RequisitoBs requisitoBs) {
+		this.requisitoBs = requisitoBs;
+	}
+
+}

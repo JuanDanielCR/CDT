@@ -1,0 +1,41 @@
+var idConvocatoriaCriterio = "";
+
+/*
+ * Esta funcion se ejecuta cuando se cambia de tab, elimina el dataTable al
+ * recurso que se cambia.
+ */
+$.subscribe('tabchange', function(event, data) {
+	var tab = event.originalEvent.ui.newTab.attr("id");
+	if (tab === "tab1") {
+		var table2 = $('#tblRequisitos').DataTable();
+		table2.destroy();
+	} else if (tab === "tab2") {
+		var table1 = $('#tblCriterios').DataTable();
+		table1.destroy();
+	}
+});
+/*
+ * Esta funcion se ejecuta siempre que se carga una tab. le da formato de
+ * dataTables al recurso externo.
+ */
+$.subscribe('tabcomplete', function(event, ui) {
+	dataTableEMETH.createResponsiveDataTable("tblCriterios");
+	dataTableEMETH.createResponsiveDataTable("tblRequisitos");
+});
+
+function submitForm() {
+	var action = $("#hdnRutaContexto").val()
+			+ "/convocatoria/gestionar-requisito/" 
+			+ idConvocatoriaCriterio;
+	$("#frmEliminarConvocatoriaRequisito").prop("action", action);
+	$("#frmEliminarConvocatoriaRequisito").submit();
+}
+
+function openDlgDelete(_idConvocatoriaCriterio) {
+	idConvocatoriaCriterio = _idConvocatoriaCriterio;
+	$.publish("showDlgDelete");
+}
+
+function closeDeleteDlg() {
+	$.publish("closeDlgDelete");
+}

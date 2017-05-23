@@ -1,0 +1,461 @@
+package mx.edu.eld.admision.action;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.apache.struts2.json.annotations.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.edu.eld.admision.mapeo.Contacto;
+import mx.edu.eld.informacionbase.mapeo.CategoriaContacto;
+import mx.edu.eld.informacionbase.mapeo.CategoriaContacto.EnumCategoriaContacto;
+import mx.edu.eld.informacionbase.mapeo.TipoContacto;
+import mx.edu.eld.informacionbase.mapeo.TipoContacto.EnumTipoContacto;
+import mx.ipn.escom.cdt.util.Constantes;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.Error;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.ContactoBs;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+import mx.ipn.escom.cdt.util.bs.exception.ContactosLimiteException;
+import mx.ipn.escom.cdt.util.bs.exception.ContactoFormatosException;
+import mx.ipn.escom.cdt.util.bs.exception.ContactoObligatoriosException;
+
+@Namespace("/admision")
+@Results({
+		@Result(name = "success", type = "redirectAction", params = { "actionName",
+				"../admision/gestionar-contactos/new" }),
+		@Result(name = "registrar", type = "redirectAction", params = { "actionName",
+				"../admision/registrar-aspirante" }) })
+@AllowedMethods("validaMinimoContactos")
+public class GestionarContactosAct extends ActionSupportCDT implements ModelDriven<Contacto> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador del id Aspirante.
+	 */
+	private Integer idSelPersona;
+
+	/**
+	 * Identificador del id del Contacto.
+	 */
+	private Integer idSel;
+	/**
+	 * Aspirante al que pertenecen los contactos. (antes persona)
+	 * 
+	 */
+	private Aspirante aspirante;
+	/**
+	 * Lista de contactos.
+	 */
+	private List<Contacto> listContactos;
+	/**
+	 * model del contacto
+	 */
+	private Contacto model;
+	/**
+	 * Lista de tipos o metodo de contacto
+	 */
+	private List<TipoContacto> listTiposContacto;
+
+	/**
+	 * Lista de categorias de contactos
+	 */
+	private List<CategoriaContacto> listCategorias;
+
+	/**
+	 * Lista de contactos en string para JSP
+	 */
+	private List<Contacto> listContactosString;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private ContactoBs contactoBs;
+
+	private Contacto contacto;
+	private Error error;
+	private static final Properties properties;
+	private static final Integer MAX_DEFAULT_NUMBER_OF_CONTACTS = 10;
+	private static final Integer MIN_DEFAULT_NUMBER_OF_CONTACTS = 0;
+	private Integer maxNumberOfContacts;
+	private Integer minNumberOfContacts;
+
+	static {
+		properties = new Properties();
+
+		try {
+			properties.load(GestionarContactosAct.class.getClassLoader()
+					.getResourceAsStream("mx/edu/eld/package_es_MX.properties"));
+			properties.load(GestionarContactosAct.class.getClassLoader().getResourceAsStream("global.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String index() {
+		return INDEX;
+	}
+
+	public String editNew() {
+		// Integer idCategoriaAux = (Integer)
+		// SessionManager.get(NombreObjetosSesion.USUARIO_SESION);
+		// model.setIdCategoria(idCategoriaAux);
+		// idSelPersona = 1;
+		getAspirante();
+		listCategorias = genericSearchBs.findAll(CategoriaContacto.class);
+		listTiposContacto = genericSearchBs.findAll(TipoContacto.class);
+		listContactos = genericSearchBs.findByExample(new Contacto(aspirante.getId()));
+		getModel();
+		model.setIdPersona(idSelPersona);
+		listContactosString = new ArrayList<>();
+		for (Contacto c : listContactos) {
+			c.setText(contactoToString(c));
+			listContactosString.add(c);
+		}
+		return EDITNEW;
+	}
+
+	public void validateCreate()
+			throws ContactoObligatoriosException, ContactosLimiteException, ContactoFormatosException {
+		getAspirante();
+		this.error = new Error();
+		error = contactoBs.addContacto(model, listContactos, error);
+
+		for (Map.Entry<String, List<String>> errorAux : error.getListErrores().entrySet()) {
+			for (Integer i = 0; i < errorAux.getValue().size(); i++) {
+				addFieldError(errorAux.getKey(), errorAux.getValue().get(i));
+			}
+		}
+		// String mensaje = properties.getProperty("MSG55");
+		// mensaje = mensaje.replace("{0}", "Este contacto");
+		// addFieldError("model.globalHidden",mensaje);
+		listCategorias = genericSearchBs.findAll(CategoriaContacto.class);
+		listTiposContacto = genericSearchBs.findAll(TipoContacto.class);
+		listContactos = genericSearchBs.findByExample(new Contacto(aspirante.getId()));
+		// getModel();
+		listContactosString = new ArrayList<>();
+		for (Contacto c : listContactos) {
+			c.setText(contactoToString(c));
+			listContactosString.add(c);
+		}
+	}
+
+	public String create() {
+		getAspirante();
+		model.setIdPersona(aspirante.getId());
+		contactoBs.agregarContacto(model);
+		listCategorias = genericSearchBs.findAll(CategoriaContacto.class);
+		listTiposContacto = genericSearchBs.findAll(TipoContacto.class);
+		listContactos = genericSearchBs.findByExample(new Contacto(aspirante.getId()));
+		getModel();
+		listContactosString = new ArrayList<>();
+		for (Contacto c : listContactos) {
+			c.setText(contactoToString(c));
+			listContactosString.add(c);
+		}
+		return SUCCESS;
+
+	}
+
+	public String destroy() {
+
+		contactoBs.eliminarContacto(model);
+		return SUCCESS;
+	}
+
+	public GestionarContactosAct() {
+		this.listContactos = new ArrayList<>();
+		this.contacto = new Contacto();
+		this.error = new Error();
+		try {
+			Integer maxNumberOfContactsProps = Integer
+					.valueOf(properties.getProperty("mx.edu.eld.maxNumberOfContacts"));
+			Integer minNumberOfContactsProps = Integer
+					.valueOf(properties.getProperty("mx.edu.eld.minNumberOfContacts"));
+			this.maxNumberOfContacts = maxNumberOfContactsProps;
+			this.minNumberOfContacts = minNumberOfContactsProps;
+		} catch (NumberFormatException nfe) {
+			this.maxNumberOfContacts = MAX_DEFAULT_NUMBER_OF_CONTACTS;
+			this.minNumberOfContacts = MIN_DEFAULT_NUMBER_OF_CONTACTS;
+		}
+	}
+
+	/*
+	 * 
+	 * 
+	 * public Boolean editContacto(Contacto contacto) { this.error.clear();
+	 * Boolean valido = false; if (listContactos == null) { listContactos = new
+	 * ArrayList<>(); } if (validarContacto(contacto)) { int index =
+	 * listContactos.indexOf(contacto); Boolean duplicated = false; for
+	 * (Contacto c : listContactos) { if (!c.getId().equals(contacto.getId()) &&
+	 * contacto.equalsValues(c)) { duplicated = true; } } if (!duplicated) {
+	 * contacto.setText(contactoToString(contacto)); contacto.getId();
+	 * listContactos.set(index, contacto); } else { error.add("globalHidden",
+	 * properties.getProperty("MSG6")); valido = false; } } return valido; }
+	 */
+
+	/**
+	 * @return the contacto
+	 */
+	@JSON(serialize = false)
+	public Contacto getContacto() {
+		return contacto;
+	}
+
+	/**
+	 * @param contacto
+	 *            the contacto to set
+	 */
+	public void setContacto(Contacto contacto) {
+		this.contacto = contacto;
+	}
+
+	/**
+	 * @return the error
+	 */
+	public Error getError() {
+		return error;
+	}
+
+	/**
+	 * @param error
+	 *            the error to set
+	 */
+	public void setError(Error error) {
+		this.error = error;
+	}
+
+	/**
+	 * Convierte el contacto en una cadena para representarse con ciertas
+	 * etiquetas dependiendo el tipo y categoría del contacto.
+	 * 
+	 * @param contacto
+	 * @return String del contacto.
+	 */
+	public String contactoToString(Contacto contacto) {
+		String emergenciaIndicator = Constantes.CADENA_VACIA;
+		String emergencia = Constantes.CADENA_VACIA;
+		if (contacto.getIdCategoria().equals(EnumCategoriaContacto.EMERGENCIA.getIdCategoria())) {
+			// Contacto de emergencia
+			emergenciaIndicator = properties.getProperty("IUI.4-6_LBL30");
+			emergencia += Constantes.COMA + contacto.getRelacion() + Constantes.ESPACIO + contacto.getEmergencia();
+		}
+		if (contacto.getIdTipo().equals(EnumTipoContacto.TELEFONO.getIdTipo())) {
+			// Telefono
+			String ext = (contacto.getContactoB() != null && !contacto.getContactoB().isEmpty())
+					? properties.getProperty("IU1.4-5_LBL12") : Constantes.CADENA_VACIA;
+			return String.format(properties.getProperty("MX.EDU.ELD.TELEPHONE_STRING"),
+					properties.getProperty("IU1.4-5_LBL11"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), ext, contacto.getContactoB(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.FAX.getIdTipo())) {
+			// Fax
+			String ext = (contacto.getContactoB() != null && !contacto.getContactoB().isEmpty())
+					? properties.getProperty("CU1_LBL_EXTENSION") : Constantes.CADENA_VACIA;
+			return String.format(properties.getProperty("MX.EDU.ELD.FAX_STRING"),
+					properties.getProperty("CUG3.1_LBL_FAX"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), ext, contacto.getContactoB(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.CELULAR.getIdTipo())) {
+			// Mobile
+			return String.format(properties.getProperty("MX.EDU.ELD.MOBILE_STRING"),
+					properties.getProperty("IU1.4-5_LBL28"), emergenciaIndicator, contacto.getContactoA(),
+					contacto.getContacto(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.EMAIL.getIdTipo())) {
+			// Email
+			return String.format(properties.getProperty("MX.EDU.ELD.EMAIL_STRING"),
+					properties.getProperty("IU1.4-5_LBL29"), emergenciaIndicator, contacto.getContacto(), emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.LINKEDIN.getIdTipo())) {
+			// Linkedin
+			return String.format(properties.getProperty("MX.EDU.ELD.LINKEDIN_STRING"),
+					properties.getProperty("CUG3.1_LBL_LINKEDIN"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.FACEBOOK.getIdTipo())) {
+			// Facebook
+			return String.format(properties.getProperty("MX.EDU.ELD.FACEBOOK_STRING"),
+					properties.getProperty("CUG3.1_LBL_FACEBOOK"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else if (contacto.getIdTipo().equals(EnumTipoContacto.TWITTER.getIdTipo())) {
+			// Twitter
+			return String.format(properties.getProperty("MX.EDU.ELD.TWITTER_STRING"),
+					properties.getProperty("CUG3.1_LBL_TWITTER"), emergenciaIndicator, contacto.getContacto(),
+					emergencia);
+		} else {
+			return Constantes.CADENA_VACIA;
+		}
+	}
+
+	/**
+	 * Verifica que el aspirante tenga el mínimo de contactos registrados.
+	 * 
+	 * @return "registrar" si sí los tiene, o "editNew" si no los cumple.
+	 */
+	public String validaMinimoContactos() {
+		getAspirante();
+		listContactos = new ArrayList<>();
+		if (contactoBs.verificarContactos(aspirante.getId())) {
+			return "registrar";
+		} else {
+			listCategorias = genericSearchBs.findAll(CategoriaContacto.class);
+			listTiposContacto = genericSearchBs.findAll(TipoContacto.class);
+			listContactos = genericSearchBs.findByExample(new Contacto(aspirante.getId()));
+			getModel();
+			listContactosString = new ArrayList<>();
+			for (Contacto c : listContactos) {
+				c.setText(contactoToString(c));
+				listContactosString.add(c);
+			}
+			addFieldError("model.globalHidden", properties.getProperty("MSG10"));
+			return EDITNEW;
+		}
+	}
+
+	@SkipValidation
+	public String getContactsJSON() {
+		listContactos = getListContactos();
+		return "getContactsJSON";
+	}
+
+	public void clearError() {
+		this.error.clear();
+	}
+
+	public ContactoBs getContactoBs() {
+		return contactoBs;
+	}
+
+	public void setContactoBs(ContactoBs contactoBs) {
+		this.contactoBs = contactoBs;
+	}
+
+	public Integer getMaxNumberOfContacts() {
+		return maxNumberOfContacts;
+	}
+
+	public void setMaxNumberOfContacts(Integer maxNumberOfContacts) {
+		this.maxNumberOfContacts = maxNumberOfContacts;
+	}
+
+	public Integer getMinNumberOfContacts() {
+		return minNumberOfContacts;
+	}
+
+	public void setMinNumberOfContacts(Integer minNumberOfContacts) {
+		this.minNumberOfContacts = minNumberOfContacts;
+	}
+
+	public Integer getIdSel() {
+		if (idSel != null) {
+			model = genericSearchBs.findById(Contacto.class, idSel);
+		} else {
+			model = new Contacto();
+		}
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+		if (this.idSel != null) {
+			model = genericSearchBs.findById(Contacto.class, idSel);
+		}
+	}
+
+	public Aspirante getAspirante() {
+		if (SessionManager.get(NombreObjetosSesion.ASPIRANTE) != null) {
+			aspirante = (Aspirante) SessionManager.get(NombreObjetosSesion.ASPIRANTE);
+		}
+		return aspirante;
+	}
+
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	public List<Contacto> getListContactos() {
+		return listContactos;
+	}
+
+	public void setListContactos(List<Contacto> listContactos) {
+		this.listContactos = listContactos;
+	}
+
+	public Contacto getModel() {
+		if (model == null) {
+			model = new Contacto();
+		}
+		return model;
+	}
+
+	public void setModel(Contacto model) {
+		this.model = model;
+	}
+
+	public List<TipoContacto> getListTiposContacto() {
+		return listTiposContacto;
+	}
+
+	public void setListTiposContacto(List<TipoContacto> listTiposContacto) {
+		this.listTiposContacto = listTiposContacto;
+	}
+
+	public List<CategoriaContacto> getListCategorias() {
+		return listCategorias;
+	}
+
+	public void setListCategorias(List<CategoriaContacto> listCategorias) {
+		this.listCategorias = listCategorias;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public List<Contacto> getListContactosString() {
+		return listContactosString;
+	}
+
+	public void setListContactosString(List<Contacto> listContactosString) {
+		this.listContactosString = listContactosString;
+	}
+
+	public Integer getIdSelPersona() {
+		if (idSelPersona != null) {
+			aspirante = genericSearchBs.findById(Aspirante.class, idSelPersona);
+		} else {
+			aspirante = new Aspirante();
+		}
+		return idSelPersona;
+	}
+
+	public void setIdSelPersona(Integer idSelPersona) {
+		this.idSelPersona = idSelPersona;
+		if (this.idSelPersona != null) {
+			aspirante = genericSearchBs.findById(Aspirante.class, idSelPersona);
+			SessionManager.put(NombreObjetosSesion.ASPIRANTE, aspirante);
+		}
+		if (aspirante != null) {
+			listContactos = genericSearchBs.findByExample(new Contacto(aspirante.getId()));
+		}
+	}
+
+}

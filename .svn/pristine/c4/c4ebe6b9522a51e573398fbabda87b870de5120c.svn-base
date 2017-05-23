@@ -1,0 +1,85 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+
+/**
+ * Abstrae la información para la calendarización de citas para las
+ * {@link Entrevista}s. Para la calendarización de las citas se almacena
+ * únicamente la fecha y hora de inicio de la misma, con la finalidad de
+ * proporcionar flexibilidad para la realización de las entrevistas.
+ * 
+ * @author Hermes
+ *
+ */
+@Embeddable
+public class CitaId implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name  = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Aspirante}
+	 */
+	@Column(name  = "id_aspirante", nullable = false)
+	private Integer idAspirante;
+
+	/**
+	 * Identificador del {@link Entrevistador}
+	 */
+	@Column(name  = "id_entrevistador", nullable = false)
+	private Integer idEntrevistador;
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+}

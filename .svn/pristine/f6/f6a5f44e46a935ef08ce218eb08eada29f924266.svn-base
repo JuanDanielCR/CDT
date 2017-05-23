@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+
+	<!-- boton de asociar -->
+	<div class="row">
+		<div class="outter-section">
+			<div class="col-md-12">
+				<a class="btn btn-default btn-default-eld" id="btnAsociar"
+					href="${pageContext.request.contextPath}/convocatoria/asociar-criterios/new?idConvocatoriaSel=${idConvocatoriaSel}">
+					<s:text name="IU1.2-3_BTN4" />
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Tabla -->
+
+
+	<s:set var="listCriterios"
+		value="{{'Examen CENEVAL','7','10','30%','14/06/2017 - 14/06/2017','10:00','400$'},
+					{'Examen Psicométrico','0','1','','14/06/2017 - 14/06/2017','14:00','100$'},
+					{'Entrevista','0','1','','20/06/2017','13:00',''},
+					{'Promedio preparatoria','7','10','','','',''},
+					{'Promedio secundaria','7','10','','','',''}}" />
+	<div class="form form-horizontal form-max text-justify">
+		<table id="tblCriterios" class="table table-striped text-center">
+			<thead>
+				<tr>
+					<th data-priority="1"><s:text name="IU1.2-2_LBL1" /></th>
+					<th data-priority="4"><s:text name="IU1.2-2_LBL2" /></th>
+					<th data-priority="5"><s:text name="IU1.2-2_LBL3" /></th>
+					<th data-priority="6"><s:text name="IU1.2-2C_LBL11" /></th>
+					<!-- <th data-priority="2"><s:text name="IU1.2-2_LBL4" /></th>
+					<th data-priority="7"><s:text name="IU1.2-2_LBL5" /></th>  -->
+					<th data-priority="8"><s:text name="IU1.2-2_LBL6" /></th>
+					<th data-priority="3"><s:text name="IU1.2-2_LBL7" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<s:iterator value="listConvocatoriaCriterio" var="crit">
+					<tr>
+						<td>${crit.criterio.nombre}</td>
+						<td>${crit.minimo}</td>
+						<td>${crit.maximo}</td>
+						<td>${crit.ponderacion}%</td>
+
+						<!--  	<td><s:date name="%{#crit.listPeriodos[0].inicio}"
+								format="yyyy-MM-dd" /> - <s:date
+								name="%{#crit.listPeriodos[0].fin}" format="yyyy-MM-dd" /></td>
+						<td><s:date name="%{#crit.listPeriodos[0].inicio}"
+								format="HH:mm"></s:date></td> -->
+						<s:if test="%{#crit.criterio.costo}">
+							<td>${crit.costo}</td>
+						</s:if>
+						<s:else>
+							<td>N/A</td>
+						</s:else>
+						<td><a
+							href="${pageContext.request.contextPath}/convocatoria/configurar-criterio/${crit.idCriterio}/edit"><i
+								class="material-icons md-24 md-eld">mode_edit</i></a></td>
+					</tr>
+				</s:iterator>
+			</tbody>
+		</table>
+	</div>
+
+</jsp:root>

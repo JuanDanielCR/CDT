@@ -1,0 +1,19 @@
+/*
+ * <script type="text/javascript">
+ * Conekta&#46;setPublishableKey('key_KJysdbf6PotS2ut2');
+ * 
+ * var conektaSuccessResponseHandler = function(token) { var $form =
+ * $("#card-form"); //Inserta el token_id en la forma para que se envíe al
+ * servidor $form&#46;append($("<input type='hidden'
+ * id='conektaTokenId'>")&#46;val(token&#46;id)); $form&#46;get(0)&#46;submit();
+ * //Hace submit }; var conektaErrorResponseHandler = function(response) { var
+ * $form = $("#card-form");
+ * $form&#46;find("&#46;card-errors")&#46;text(response&#46;message_to_purchaser);
+ * $form&#46;find("button")&#46;prop("disabled", false); };
+ * 
+ * //jQuery para que genere el token después de dar click en submit $(function () {
+ * $("#card-form")&#46;submit(function(event) { var $form = $(this); // Previene
+ * hacer submit más de una vez $form&#46;find("button")&#46;prop("disabled",
+ * true); Conekta&#46;token&#46;create($form, conektaSuccessResponseHandler,
+ * conektaErrorResponseHandler); return false; }); }); </script>
+ */

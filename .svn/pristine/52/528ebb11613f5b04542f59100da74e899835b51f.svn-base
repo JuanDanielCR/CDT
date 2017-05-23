@@ -1,0 +1,186 @@
+/**
+Estilos generales
+**/
+body {
+	font-family: "Raleway", Helvetica, Arial, Verdana, sans-serif !important;
+	font-size: 13px/16px";
+}
+
+#content {
+	min-height: 400px !important;
+}
+
+.footer {
+	clear: both;
+	width: 100%;
+	height: 100px;
+	background-color: rgb(252, 252, 252);
+	margin-top: 10px !important;
+	clear: both;
+	border-top: 1px solid;
+	border-top-color: rgb(231, 231, 231);
+	padding: 20px 0px 20px 0px;
+	text-align: center;
+}
+
+.navbar {
+	padding: 0px 0px 0px 0px;
+}
+
+.logo {
+	width: 100%;
+	height: 100%;
+	margin: 0px 10px 0px -10px;
+}
+
+/**
+Estilos para columnas pequeñas enn datatables
+**/
+.col-actions {
+	max-width: 15% !important;
+	width: 15% !important;
+}
+
+.col-number {
+	max-width: 15% !important;
+	width: 15% !important;
+}
+
+/**
+Estilos para elementos html
+**/
+textarea {
+	resize: none;
+}
+
+i {
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
+
+/**
+Estilos para el componente de contactos
+**/
+.container-dialog {
+	width: 95%;
+}
+
+#dlgContact, .ui-dialog {
+	width: 650px !important;
+	/*min-height: 200px !important;*/
+}
+
+#dlgContact>* {
+	display: block;
+}
+
+/*
+Otros estilos
+*/
+section.intro-section {
+	padding-top: 90px !important;
+}
+
+.button-action-image:hover {
+	background-color: rgba(234, 234, 234, 0.9);
+}
+
+.button-action-image {
+	border-radius: 2px;
+	padding: 2px;
+	height: 22px;
+	width: 22px;
+	cursor: pointer;
+	margin: 0px 2px 0px 2px;
+	background-color: rgba(234, 234, 234, 0.5);
+}
+
+.alert-info {
+	margin: 10px 0px 10px 0px;
+}
+
+.col-text {
+	text-align: left;
+}
+
+.group-image {
+	max-width: 75%;
+}
+
+.col-actions {
+	max-width: 15% !important;
+	width: 15% !important;
+}
+
+.col-number {
+	max-width: 15% !important;
+	width: 15% !important;
+}
+
+.msg-welcome {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.msg-frase {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	font-style: italic;
+}
+
+.msg-author {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-style: italic;
+}
+
+div#content {
+	/*min-height: 800px;*/
+	
+}
+
+.pdf {
+	height: 500px;
+}
+
+.ui-datepicker {
+	z-index: 1000 !important;
+}
+
+table, th, tr, td{
+	text-align: left;
+}
+
+.title-red {
+	margin: 0px 0px 20px 0px;
+	color: #ff1a1a;
+}
+
+.text-xs-left { text-align: left; }
+.text-xs-right { text-align: right; }
+.text-xs-center { text-align: center; }
+.text-xs-justify { text-align: justify; }
+
+@media (min-width: 768px) {
+    .text-sm-left { text-align: left; }
+    .text-sm-right { text-align: right; }
+    .text-sm-center { text-align: center; }
+    .text-sm-justify { text-align: justify; }
+}
+
+@media (min-width: 992px) {
+    .text-md-left { text-align: left; }
+    .text-md-right { text-align: right; }
+    .text-md-center { text-align: center; }
+    .text-md-justify { text-align: justify; }
+}
+
+@media (min-width: 1200px) {
+    .text-lg-left { text-align: left; }
+    .text-lg-right { text-align: right; }
+    .text-lg-center { text-align: center; }
+    .text-lg-justify { text-align: justify; }
+}

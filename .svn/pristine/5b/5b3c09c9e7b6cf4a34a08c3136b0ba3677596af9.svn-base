@@ -1,0 +1,12 @@
+var listCriterios;
+$(function() {
+
+	listCriterios = "";
+	dataTableEMETH.createResponsiveDataTable("tblCriterios");
+
+	$("input[type='checkbox']").change(function() {
+		listCriterios = listCriterios + $(this).val() + "_";
+		$("#listAsociar").val(listCriterios);
+	});
+
+});

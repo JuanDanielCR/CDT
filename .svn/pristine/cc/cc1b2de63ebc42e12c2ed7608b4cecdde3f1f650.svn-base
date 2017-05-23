@@ -1,0 +1,36 @@
+package mx.edu.eld.bs.rules;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.admision.mapeo.ConvocatoriaAspirante;
+import mx.ipn.escom.cdt.util.Numeros;
+
+/**
+ * Regla de negocio RN-N8 Promedio General
+ */
+@Service("reglaNegocioN8")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN8 implements ReglaNegocio {
+
+	/**
+	 * Regla de negocio N8 obtiene el promedio general mediante la siguiente
+	 * expreción PG = 0.3PSB + 0.4EC + 0.3EP.
+	 * 
+	 * @param aspirante
+	 *            {ConvocatoriaAspirante} Aspirante al cual se le genera el
+	 *            promedio.
+	 * @return {float} Promedio general. Nota: las evaluaciones de ExamenCeneval
+	 *         y Examen Psicometrico aun no se obtienen.
+	 */
+	public float validate(ConvocatoriaAspirante aspirante) {
+		Double promedioGeneral;
+		float promedioSB;
+		promedioSB = (aspirante.getPromedioBachillerato() + aspirante.getPromedioSecundaria()) / Numeros.DOS.getValor();
+		promedioGeneral = promedioSB * 0.3 + aspirante.getExamenCeneval() * 0.4
+				+ aspirante.getExamenPsicometrico() * 0.3;
+		return promedioGeneral.floatValue();
+	}
+
+}

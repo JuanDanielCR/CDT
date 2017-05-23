@@ -1,0 +1,207 @@
+package mx.edu.eld.admision.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import mx.edu.eld.admision.bs.ConvocatoriaAspiranteBs;
+import mx.edu.eld.admision.mapeo.ConvocatoriaAspirante;
+import mx.edu.eld.admision.mapeo.EstatusAspirante.estatusAspiratenEnum;
+import mx.edu.eld.calendario.bs.CicloBs;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/admision")
+@AllowedMethods({ "notificarAspirantes" })
+public class AspirantesEntrevistarAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private CicloBs cicloBs;
+
+	/**
+	 * Modelo con la convocatoria actual.
+	 */
+	private Convocatoria convocatoriaSel;
+
+	/**
+	 * Id de la convocatoria actual.
+	 */
+	private Integer idSel;
+
+	@Autowired
+	private ConvocatoriaAspiranteBs convocatoriaAspiranteBs;
+
+	/**
+	 * Lista de aspirantes de la convocatoria actual.
+	 */
+	private List<ConvocatoriaAspirante> listConvocatoriaAspirante;
+
+	/**
+	 * Lista de Aspirantes que cambian del estatus Evaluaciones a Entrevistas.
+	 */
+	private List<Integer> listAspirantes;
+
+	private boolean esperados;
+
+	public String index() {
+		convocatoriaSel = genericSearchBs.findById(Convocatoria.class, cicloBs.obtenerCicloActual().getId());
+		listConvocatoriaAspirante = genericSearchBs.findByExample(
+				new ConvocatoriaAspirante(convocatoriaSel.getId(), estatusAspiratenEnum.ENTREVISTAS.getEstatus()));
+		for (ConvocatoriaAspirante c : listConvocatoriaAspirante) {
+			c.setExamenCeneval((float) 8);
+			c.setExamenPsicometrico((float) 9);
+		}
+		esperados = convocatoriaAspiranteBs.numeroAspirantesEsperados(convocatoriaSel.getNumeroAceptar(),
+				listConvocatoriaAspirante.size());
+		return INDEX;
+	}
+
+	public String editNew() {
+		Ciclo cicloActual = cicloBs.obtenerCicloActual();
+		if (cicloActual != null) {
+			convocatoriaSel = genericSearchBs.findById(Convocatoria.class, cicloBs.obtenerCicloActual().getId());
+			listConvocatoriaAspirante = genericSearchBs.findByExample(
+					new ConvocatoriaAspirante(convocatoriaSel.getId(), estatusAspiratenEnum.EVALUACIONES.getEstatus()));
+			for (ConvocatoriaAspirante c : listConvocatoriaAspirante) {
+				c.setExamenCeneval((float) 8);
+				c.setExamenPsicometrico((float) 9);
+			}
+		}
+		return EDITNEW;
+	}
+
+	public String update() {
+		
+		return EDITNEW;
+	}
+
+	public String notificarAspirantes() {
+		System.err.println("llego");
+		return SUCCESS;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	/**
+	 * @return the cicloBs
+	 */
+	public CicloBs getCicloBs() {
+		return cicloBs;
+	}
+
+	/**
+	 * @param cicloBs
+	 *            the cicloBs to set
+	 */
+	public void setCicloBs(CicloBs cicloBs) {
+		this.cicloBs = cicloBs;
+	}
+
+	/**
+	 * @return the listConvocatoriaAspirante
+	 */
+	public List<ConvocatoriaAspirante> getListConvocatoriaAspirante() {
+		return listConvocatoriaAspirante;
+	}
+
+	/**
+	 * @param listConvocatoriaAspirante
+	 *            the listConvocatoriaAspirante to set
+	 */
+	public void setListConvocatoriaAspirante(List<ConvocatoriaAspirante> listConvocatoriaAspirante) {
+		this.listConvocatoriaAspirante = listConvocatoriaAspirante;
+	}
+
+	/**
+	 * @return the convocatoriaSel
+	 */
+	public Convocatoria getConvocatoriaSel() {
+		return convocatoriaSel;
+	}
+
+	/**
+	 * @param convocatoriaSel
+	 *            the convocatoriaSel to set
+	 */
+	public void setConvocatoriaSel(Convocatoria convocatoriaSel) {
+		this.convocatoriaSel = convocatoriaSel;
+	}
+
+	/**
+	 * @return the convocatoriaAspiranteBs
+	 */
+	public ConvocatoriaAspiranteBs getConvocatoriaAspiranteBs() {
+		return convocatoriaAspiranteBs;
+	}
+
+	/**
+	 * @param convocatoriaAspiranteBs
+	 *            the convocatoriaAspiranteBs to set
+	 */
+	public void setConvocatoriaAspiranteBs(ConvocatoriaAspiranteBs convocatoriaAspiranteBs) {
+		this.convocatoriaAspiranteBs = convocatoriaAspiranteBs;
+	}
+
+	/**
+	 * @return the idSel
+	 */
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	/**
+	 * @param idSel
+	 *            the idSel to set
+	 */
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+	/**
+	 * @param esperados
+	 *            the esperados to set
+	 */
+	public void setEsperados(boolean esperados) {
+		this.esperados = esperados;
+	}
+
+	/**
+	 * @return the listAspirantes
+	 */
+	public List<Integer> getListAspirantes() {
+		return listAspirantes;
+	}
+
+	/**
+	 * @param listAspirantes
+	 *            the listAspirantes to set
+	 */
+	public void setListAspirantes(List<Integer> listAspirantes) {
+		this.listAspirantes = listAspirantes;
+	}
+}

@@ -1,0 +1,196 @@
+var map;
+var infoWindow = null;
+var point = null;
+var latlng = null;
+
+$(function() {
+	$("#fileIdentificacion").bind('change', function() {
+
+		var fileName = $("#fileIdentificacion").val();
+		$("#identificacionOficial").text(fileName);
+	});
+	$("#fileActaNacimiento").bind('change', function() {
+		var fileName = $("#fileActaNacimiento").val();
+		$("#actaNacimiento").text(fileName);
+	});
+	$("#fileCurp").bind('change', function() {
+		var fileName = $("#fileCurp").val();
+		$("#curp").text(fileName);
+	});
+	$("#fileCertificadoSecundaria").bind('change', function() {
+		var fileName = $("#fileCertificadoSecundaria").val();
+		$("#certificadoSecundaria").text(fileName);
+	});
+	$("#fileCertificadoBachillerato").bind('change', function() {
+		// var nombre3 =
+		// $("#certificadoBachillerato").text($("#fileCertificadoBachillerato").prop("value"));
+		// $("#fileName").prop("value", fileName);
+		var fileName = $("#fileCertificadoBachillerato").val();
+		$("#certificadoBachillerato").text(fileName);
+
+	});
+});
+
+function DeleteContact() {
+	$.publish("showDlgDeleteContact");
+	$("#dlgDeleteContact").removeClass("dlgDeleteContact");
+}
+
+function closeDeleteContact(){
+	$.publish("closeDlgDeleteContact");
+}
+
+function verificaOpcion(idRadio) {
+	if (idRadio == "rdGenero_1") {
+		$("#txNombreMaterias").val("");
+		$("#idNombreMaterias").removeClass("hidden");
+	}
+	if (idRadio == "rdGenero_0") {
+		$("#idNombreMaterias").addClass("hidden");
+		$("#txNombreMaterias").val("");
+	}
+	if (idRadio == "rdMexicoBach_1") {
+		$("#txPromedioBachillerato").val("");
+		$("#idBachilleratoEntidad").removeClass("hidden");
+		$("#idBachilleratoMunicipio").removeClass("hidden");
+		$("#idNombreBachillerato").removeClass("hidden");
+		$("#idPromedioBachillerato").removeClass("hidden");
+		$("#idTipoBachillerato").removeClass("hidden");
+		$("#idAdeudoMaterias").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoBach_0") {
+		$("#txPromedioBachillerato").val("");
+		$("#idBachilleratoEntidad").addClass("hidden");
+		$("#idBachilleratoMunicipio").addClass("hidden");
+		$("#idNombreBachillerato").removeClass("hidden");
+		$("#idPromedioBachillerato").addClass("hidden");
+		$("#idTipoBachillerato").removeClass("hidden");
+		$("#idAdeudoMaterias").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoBach_true") {
+		$("#txPromedioBachillerato").val("");
+		$("#idBachilleratoEntidad").removeClass("hidden");
+		$("#idBachilleratoMunicipio").removeClass("hidden");
+		$("#idNombreBachillerato").removeClass("hidden");
+		$("#idPromedioBachillerato").removeClass("hidden");
+		$("#idTipoBachillerato").removeClass("hidden");
+		$("#idAdeudoMaterias").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoBach_false") {
+		$("#txPromedioBachillerato").val("");
+		$("#idBachilleratoEntidad").addClass("hidden");
+		$("#idBachilleratoMunicipio").addClass("hidden");
+		$("#idNombreBachillerato").removeClass("hidden");
+		$("#idPromedioBachillerato").addClass("hidden");
+		$("#idTipoBachillerato").removeClass("hidden");
+		$("#idAdeudoMaterias").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoSec_1") {
+		$("#txPromedioSecundaria").val("");
+		$("#idSecundariaEntidad").removeClass("hidden");
+		$("#idSecundariaMunicipio").removeClass("hidden");
+		$("#idNombreSecundaria").removeClass("hidden");
+		$("#idPromedioSecundaria").removeClass("hidden");
+		$("#idTipoEscuelaSecundaria").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoSec_0") {
+		$("#txPromedioSecundaria").val("");
+		$("#idSecundariaEntidad").addClass("hidden");
+		$("#idSecundariaMunicipio").addClass("hidden");
+		$("#idNombreSecundaria").removeClass("hidden");
+		$("#idPromedioSecundaria").addClass("hidden");
+		$("#idTipoEscuelaSecundaria").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoSec_true") {
+		$("#txPromedioSecundaria").val("");
+		$("#idSecundariaEntidad").removeClass("hidden");
+		$("#idSecundariaMunicipio").removeClass("hidden");
+		$("#idNombreSecundaria").removeClass("hidden");
+		$("#idPromedioSecundaria").removeClass("hidden");
+		$("#idTipoEscuelaSecundaria").removeClass("hidden");
+	}
+	if (idRadio == "rdMexicoSec_false") {
+		$("#txPromedioSecundaria").val("");
+		$("#idSecundariaEntidad").addClass("hidden");
+		$("#idSecundariaMunicipio").addClass("hidden");
+		$("#idNombreSecundaria").removeClass("hidden");
+		$("#idPromedioSecundaria").addClass("hidden");
+		$("#idTipoEscuelaSecundaria").removeClass("hidden");
+	}
+}
+
+function verificaBachillerato() {
+	var id = $("#slcListBachilleratos option:selected").val();
+	if (id == 3) {
+		$("#nombreBachillerato").removeClass("hidden");
+	} else {
+		$("#nombreBachillerato").addClass("hidden");
+	}
+	$("#nombreBachillerato").val("");
+}
+
+function selectImage(idImage) {
+	$("#" + idImage).click();
+}
+
+function validateFormat(format) {
+	return (format == FORMAT_PNG || format == FORMAT_JPG || format == FORMAT_JPEG) ? true
+			: false;
+}
+function validateSize(size) {
+	return (Number(size) <= Number(SIZE2M)) ? true : false;
+}
+
+var image = function() {
+
+	var FORMAT_PNG = "image/png";
+	var FORMAT_JPG = "image/jpg";
+	var FORMAT_JPEG = "image/jpeg";
+	const
+	SIZE2M = "2465792";
+
+	function validateFormat(format) {
+		return (format == FORMAT_PNG || format == FORMAT_JPG || format == FORMAT_JPEG) ? true
+				: false;
+	}
+
+	function showImage(input, idImage, idError, idErrorServer, pathImageAvatar) {
+		$('#' + idError).addClass('hide');
+		$('#' + idErrorServer).addClass('hide');
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			var format = input.files[0].type
+			if (!(input.files[0].size < 1024 * 1024 * 1)) {
+				$(".erasable").addClass("hide");
+				$("#" + idError).removeClass("hide");
+				$('#' + idImage).attr('src', pathImageAvatar);
+			} else {
+
+				if (validateFormat(format)) {
+					reader.onload = function(e) {
+						$('#' + idImage).attr('src', e.target.result);
+					}
+					reader.readAsDataURL(input.files[0]);
+				} else {
+					$(".erasable").addClass("hide");
+					$("#" + idError).removeClass("hide");
+					$('#' + idImage).attr('src', pathImageAvatar);
+				}
+			}
+		}
+	}
+
+	function selectImage(idImage) {
+		$("#" + idImage).click();
+	}
+
+	function validateSize(size) {
+		return (Number(size) <= Number(SIZE2M)) ? true : false;
+	}
+
+	return {
+		showImage : showImage,
+		selectImage : selectImage,
+		validateSize : validateSize
+	};
+}();

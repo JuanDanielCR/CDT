@@ -1,0 +1,246 @@
+/**
+ * 
+ */
+package mx.edu.eld.convocatoria.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import mx.edu.eld.bs.rules.ReglaNegocioS9;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterio;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+import mx.edu.eld.calendario.mapeo.Criterio;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaBs;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaCriterioBs;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * @author
+ *
+ */
+@Namespace("/convocatoria")
+@Results({
+		@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+				"gestionar-convocatoria/${idConvocatoriaSel}/edit" }),
+		@Result(name = ActionSupportCDT.ERROR, type = "redirectAction", params = { "actionName",
+				"asociar-criterios/new?idConvocatoriaSel=${idConvocatoriaSel}" }) })
+public class AsociarCriteriosAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private ConvocatoriaBs convocatoriaBs;
+
+	@Autowired
+	private ConvocatoriaCriterioBs convocatoriaCriterioBs;
+
+	/**
+	 * Id de la convocatoria actual
+	 */
+	private Integer idConvocatoriaSel;
+
+	/**
+	 * Lista con ids de criterios para asociar a una convocatoria
+	 */
+	private List<Integer> listAsociar;
+
+	/**
+	 * Lista con todos los criterios
+	 */
+	private List<Criterio> listCriterio;
+
+	/**
+	 * Lista con los criterios de una convocatoria
+	 */
+	private List<ConvocatoriaCriterio> listConvocatoriaCriterio;
+
+	public String editNew() {
+		listCriterio = genericSearchBs.findAll(Criterio.class);
+		if (listConvocatoriaCriterio != null) {
+			for (Criterio criterio : listCriterio) {
+				for (ConvocatoriaCriterio convocatoriaCriterio : listConvocatoriaCriterio) {
+					if (convocatoriaCriterio.getIdCriterio().equals(criterio.getId())) {
+						criterio.setAsociar(true);
+						break;
+					}
+				}
+			}
+		}
+		return EDITNEW;
+	}
+
+	public String create() {
+		if (!ReglaNegocioS9.validate(listAsociar)) {
+			addActionError(getText("MSG3"));
+			return ERROR;
+		}
+		Ciclo ciclo = genericSearchBs.findById(Ciclo.class, idConvocatoriaSel);
+		if (!convocatoriaBs.validarFechaConvocatoria(ciclo)) {
+			addActionError(getText("MSG3"));
+			return ERROR;
+		}
+		for (ConvocatoriaCriterio criterioAsociado : listConvocatoriaCriterio) {
+			if (!listAsociar.contains(criterioAsociado.getIdCriterio())) {
+				convocatoriaCriterioBs.delete(criterioAsociado);
+			}
+		}
+		Convocatoria convocatoriaActual = genericSearchBs.findById(Convocatoria.class, idConvocatoriaSel);
+		Convocatoria convocatoriaAnterior = convocatoriaBs.obtenerConvocatoriaAnterior(convocatoriaActual);
+		for (Integer idCriterio : listAsociar) {
+			if (!contieneCriterio(idCriterio)) {
+				ConvocatoriaCriterioId id = new ConvocatoriaCriterioId(idConvocatoriaSel, idCriterio);
+				ConvocatoriaCriterio convocatoriaCriterio = new ConvocatoriaCriterio(id);
+				if (convocatoriaAnterior != null) {
+					ConvocatoriaCriterioId idConvocatoriaCriterioAnterior = new ConvocatoriaCriterioId(
+							convocatoriaAnterior.getId(), idCriterio);
+					ConvocatoriaCriterio convocatoriaCriterioAnterior = genericSearchBs
+							.findById(ConvocatoriaCriterio.class, idConvocatoriaCriterioAnterior);
+					if (convocatoriaCriterioAnterior != null) {
+						convocatoriaCriterio.setCosto(convocatoriaCriterioAnterior.getCosto());
+						convocatoriaCriterio.setMaximo(convocatoriaCriterioAnterior.getMaximo());
+						convocatoriaCriterio.setMinimo(convocatoriaCriterioAnterior.getMinimo());
+						convocatoriaCriterio.setPonderacion(convocatoriaCriterioAnterior.getPonderacion());
+					}
+				}
+				convocatoriaCriterioBs.save(convocatoriaCriterio);
+			}
+		}
+		addActionMessage(getText("MSG1", new String[] { "Los datos", "agregaron" }));
+		return SUCCESS;
+	}
+
+	private boolean contieneCriterio(Integer idCriterio) {
+		for (ConvocatoriaCriterio criterioAsociado : listConvocatoriaCriterio) {
+			if(idCriterio.equals(criterioAsociado.getIdCriterio())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	/**
+	 * @return the convocatoriaBs
+	 */
+	public ConvocatoriaBs getConvocatoriaBs() {
+		return convocatoriaBs;
+	}
+
+	/**
+	 * @param convocatoriaBs
+	 *            the convocatoriaBs to set
+	 */
+	public void setConvocatoriaBs(ConvocatoriaBs convocatoriaBs) {
+		this.convocatoriaBs = convocatoriaBs;
+	}
+
+	/**
+	 * @return the convocatoriaCriterioBs
+	 */
+	public ConvocatoriaCriterioBs getConvocatoriaCriterioBs() {
+		return convocatoriaCriterioBs;
+	}
+
+	/**
+	 * @param convocatoriaCriterioBs
+	 *            the convocatoriaCriterioBs to set
+	 */
+	public void setConvocatoriaCriterioBs(ConvocatoriaCriterioBs convocatoriaCriterioBs) {
+		this.convocatoriaCriterioBs = convocatoriaCriterioBs;
+	}
+
+	/**
+	 * @return the idConvocatoriaSel
+	 */
+	public Integer getIdConvocatoriaSel() {
+		return idConvocatoriaSel;
+	}
+
+	/**
+	 * @param idConvocatoriaSel
+	 *            the idConvocatoriaSel to set
+	 */
+	public void setIdConvocatoriaSel(Integer idConvocatoriaSel) {
+		if (idConvocatoriaSel != null) {
+			ConvocatoriaCriterioId id = new ConvocatoriaCriterioId();
+			id.setIdConvocatoria(idConvocatoriaSel);
+			ConvocatoriaCriterio example = new ConvocatoriaCriterio();
+			example.setId(id);
+			this.listConvocatoriaCriterio = genericSearchBs.findByExample(example);
+		}
+		this.idConvocatoriaSel = idConvocatoriaSel;
+	}
+
+	/**
+	 * @return the listCriterio
+	 */
+	public List<Criterio> getListCriterio() {
+		return listCriterio;
+	}
+
+	/**
+	 * @param listCriterio
+	 *            the listCriterio to set
+	 */
+	public void setListCriterio(List<Criterio> listCriterio) {
+		this.listCriterio = listCriterio;
+	}
+
+	/**
+	 * @return the listAsociar
+	 */
+	public List<Integer> getListAsociar() {
+		return listAsociar;
+	}
+
+	/**
+	 * @param listAsociar
+	 *            the listAsociar to set
+	 */
+	public void setListAsociar(List<Integer> listAsociar) {
+		this.listAsociar = listAsociar;
+	}
+
+	/**
+	 * @return the listConvocatoriaCriterio
+	 */
+	public List<ConvocatoriaCriterio> getListConvocatoriaCriterio() {
+		return listConvocatoriaCriterio;
+	}
+
+	/**
+	 * @param listConvocatoriaCriterio
+	 *            the listConvocatoriaCriterio to set
+	 */
+	public void setListConvocatoriaCriterio(List<ConvocatoriaCriterio> listConvocatoriaCriterio) {
+		this.listConvocatoriaCriterio = listConvocatoriaCriterio;
+	}
+
+}

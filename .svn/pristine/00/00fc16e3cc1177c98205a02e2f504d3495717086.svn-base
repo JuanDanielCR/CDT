@@ -1,0 +1,83 @@
+package mx.edu.eld.calendario.bs;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.calendario.bs.exception.ActividadFueraCicloException;
+import mx.edu.eld.calendario.bs.exception.ActividadFueraCicloException.ActividadFueraCiclo;
+import mx.edu.eld.calendario.dao.CicloActidadDao;
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.CicloActividad;
+import mx.edu.eld.calendario.mapeo.CicloActividadId;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+
+@Service("cicloActividadBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class CicloActividadBs extends GenericBs<CicloActividad>{
+
+	@Autowired
+	CicloActidadDao cicloActividadDao;
+	
+	public List<FaseActividad> buscarTipoActividades(Integer idTipo){
+		
+		return cicloActividadDao.buscaTipoActividadDao(idTipo);
+	}
+	
+	private Boolean fechaDentroCiclo(Date fecha, Ciclo ciclo) {
+		return fecha.equals(ciclo.getInicio()) || (fecha.after(ciclo.getInicio())) && ((fecha.before(ciclo.getFin())) || (fecha.equals(ciclo.getFin()))); 
+	}
+	
+	private void validarContencionPeriodo(Date inicio, Date fin, Ciclo ciclo) throws ActividadFueraCicloException {
+
+		// verifica que la fecha inicial y final se encuentren dentro del ciclo
+		if (!fechaDentroCiclo(inicio, ciclo)) {
+			throw new ActividadFueraCicloException(ActividadFueraCiclo.FECHA_INICIO);
+		}
+		if (!fechaDentroCiclo(fin, ciclo)) {
+			throw new ActividadFueraCicloException(ActividadFueraCiclo.FECHA_FIN);
+		} 
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public CicloActividad guardar(CicloActividad model, Ciclo ciclo) throws ActividadFueraCicloException{
+			/*
+			 * Se valida que las fechas de inicio y fin de ciclo esten dentro del ciclo
+			 */
+			validarContencionPeriodo(model.getInicio(), model.getFin(), ciclo);
+			
+			/*
+			 * Este metodo, por medio de un HQL query trae el ultimo valor de id_ciclo_actividad y usa como parametros de busqueda el idCiclo y el idActividad indicado
+			 */
+			Integer idCicloactividad = cicloActividadDao.generarId(ciclo.getId(), model.getIdActividad());
+			
+			/*
+			 * se construye el nuevo id que se asegura de ir incrementando el id_ciclo_actividad
+			 */
+			/*
+			 * TODO: modificar para funcionar con el nuevo constructor de ID
+			 */
+			//model.setId(new CicloActividadId(ciclo.getId(), model.getIdActividad(), idCicloactividad + 1));
+			return save(model);
+		
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void edit(CicloActividad model, Ciclo ciclo) throws ActividadFueraCicloException{
+		/*
+		 * Se valida que las fechas de inicio y fin de ciclo esten dentro del ciclo
+		 */
+		validarContencionPeriodo(model.getInicio(), model.getFin(), ciclo);
+				
+		//Si  lavidacion de contencion de fechas dentro del periodo es valida, se procede a actualizar el valor
+		update(model);
+	}
+	
+}

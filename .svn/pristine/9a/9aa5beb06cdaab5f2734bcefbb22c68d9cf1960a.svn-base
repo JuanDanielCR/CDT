@@ -1,0 +1,13 @@
+package mx.edu.eld.bs.rules;
+
+public class ReglaNegocio1 implements ReglaNegocio {
+
+	/**
+	 * Metodo donde se haran las validaciones de cada regla de negocio
+	 * 
+	 * @return
+	 */
+	public Boolean validate() {
+		return true;
+	}
+}

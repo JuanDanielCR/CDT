@@ -1,0 +1,49 @@
+package mx.edu.eld.bs.rules;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterio;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * 
+ * @author Er-ramani Velasco
+ *
+ */
+@Service("reglaNegocioN4")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN4  implements ReglaNegocio{
+	
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	/**
+	 * Valida que la suma de las ponderaciones en los criterios
+	 * de una convocatoria sea igual a 100%.
+	 * @param idConvocatoria {Integer} Identificador de la
+	 * convocatoria.
+	 * @return {Boolean} true si la suma de las ponderaciones
+	 * es igual a 100. false en caso contrario.
+	 */
+	
+	public Boolean validate(Integer idConvocatoria){
+		List<ConvocatoriaCriterio> listCriterios = genericSearchBs.findByExample(new ConvocatoriaCriterio(idConvocatoria));
+		Integer totalPonderacion = 0;
+		for (ConvocatoriaCriterio C : listCriterios){
+			totalPonderacion += C.getPonderacion();
+		}
+		return (totalPonderacion ==100 ? true : false);
+	}
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+}

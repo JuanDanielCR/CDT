@@ -1,0 +1,11 @@
+$(function() {
+	$("#tblEntrevistas").dataTable();
+});
+
+function cerrarDialogEntrevistador() {
+	$("#myclickdialog").dialog("close");
+}
+
+function abrirDialogEntrevistador() {
+	$("#myclickdialog").dialog("open");
+}

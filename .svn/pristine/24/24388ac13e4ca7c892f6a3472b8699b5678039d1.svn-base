@@ -1,0 +1,22 @@
+package mx.edu.eld.bs.rules;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service("reglaNegocioN50")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN50 {
+	/**
+	 * 
+	 * @param aspirantesEsperados
+	 *             {Integer}Numero de aspirantes esperados
+	 * @param numeroAspirantes
+	 *         {Integer} Numero de aspirantes seleccionados
+	 * @return {boolean} True si numeroAspirantes es mayor a .
+	 */
+	public boolean validate(Integer aspirantesEsperados,Integer numeroAspirantes){
+		return numeroAspirantes>aspirantesEsperados;	
+	}
+
+}

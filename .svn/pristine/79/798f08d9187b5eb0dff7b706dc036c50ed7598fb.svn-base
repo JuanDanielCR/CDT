@@ -1,0 +1,59 @@
+package mx.edu.eld.bs.rules;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.mapeo.Ciclo;
+
+
+@Service("reglaNegocioN1")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN1 implements ReglaNegocio{
+	
+	/**
+	 * La funcion validate se encargara  de cumplir la condiciones de la regla de negocio RN-N1 la cual describe las siguientes validaciones:
+	 * 
+	 * La duración de un ciclo registrado no puede traslaparse con otro ciclo.
+	 * 
+	 * Con esto nos da entender que al registra o actualizar un ciclo verificaremos si existen ciclos registrados y que a su vez estos no 
+	 * se traslapen con el nuevo ciclo a registrar o actualizar.
+	 * 
+	 * @param aRegistrar como su nombre lo indica es el nuevo ciclo a registrar o actualizar
+	 * 
+	 * @param aComparar este sera el ciclo en ese momento de la iteracion a comparar con @param aRegistrar
+	 * 
+	 * @return {boolean} @variable val quien determinara si manda la excepcion o no 
+	 */
+	public boolean validate(Ciclo aRegistrar,Ciclo aComparar){
+		boolean val=false;
+		int bandera=0;
+		
+		if (aRegistrar.getInicio().compareTo(aComparar.getInicio()) < 0
+				&& aRegistrar.getInicio().compareTo(aComparar.getFin()) > 0) {
+			bandera = 1;
+		} else if (aRegistrar.getInicio().compareTo(aComparar.getInicio()) > 0
+				&& aRegistrar.getInicio().compareTo(aComparar.getFin()) < 0) {
+			bandera = 2;
+		} else if (aRegistrar.getFin().compareTo(aComparar.getInicio()) > 0
+				&& aRegistrar.getFin().compareTo(aComparar.getFin()) < 0) {
+			bandera = 3;
+		} else if (aRegistrar.getFin().compareTo(aComparar.getInicio()) == 0) {
+			bandera = 4;
+		} else if (aRegistrar.getInicio().compareTo(aComparar.getInicio()) == 0) {
+			bandera = 5;
+		} else if (aRegistrar.getFin().compareTo(aComparar.getFin()) == 0) {
+			bandera = 6;
+		} else if (aRegistrar.getInicio().compareTo(aComparar.getFin()) == 0) {
+			bandera = 7;
+		}
+		
+		if (bandera != 0) {
+			System.err.println("Entro en traslape");
+			val=true;
+		}		
+		
+		return val;
+	}
+
+}

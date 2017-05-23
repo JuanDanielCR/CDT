@@ -1,0 +1,152 @@
+/**
+ * 
+ */
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * @author homura
+ *
+ */
+@Entity
+@Table(name = "tad01_estatus_aspirante")
+public class EstatusAspirante implements Modelo {
+
+	@Id
+	@SequenceGenerator(name = "tad01_estatus_aspirante_id_estatus_seq", sequenceName = "tad01_estatus_aspirante_id_estatus_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad01_estatus_aspirante_id_estatus_seq")
+	@Column(name = "id_estatus")
+	private Integer id;
+
+	/**
+	 * nombre del estatus
+	 **/
+	@Column(name = "nb_estatus")
+	private String nombre;
+
+	/**
+	 * Descripcion del estado
+	 **/
+	@Column(name = "ds_estatus")
+	private String descripcion;
+
+	/**
+	 * Estado del estatus
+	 **/
+	@Column(name = "st_activo")
+	private Boolean estatus;
+
+	public enum estatusAspiratenEnum {
+		CREADO(1, "Creado"), PAGOS(2, "Pagos"), EVALUACIONES(3, "Evaluaciones"), ENTREVISTAS(4,
+				"Entrevistas"), NOTIF_ENTREVISTA(5,
+						"Notificado Entrevista"), ACEPTADO(6, "Aceptado"), NOTIF_ACEPTADO(7, "Notificado Aceptado");
+
+		private Integer estatus;
+		private String nombre;
+
+		private estatusAspiratenEnum(Integer estatus, String nombre) {
+			this.estatus = estatus;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the estatus
+		 */
+		public Integer getEstatus() {
+			return estatus;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	public EstatusAspirante() {
+		super();
+	}
+
+	public EstatusAspirante(Integer id, String nombre, String descripcion, Boolean estatus) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public Boolean getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
+	}
+
+}

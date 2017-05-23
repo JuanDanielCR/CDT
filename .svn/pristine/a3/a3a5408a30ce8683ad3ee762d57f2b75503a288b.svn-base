@@ -1,0 +1,13 @@
+$(function() {
+	dataTableEMETH.createDataTable("tblAspirantes");
+});
+
+function cerrarMensajeAceptar(){
+	$.publish("closeDlgAceptar");
+	
+}
+
+function dialogBorrar(){
+	$.publish("showDlgGuardar");
+	
+}

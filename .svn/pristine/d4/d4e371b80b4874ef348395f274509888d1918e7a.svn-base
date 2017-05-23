@@ -1,0 +1,92 @@
+package mx.edu.eld.sepomex.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae el modelo de negocio asociado a una Entidad Federativa con base en la
+ * información provista por el MGN del INEGI.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tsp01_entidad")
+public class Entidad implements Modelo{
+	/**
+	 * Clave de dos digitos de la Entidad Federativa asociada
+	 */
+	@Id
+	@Column(name = "id_entidad")
+	private String id;
+
+	/**
+	 * Nombre asociado a la Entidad Federativa
+	 */
+	@Column(name = "nb_entidad")
+	private String nombre;
+
+	/**
+	 * Estado asociado al elemento del catalogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * Municipios que pertenecen a la Entidad Federativa
+	 */
+	@OneToMany(mappedBy = "entidad")
+	private List<Municipio> municipios;
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

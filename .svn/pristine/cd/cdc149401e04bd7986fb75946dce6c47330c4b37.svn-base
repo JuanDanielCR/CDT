@@ -1,0 +1,174 @@
+package mx.edu.eld.controlacceso.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Contiene la información necesaria para autenticar a un {@link Usuario}. Esta
+ * entidad contiene la información necesaria para determinar los periodos en los
+ * que un usuario puede o no ingresar al sistema.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tau03_cuenta")
+public class Cuenta implements Modelo {
+	/**
+	 * Llave compuesta de la {@link Cuenta}
+	 */
+	@EmbeddedId
+	private CuentaId id;
+
+	/**
+	 * Identificador del {@link Usuario} al que pertenece la {@link Cuenta}
+	 */
+	@Column(name = "id_usuario", insertable = false, updatable = false)
+	private Integer idUsuario;
+
+	/**
+	 * Identificador del {@link Perfil} al que pertenece la {@link Cuenta}
+	 */
+	@Column(name = "id_perfil", insertable = false, updatable = false)
+	private Integer idPerfil;
+
+	/**
+	 * Identificador del {@link Cuenta}
+	 */
+	@Column(name = "id_cuenta", insertable = false, updatable = false)
+	private Integer idCuenta;
+
+	/**
+	 * Fecha de inicio del periodo de vigencia de la cuenta.
+	 */
+	@Column(name = "fh_inicio")
+	private Date inicio;
+
+	/**
+	 * Fecha de fin del periodo de la cuenta; esta fecha especifica hasta cuando
+	 * un usuario podrá ingresar al sistema. Si la fecha de fin = null, quiere
+	 * decir que ésta cuenta tiene periodo indefinido.
+	 */
+	@Column(name = "fh_fin")
+	private Date fin;
+
+	/**
+	 * {@link Perfil} asociado a la cuenta
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil", insertable = false, updatable = false)
+	private Perfil perfil;
+
+	/**
+	 * @return the id
+	 */
+	public CuentaId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(CuentaId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idUsuario
+	 */
+	public Integer getIdUsuario() {
+		return idUsuario;
+	}
+
+	/**
+	 * @param idUsuario
+	 *            the idUsuario to set
+	 */
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	/**
+	 * @return the idPerfil
+	 */
+	public Integer getIdPerfil() {
+		return idPerfil;
+	}
+
+	/**
+	 * @param idPerfil
+	 *            the idPerfil to set
+	 */
+	public void setIdPerfil(Integer idPerfil) {
+		this.idPerfil = idPerfil;
+	}
+
+	/**
+	 * @return the idCuenta
+	 */
+	public Integer getIdCuenta() {
+		return idCuenta;
+	}
+
+	/**
+	 * @param idCuenta
+	 *            the idCuenta to set
+	 */
+	public void setIdCuenta(Integer idCuenta) {
+		this.idCuenta = idCuenta;
+	}
+
+	/**
+	 * @return the inicio
+	 */
+	public Date getInicio() {
+		return inicio;
+	}
+
+	/**
+	 * @param inicio
+	 *            the inicio to set
+	 */
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	/**
+	 * @return the fin
+	 */
+	public Date getFin() {
+		return fin;
+	}
+
+	/**
+	 * @param fin
+	 *            the fin to set
+	 */
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
+
+	/**
+	 * @return the perfil
+	 */
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	/**
+	 * @param perfil
+	 *            the perfil to set
+	 */
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
+	}
+}

@@ -1,0 +1,35 @@
+package mx.edu.eld.convocatoria.dao;
+
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import mx.edu.eld.calendario.mapeo.Criterio;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+@Repository("criterioDao")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class CriterioDao extends GenericDao {
+
+	/**
+	 * Validad la unicidad de @param nombre
+	 * 
+	 * @return boolean
+	 */
+	public boolean validarNombreCriterio(String nombre) {
+		CriteriaBuilder builder = sessionFactory.getCriteriaBuilder();
+		CriteriaQuery<Criterio> criteriaQuery = builder.createQuery(Criterio.class);
+		Root<Criterio> root = criteriaQuery.from(Criterio.class);
+		criteriaQuery.where(builder.like(builder.lower(root.<String>get("nombre")), "%" + nombre.toLowerCase() + "%"));
+		List<Criterio> list = sessionFactory.getCurrentSession().createQuery(criteriaQuery)
+				.getResultList();
+		return (list.isEmpty()) ? true : false;
+	}
+
+}

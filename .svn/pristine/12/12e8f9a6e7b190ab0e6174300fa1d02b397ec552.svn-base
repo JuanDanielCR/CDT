@@ -1,0 +1,136 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Abstrae los rubros a evaluar en una entrevista.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tad10_rubro_entrevista")
+public class RubroEntrevista implements Catalogo {
+	/**
+	 * Identificador del elemento del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "tad10_rubro_entrevista_id_rubro_seq", sequenceName = "tad10_rubro_entrevista_id_rubro_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad10_rubro_entrevista_id_rubro_seq")
+	@Column(name = "id_rubro")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catálogo
+	 */
+	@Column(name = "nb_rubro")
+	private String nombre;
+
+	/**
+	 * Descripción del elemento del catálogo
+	 */
+	@Column(name = "ds_rubro")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_rubro")
+	private Boolean activo;
+
+	public enum rubroEntrevistaEnum {
+		VOCACION(1, "Vocación"), CARACTER(2, "Carácter"), INTERES_ELD(3, "Intéres por la ELD"), APTITUDES_VERBALES(4,
+				"Aptitudes Verbales");
+
+		private Integer rubro;
+		private String nombre;
+
+		private rubroEntrevistaEnum(Integer rubro, String nombre) {
+			this.rubro = rubro;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the rubro
+		 */
+		public Integer getRubro() {
+			return rubro;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

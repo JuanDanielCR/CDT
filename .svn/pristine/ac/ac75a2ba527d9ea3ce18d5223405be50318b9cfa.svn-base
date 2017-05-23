@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- Head -->
+<jsp:text>
+	<![CDATA[
+		<script
+			src="${pageContext.request.contextPath}/pages/calendario/gestionar-ciclo-actividad/js/index-edit.js"
+			type="text/javascript"></script>
+	]]>
+</jsp:text>
+</head>
+<body>
+	<s:set var="title" value="%{getText('IU1.1-10_TITLE')}" />
+	<s:set var="btnsi" value="%{getText('btnSi')}" />
+	<s:set var="btnno" value="%{getText('btnNo')}" />
+	<s:set var="txConfirmar" value="%{getText('MSG2')}" />
+	<s:set var="varHeaderKey"
+		value="%{getText('COM.ELD.DEFAULT_HEADER_KEY')}" />
+	<s:set var="varHeaderValue"
+		value="%{getText('COM.ELD.DEFAULT_HEADER_VALUE')}" />
+	
+	<s:set var="nombreCiclo" value="model.ciclo.nombre"/>
+	<s:set var="fechaIni" value="model.ciclo.inicio" />
+	<s:set var="fechaFin" value="model.ciclo.fin" />
+	<s:date name="%{model.ciclo.inicio}" format="%{getText('mx.edu.eld.formatTimeDatePicker')}" var="setInicio" />
+	<s:date name="%{model.ciclo.fin}" format="%{getText('mx.edu.eld.formatTimeDatePicker')}" var="setFinal" />
+
+	<s:hidden id="hdIdCiclo" value="%{cicloSel.id}" />
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="title">${title}</h1>
+			<s:property value="model.id"/>
+		</div>
+	</div>
+
+	<!-- label mensajes obligatorios -->
+	<div class="row">
+		<div class="outter-section form-medium text-left">
+			<div class="col-md-12 text-left">
+				<s:text name="IU1.4-2_LBL1" />
+			</div>
+		</div>
+	</div>
+
+	<div class="row title">
+		<div class="col-md-12">
+			<h2 class="title">
+				<s:text name="IU1.1-8_LBL2" /><s:text name="%{#nombreCiclo}" />
+			</h2>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-6 text-left">
+				<h3 class="title">
+					<s:text name="IU1.1-8_LBL2a" />
+					<s:property value="#fechaIni" />
+				</h3>
+			</div>
+			<div class="col-md-6 text-right">
+				<h3 class="title">
+					<s:text name="IU1.1-8_LBL2b" />
+					<s:property value="#fechaFin" />
+				</h3>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="divFrmGeneralData" class="form form-horizontal">
+		<s:form id="frmEditarActividad"
+			action="%{#pagecontext.request.contextPath}/calendario/gestionar-ciclo-actividad/%{model.id}"
+			method="POST">
+			<s:hidden name="_method" value="PUT" />
+
+			<!-- el fieldSet dibuja una caja contenedora de elementos como inputs, selectores, etc -->
+			<fieldset
+				class="form-section form-horizontal form-medium text-justify">
+				<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				<legend class="form-section">
+					<s:text name="IU1.1-6_LBL1" />
+				</legend>
+
+				<!-- Tipo Actividad -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.1-6_LBL3" /></label>
+					<div class="col-md-8">
+ 						<s:property value="model.actividad.tipoActividad.nombre" /> 
+					</div>
+				</div>
+
+				<!-- Actividad -->
+				<br />
+				<div id="divActividadesList">
+					<div class="form-group">
+						<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+								name="IU1.1-8_TITLE" /></label>
+						<div class="col-md-8">
+							<s:property value="model.actividad.nombre" />
+						</div>
+					</div>
+				</div>
+				<br /> <br />
+				<!--Fecha de inicio -->
+
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.1-6_LBL4" /></label>
+					<div class="col-md-8 input-min">
+						<sj:datepicker id="dpInicio" name="model.inicio"
+							cssClass="form-control date-picker" showOn="focus"
+							inputAppendIcon="calendar" changeYear="true" changeMonth="true"
+							readonly="true" showAnim="fadeIn" parentTheme="bootstrap"
+							minDate="%{#setInicio}" maxDate="%{#setFinal}"
+							cssErrorClass="field-error" />
+						<!--Sirve para mostrar un campo de erro al no cumplirse una validacion-->
+						<s:fielderror fieldName="model.inicio" cssClass="error"
+                       theme="%{getText('mx.edu.eld.defaulTheme')}"></s:fielderror>
+					</div>
+
+				</div>
+
+				<!--  Fecha fin -->
+
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.1-6_LBL5" /></label>
+					<div class="col-md-8 input-min">
+						<sj:datepicker id="dpTermino" name="model.fin"
+							cssClass="form-control date-picker" showOn="focus"
+							inputAppendIcon="calendar" changeYear="true" changeMonth="true"
+							readonly="true" showAnim="fadeIn" parentTheme="bootstrap"
+							minDate="%{#setInicio}" maxDate="%{#setFinal}"
+							cssErrorClass="field-error" />
+						<!--  Sirve para mostrar un campo de erro al no cumplirse una validacion -->
+						<s:fielderror fieldName="model.fin" cssClass="error"
+                       theme="%{getText('mx.edu.eld.defaulTheme')}"></s:fielderror>
+					</div>
+
+				</div>
+
+			</fieldset>
+
+			<div class="row">
+				<div class="outter-section form-medium">
+					<div class="col-md-12 text-right">
+						<s:submit cssClass="btn btn-default btn-default-eld"
+							value="Aceptar" />
+						<a id="btnCancelar" class="btn btn-default btn-default-eld"
+							href="${pageContext.request.contextPath}/calendario/gestionar-ciclo-actividad"><s:text
+								name="mx.com.eld.boton.cancelar" /></a>
+					</div>
+				</div>
+			</div>
+		</s:form>
+		
+		<s:form id="hdnActionFormEdit" method="post"
+			action="%{pageContext.request.contextPath}/calendario/gestionar-ciclo-actividad!buscarActividades">
+			<!-- 		<s:hidden id="hdnCiclo" name="idCicloSel" /> -->
+			<s:hidden id="hdnIdTipo" name="idTipoSel" value="" />
+		</s:form>
+	
+	</div>
+</body>
+	</html>
+</jsp:root>

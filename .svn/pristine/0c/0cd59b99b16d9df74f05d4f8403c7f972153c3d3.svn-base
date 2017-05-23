@@ -1,0 +1,28 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+
+import mx.edu.eld.controlacceso.mapeo.Usuario;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tad17_entrevistador")
+@Inheritance(strategy = InheritanceType.JOINED)
+@PrimaryKeyJoinColumn(name = "id_entrevistador", referencedColumnName = "id_usuario")
+public class Entrevistador extends Usuario implements Modelo {
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
+	
+	
+}

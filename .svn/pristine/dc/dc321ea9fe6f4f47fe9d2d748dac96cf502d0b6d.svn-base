@@ -1,0 +1,35 @@
+package mx.edu.eld.bs.rules;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service("reglaNegocioN11")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN11 implements ReglaNegocio {
+	
+	/**
+	 * La funcion validate se encargara  de cumplir la condiciones de la regla de negocio RN-N11 la cual describe las siguientes validaciones:
+	 * 
+	 * El valor mínimo ingresado siempre debe de ser @param valMinimo al valor @param valMaximo, con base en la siguiente formula:
+	 *
+	 * valorMinimo < valorMaximo
+	 *
+	 * @param valMinimo
+	 * @param valMaximo
+	 * @return {boolean} val
+	 */
+	
+	public boolean validate(Integer valMinimo,Integer valMaximo){
+		boolean val=false;
+		System.err.println("valor minimo "+valMinimo);
+		System.err.println("valor Maximo "+valMaximo);
+		
+		if(valMinimo>valMaximo){
+			val=true;
+			System.err.println("bandera dentro "+val);
+		}
+		
+		return val;
+	}
+}

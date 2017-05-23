@@ -1,0 +1,15 @@
+package mx.edu.eld.admision.bs;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+/**
+ * Bs de la entidad {@link ConvocatoriaEntrevistador}
+ * @author Luis
+ *
+ */
+@Service("convocatoriaEntrevistadorBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaEntrevistadorBs {
+
+}

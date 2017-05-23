@@ -1,0 +1,8 @@
+function AceptAlumnos() {
+	$.publish("showDlgDeleteContact");
+	$("#dlgDeleteContact").removeClass("dlgDeleteContact");
+}
+
+function closeAceptAlumnos(){
+	$.publish("closeDlgDeleteContact");
+}

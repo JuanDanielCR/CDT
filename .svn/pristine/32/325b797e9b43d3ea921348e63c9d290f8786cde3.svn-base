@@ -1,0 +1,22 @@
+package mx.edu.eld.calendario.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+@Namespace("/calendario")
+@Results({@Result(name = "success", type = "redirectAction", params = { "actionName", "../calendario/gestionar-calendario-academico" })})
+public class GestionarCalendarioAcademicoAct extends ActionSupportCDT{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public String index(){
+		return INDEX;
+	}
+
+}

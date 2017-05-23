@@ -1,0 +1,55 @@
+package mx.edu.eld.convocatoria.dao;
+
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.query.Query;
+import org.hibernate.type.IntegerType;
+import org.springframework.stereotype.Repository;
+
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+import mx.edu.eld.calendario.mapeo.PeriodoCriterio;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+@Repository("periodoDao")
+public class PeriodoDao extends GenericDao {
+	
+	private static final String QUERY_GENERAR_ID = "select max(p.id_periodo) from tca10_periodo as p where p.id_convocatoria=:idConvocatoria and p.id_criterio=:idCriterio";
+	
+	/**
+	 * Función para validar unicidad en el nombre de periodo
+	 * 
+	 * @param nombrePeriodo
+	 * @return
+	 */
+	public boolean validarNombrePeriodo(String nombrePeriodo) {
+		CriteriaBuilder builder = sessionFactory.getCriteriaBuilder();
+		CriteriaQuery<PeriodoCriterio> criteriaQuery = builder.createQuery(PeriodoCriterio.class);
+		Root<PeriodoCriterio> root = criteriaQuery.from(PeriodoCriterio.class);
+		criteriaQuery.where(builder.like(builder.lower(root.<String>get("nombrePeriodo")), "%" + nombrePeriodo.toLowerCase() + "%"));
+		List<PeriodoCriterio> list = (List<PeriodoCriterio>) sessionFactory.getCurrentSession().createQuery(criteriaQuery)
+				.getResultList();
+		return (list.size() == 0) ? true : false;
+	}
+	
+	/**
+	 * Función para generar idPeriodo con base en los id Convocatoria y Criterio 
+	 * que obtenemos de la sesión
+	 * 
+	 * @param idConvocatoriaCriterioSel
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Integer generarId(ConvocatoriaCriterioId idConvocatoriaCriterioSel){
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(QUERY_GENERAR_ID);
+		query.setParameter("idConvocatoria", idConvocatoriaCriterioSel.getIdConvocatoria(), IntegerType.INSTANCE);
+		query.setParameter("idCriterio", idConvocatoriaCriterioSel.getIdCriterio(), IntegerType.INSTANCE);
+		Integer bi = (Integer) query.getSingleResult();
+		return bi != null ? bi : Numeros.CERO.getValorInteger();
+	}
+	
+}

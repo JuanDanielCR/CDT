@@ -1,0 +1,87 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Abstrae la información para almacenar si un aspirante cuenta con la
+ * recomendación de algún Profesor de la ELD o de algun Abogado reconocido.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tad14_recomendacion")
+public class Recomendacion {
+	/**
+	 * Identificador de la recomendación, la cual hace referencia al mismo
+	 * identificador de la entrevista a la que está asociada.
+	 */
+	@Id
+	@Column(name = "id_recomendacion")
+	private Integer id;
+
+	/**
+	 * Identificador del recomendador. En caso de que el recomendador no sea
+	 * profesor de la ELD esta propiedad valdra null.
+	 * 
+	 * TODO: Mapear la relación con el recomendador cuando ya se tenga modelada
+	 * la información de los profesores
+	 */
+	@Column(name = "id_recomendador")
+	private Integer idRecomendador;
+
+	/**
+	 * Propiedad que hace referencia al recomendador si éste no es Profesor de
+	 * la ELD. En caso contrario valdrá null.
+	 */
+	@Column(name = "nb_recomendador")
+	private String nombre;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idRecomendador
+	 */
+	public Integer getIdRecomendador() {
+		return idRecomendador;
+	}
+
+	/**
+	 * @param idRecomendador
+	 *            the idRecomendador to set
+	 */
+	public void setIdRecomendador(Integer idRecomendador) {
+		this.idRecomendador = idRecomendador;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+}

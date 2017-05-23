@@ -1,0 +1,161 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Una categoria de pago es un posible medio por el cual se le puede pagar a la
+ * ELD y no el tipo de pago en sí. Por ejemplo: SPEI, Tarjeta de Crédito, Tienda
+ * de Autoservicio, etc.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tib_categoria_pago")
+public class CategoriaPago implements Catalogo {
+	/**
+	 * Identificador de la categoría
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_categoria")
+	private Integer id;
+
+	/**
+	 * Nombre único de la categoría
+	 */
+	@Column(name = "nb_categoria")
+	private String nombre;
+
+	/**
+	 * Descripción de la categoría
+	 */
+	@Column(name = "ds_descripcion")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * Tipos de pagos que tiene una categoría
+	 */
+	@OneToMany(mappedBy = "categoria")
+	private List<TipoPago> tipos;
+
+	public enum categoriaPagoEnum {
+		SPEI(1, "SPEI"), TARJETA(2, "Tarjeta"), EFECTIVO(3, "Efectivo");
+
+		private Integer categoria;
+		private String nombre;
+
+		private categoriaPagoEnum(Integer categoria, String nombre) {
+			this.categoria = categoria;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the categoria
+		 */
+		public Integer getCategoria() {
+			return categoria;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	/**
+	 * @return the tipos
+	 */
+	public List<TipoPago> getTipos() {
+		return tipos;
+	}
+
+	/**
+	 * @param tipos
+	 *            the tipos to set
+	 */
+	public void setTipos(List<TipoPago> tipos) {
+		this.tipos = tipos;
+	}
+}

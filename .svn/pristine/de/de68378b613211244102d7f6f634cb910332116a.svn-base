@@ -1,0 +1,4 @@
+$(function(){
+	/*dataTableEMETH.createDataTable("tblAspirantesProgramar");*/
+	dataTableEMETH.createResponsiveDataTable("tblAspirantesProgramar");
+});

@@ -1,0 +1,11 @@
+$(function(){
+	dataTableEMETH.createResponsiveDataTable("tblRequisitos");
+});
+function myclickDialog() {
+	$.publish("showDlgDelete");
+	$("#dlgDelete").removeClass("dlgDelete");
+}
+
+function closeDeleteDlg(){
+	$.publish("closeDlgDelete");
+}

@@ -1,0 +1,242 @@
+package mx.edu.eld.bs.rules;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException;
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException.condicionesCicloIncumplidas;
+import mx.ipn.escom.cdt.mail.controller.ContextLoader;
+
+@Service("reglaNegocioN7")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN7 implements ReglaNegocio{
+	
+	private ContextLoader contextLoader;
+	
+	/**
+	 * 
+	 * La funcion validate se encargara  de cumplir la condiciones de la regla de negocio RN-N7 la cual describe las siguientes validaciones:
+	 * 
+	 * 1. Al establecer las fechas de inicio y fin se debera cumplir que:
+	 * 
+	 * inicio < fin
+	 * 
+	 * Esto quiere decir que la fecha de inicio del ciclo debera ser menor que la fecha de termino del ciclo en caso contrario se procedera a 
+	 * mandar un mensage de error.
+	 * 
+	 * A su vez se tomara en cuenta dadas ciertas condiciones:
+	 * 
+	 * fin >= inicio + 2 meses
+	 * 
+	 * Esto quiere decir que minimo entre las fechas de inicio y fin de ciclo debe haberse cumplido un lapso de 2 meses para poder registrar o actualizar
+	 * un ciclo.
+	 * 
+	 * fin <= inicio + No de dias
+	 * 
+	 * Esto quiere decir que entre las fechas de inicio y fin de ciclo no debe rebasarse el limite que seria hasta el indicado por No de dias
+	 * 
+	 * 2.- Al establecerse la fecha de inicio:
+	 * 
+	 * fechaRegistroDeCiclo < fechaInicioDeCiclo
+	 * 
+	 * Esto quiere decir que la fecha de inicio no podra ser menor a la fecha en la que se esta haciendo el registro.
+	 * 
+	 * 3.- Al establecer la fecha de publicacion:
+	 * 
+	 * inicio <= publicacion
+	 * 
+	 * Esto quiere decir que la fecha de inicio no podra ser menor e igual a la fecha de publicacion. 
+	 * 
+	 * @param inicio
+	 * @param fin
+	 * @param publicacion
+	 * @return {boolean} val
+	 * @throws IntersectionCyclePeriodException
+	 */
+
+	public boolean validate(Date inicio,Date fin, Date publicacion) throws IntersectionCyclePeriodException{
+		boolean val=false;
+		
+		if(verificarFechaInicioFin(inicio, fin)>0){
+			val=true;
+			throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.FECHA_INICIO);
+		}
+		
+		if (verifiacarDiasCiclo(inicio,fin) == 0) {
+			val=true;
+			throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.FECHA_PERIODO);
+		}
+		
+		if (compararFechaPublicacion(inicio,publicacion) == 0) {
+			val=true;
+			throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.FECHA_IGUAL);
+		} else if (compararFechaPublicacion(inicio,publicacion) < 0) {
+			val=true;
+			throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.FECHA_PUBLICACION);
+		}
+		
+		
+		return val;
+	}
+	
+	/**
+	 * Esta funcion verfica que entre las fechas de inicio y fin del ciclo no exista la posibilidad que la de fin sea menor a la de inicio
+	 * si este caso de da se retornara una bandera la cual el valor sera dado por la comparacion de las mismas siendo el caso en que la
+	 * bandera sea mayor a 0 se arroje una excepcion.  
+	 * 
+	 * @param inicio
+	 * @param fin
+	 * @return bandera
+	 */
+	public int verificarFechaInicioFin(Date inicio,Date fin){
+		int bandera=0;
+		if (inicio != null && fin != null) {
+			bandera = inicio.compareTo(fin);
+			System.err.println("bandera paso 1: " + bandera);
+
+			if (bandera > 0) {
+				System.err.println("bandera = " + bandera);
+			}
+		}
+		return bandera;
+	}
+	
+	/**
+	 * En esta funcion se verifica que los dias del ciclo deben ser hasta 365
+	 * dias regresando bandera igual a dos en caso de cumplirse la condicion de
+	 * maximo hasta 365 dias y mandando bandera igual a 1 si el plazo de 365
+	 * dias es superado mandando el error en la pantalla designada a esta
+	 * funcion.
+	 */
+	public int verifiacarDiasCiclo(Date inicio, Date fin) throws IntersectionCyclePeriodException {
+		int bandera = 0;
+		long dif;
+		int dias;
+		int meses;
+		String noDias = new String();
+		contextLoader = new ContextLoader();
+		contextLoader.getAutoWireCapable().initializeBean(this, "global");
+		noDias = contextLoader.getMailProperty("mx.edu.eld.maxCiclo");
+		System.err.println("numero de dias: " + noDias);
+		meses = calcularMesesFechas(inicio, fin);
+		System.err.println("No Meses: " + meses);
+		System.err.println("inicio: " + inicio);
+		System.err.println("final: " + fin);
+		if (fin != null && inicio != null) {
+			dif = (fin.getTime() - inicio.getTime());
+			System.err.println("dif: " + dif);
+			dias = (int) (dif / (1000 * 60 * 60 * 24));
+			System.err.println("dias: " + dias);
+			if (dias > Integer.parseInt(noDias) || meses < 2) {
+				bandera = 0;
+			} else {
+				bandera = 1;
+			}
+		}
+		System.err.println("bandera: " + bandera);
+		return bandera;
+	}
+	
+	
+	/**
+	 * Esta funcion se encarga de encontrar la cantida de meses a base de @param inicio y @param fin
+	 * utilizando la clase {Calendar} para hacer uso de la fechas y poder calcular dicha cantidad 
+	 * 
+	 * Para ello la funcion dara como valor de @return diffMesses, 0 en caso de que sea un lapso en el 
+	 * mismo mes y mayor a cero dependiendo que tanto se alejen las fechas.
+	 * 
+	 */
+	public Integer calcularMesesFechas(Date inicio, Date fin) {
+		try {
+			Calendar startCalendar = Calendar.getInstance();
+			Calendar endCalendar = Calendar.getInstance();
+
+			startCalendar.setTime(inicio);
+			endCalendar.setTime(fin);
+
+			int starMes = (startCalendar.get(Calendar.YEAR) * 12) + startCalendar.get(Calendar.MONTH);
+			int endMes = (endCalendar.get(Calendar.YEAR) * 12) + endCalendar.get(Calendar.MONTH);
+
+			int diffMeses = endMes - starMes;
+
+			Date aFecha = ponerAnioMesActual(inicio, fin).getTime();
+
+			if (formatearDate(fin, "dd/MM/yyyy").compareTo(formatearDate(aFecha, "dd/MM/yyyy")) < 0) {
+				diffMeses = diffMeses - 1;
+			}
+
+			if (diffMeses < 0) {
+				diffMeses = 0;
+			}
+
+			return diffMeses;
+
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	/**
+     * Método que remplaza el año y el mes de fecha y pone
+     * el año y mes de fechaActual
+     * @param fecha: fecha a remplazar el mes y el año
+     * @param fechaActual: fecha de la cual se tomara el mes y el año
+     * y se colocara en fecha
+     * @return Calendar con la nueva fecha calculada.
+     */
+	public Calendar ponerAnioMesActual(Date fecha, Date fechaActual) {
+		try {
+			Calendar cActual = Calendar.getInstance();
+			cActual.setTime(fechaActual);
+			Calendar cfecha = Calendar.getInstance();
+			cfecha.setTime(fecha);
+			Calendar c1 = Calendar.getInstance();
+			c1.set(cActual.get(Calendar.YEAR), cActual.get(Calendar.MONTH), cfecha.get(Calendar.DATE));
+			return c1;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * se le da formato a las fechas con las que se va a trabajar a base de @param pattern y de la @param fecha 
+	 */
+	public Date formatearDate(Date fecha, String pattern) {
+		SimpleDateFormat formato = new SimpleDateFormat(pattern);
+		Date fechaFormateada = null;
+		try {
+			fechaFormateada = formato.parse(formato.format(fecha));
+			return fechaFormateada;
+		} catch (Exception ex) {
+			return fechaFormateada;
+		}
+	}
+	
+	/**
+	 * La funcion realiza la comparacion de la fecha de inicio del ciclo con la
+	 * fecha de publicacion la cual debera cumplir las condiciones:
+	 * 
+	 * La fecha de inicio debe ser un dia o superior a la fecha de publicacion,
+	 * dando como resultado que la bandera regrese mayor a 0 o de lo contyrario
+	 * regreara menor 0 incumpliendo la validacion y mandando el respectivo
+	 * error.
+	 * 
+	 * 
+	 * No deben ser iguales la fecha de inicio y la de publicacion regreasndo a
+	 * bandera con un valor de 0 validando el caso de que las fecha no deben
+	 * deben ser las mismas.
+	 * 
+	 */
+	public int compararFechaPublicacion(Date init, Date publicacion) throws IntersectionCyclePeriodException {
+		int bandera = 0;
+		if (init != null && publicacion != null) {
+			bandera = init.compareTo(publicacion);
+		}
+		return bandera;
+	}
+}

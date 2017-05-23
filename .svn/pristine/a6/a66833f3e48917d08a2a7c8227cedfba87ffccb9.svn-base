@@ -1,0 +1,86 @@
+$(function() {
+	var cp;
+	var cplenght;
+	var colonia;
+	$("#txCp").keyup(function() {
+		cp = $("#txCp").val();
+		cplenght = cp.length;
+		if (cplenght == 5) {
+			cp = $("#txCp").val();
+			buscarCP(cp);
+			$("#hdnColonia").attr("value", "");// se queda en -1 el select
+		}
+	});
+	$("#slcColonia").change(
+			function() {
+				colonia = $("#slcColonia option:selected").val();
+				if (colonia == "-2") {
+					$("#divOtraColonia").removeClass("hidden");
+					$("#hdnColonia").attr("value", $("#txOtraColonia").val());
+				} else if (colonia == "-1") {
+					$("#hdnColonia").attr("value", "");// se queda en -1 el
+					// select
+				} else {
+					$("#hdnColonia").attr("value",
+							$("#slcColonia option:selected").text());
+					$("#divOtraColonia").addClass("hidden");
+				}
+			});
+});
+
+function buscarCP(cp) {
+	$("#hdnCP").attr("value", cp);
+	var form = $("#hdnActionForm");
+	$.ajax({
+		type : form.attr("method"),
+		url : form.attr("action"),
+		data : form.serialize(),
+		cache : false,
+		dataType : 'html',
+		success : function(data) {
+			$("#divDireccionCp").html("");
+			$("#divDireccionCp").html(data);
+		},
+		error : function(data) {
+			alert("error:" + data);
+		}
+	});
+}
+
+function gestionarErrores(error) {
+	limpiarErrores();
+	var keys = error.keys;
+	for (var i = 0; i < keys.length; i++) {
+		var name = keys[i];
+		var div = $("div[id='" + name + "']");
+		if (div.length > 0) {
+			mostrarErrores(error.listErrores, div, keys[i]);
+		} else {
+			var textarea = $("textarea[name='" + name + "']");
+			if (textarea.length > 0) {
+				textarea.addClass("field-error");
+				mostrarErrores(error.listErrores, textarea, keys[i]);
+			}
+		}
+	}
+}
+
+function limpiarErrores() {
+	var frm = $("#" + formId);
+	if (frm.length > 0) {
+		frm.find(".alert.alert-danger.error").remove();
+		frm.find(".field-error").removeClass("field-error");
+	}
+}
+
+function mostrarErrores(listErrores, element, name) {
+	var divErrorMessageContainer = $("<div></div>");
+	var errores = listErrores[name];
+	for (var i = 0; i < errores.length; i++) {
+		var message = $("<p></p>");
+		message.text(errores[i]);
+		divErrorMessageContainer.append(message);
+	}
+	divErrorMessageContainer.addClass("alert alert-danger error");
+	element.after(divErrorMessageContainer);
+}

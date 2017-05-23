@@ -1,0 +1,111 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tca13_fuente_criterio")
+public class FuenteCriterio implements Modelo {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_fuente")
+	private Integer id;
+
+	/**
+	 * Nombre de la fuente del criteroi
+	 **/
+	@Column(name = "nb_fuente")
+	private String nombre;
+
+	/**
+	 * Descripcion de la fuente del criteroi
+	 **/
+	@Column(name = "ds_fuente")
+	private String descripcion;
+
+	/**
+	 * estatus de la fuente del criterio
+	 **/
+	@Column(name = "st_activo")
+	private Boolean estatus;
+
+	public FuenteCriterio(Integer id, String nombre, String descripcion, Boolean estatus) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.estatus = estatus;
+	}
+
+	public FuenteCriterio() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public Boolean getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(Boolean estatus) {
+		this.estatus = estatus;
+	}
+
+}

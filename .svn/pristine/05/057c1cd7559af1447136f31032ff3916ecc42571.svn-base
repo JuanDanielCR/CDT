@@ -1,0 +1,126 @@
+package mx.edu.eld.calendario.dao;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.dao.GenericDao;
+
+/**
+ * Dao de la entidad {@link Ciclo}
+ * 
+ * @author Cristian,Lusi
+ */
+@Repository("cicloDao")
+public class CicloDao extends GenericDao {
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	private static final String QUERY_CICLO_ACTUAL = "FROM Ciclo cic WHERE :fechaActual BETWEEN inicio AND fin";
+
+	private static final String QUERY_CICLOS_FUTUROS = "SELECT c FROM Ciclo c WHERE fh_inicio > :fecha ORDER BY fh_inicio ASC";
+
+	private static final String QUERY_CICLO_ANTERIOR = "SELECT c FROM Ciclo c WHERE fh_fin < :fecha ORDER BY fh_fin DESC";
+
+	/**
+	 * Metodo que devuelve una lista con el ciclo actual, anterior y futuros.
+	 * 
+	 * @return {List<Ciclo> listCiclos}
+	 */
+	public List<Ciclo> obtenerCiclos(Ciclo cicloActual) {
+		List<Ciclo> listCiclos = new ArrayList<Ciclo>();
+		List<Ciclo> listCiclosFuturos = obtenerCiclosFuturos(cicloActual.getFin());
+		Ciclo cicloAnterior = obtenerCicloAnterior(cicloActual);
+		if (cicloAnterior != null) {
+			listCiclos.add(cicloAnterior);
+		}
+		listCiclos.add(cicloActual);
+		if (listCiclosFuturos != null) {
+			listCiclos.addAll(listCiclosFuturos);
+		}
+		return listCiclos;
+	}
+
+	/**
+	 * Metodo que devuelve una lista con los ciclos futuros respecto a una
+	 * fecha.
+	 * 
+	 * @param {Date}
+	 *            fecha
+	 * @return {List} Lista de ciclos futuros
+	 */
+	public List<Ciclo> obtenerCiclosFuturos(Date fecha) {
+		return sessionFactory.getCurrentSession().createQuery(QUERY_CICLOS_FUTUROS, Ciclo.class)
+				.setParameter("fecha", fecha).getResultList();
+	}
+
+	/**
+	 * Metodo para obtener el ciclo anterior al actual.
+	 *
+	 * @return {Ciclo} Ciclo anterior al actual.
+	 * 
+	 */
+	public Ciclo obtenerCicloAnterior(Ciclo cicloActual) {
+		List<Ciclo> ciclo = sessionFactory.getCurrentSession().createQuery(QUERY_CICLO_ANTERIOR, Ciclo.class)
+				.setParameter("fecha", cicloActual.getInicio()).getResultList();
+		return (ciclo.isEmpty()) ? null : ciclo.get(Numeros.CERO.getValor());
+	}
+
+	/**
+	 * Metodo para obtener el ciclo actual comparando la fecha actual con la
+	 * fecha de inico y fin.
+	 *
+	 * @return {Ciclo} Ciclo que cumple con la condicion del periodo, null si no
+	 *         se encontro un ciclo valido
+	 */
+	public Ciclo obtenerCicloActual() {
+		List<Ciclo> listCiclos = sessionFactory.getCurrentSession().createQuery(QUERY_CICLO_ACTUAL, Ciclo.class)
+				.setParameter("fechaActual", new Date()).getResultList();
+		return !listCiclos.isEmpty() ? listCiclos.get(Numeros.CERO.getValor()) : null;
+	}
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@Transactional
+	public void eliminarConvocatoria(Integer id) {
+		Query q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaRequisito");
+		q.setParameter("idConvocatoriaR", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaPeriodo");
+		q.setParameter("idConvocatoriaP", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaCriterio");
+		q.setParameter("idConvocatoriaC", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaHorario");
+		q.setParameter("idConvocatoriaH", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaEntrevistador");
+		q.setParameter("idConvocatoriaE", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoria");
+		q.setParameter("idConvocatoria", id);
+		q.executeUpdate();
+		q = sessionFactory.getCurrentSession().createNamedQuery("deleteConvocatoriaActividad");
+		q.setParameter("idCicloA", id);
+		q.executeUpdate();
+
+	}
+
+}

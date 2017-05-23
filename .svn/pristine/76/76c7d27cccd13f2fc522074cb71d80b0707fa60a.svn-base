@@ -1,0 +1,144 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae los tipos de actividades que pueden asociarse a un {@link Ciclo}.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca03_tipo_actividad")
+public class TipoActividad implements Catalogo, Modelo {
+	/**
+	 * Identificador del elemento del catálogo
+	 */
+	@Id
+	@SequenceGenerator(name = "tca03_tipo_actividad_id_tipo_seq", sequenceName = "tca03_tipo_actividad_id_tipo_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tca03_tipo_actividad_id_tipo_seq")
+	@Column(name = "id_tipo")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catálogo
+	 */
+	@Column(name = "nb_tipo")
+	private String nombre;
+
+	/**
+	 * Descripción del elemento del catálogo
+	 */
+	@Column(name = "ds_tipo")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_actividad")
+	private Boolean activo;
+
+	@OneToMany(mappedBy = "tipoActividad")
+	List<FaseActividad> actividades;
+
+	public enum tipoActividadEnum {
+		SUSPENSION_LABORES(1, "Suspensión de labores"), CURSO_PROPEDEUTICO(2, "Curso Propedéutico"), VACACIONES(3,
+				"Vacaciones"), EXAMENES_PRE_ORDINARIOS(4, "Exámenes pre-ordinarios"), EXAMENES_ORDINARIOS(5,
+						"Exámenes ordinarios"), INSCRIPCIONES_REINSCRIPCIONES(6, "Inscripciones y reinscripciones");
+
+		private Integer tipo;
+		private String nombre;
+
+		private tipoActividadEnum(Integer tipo, String nombre) {
+			this.tipo = tipo;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the tipo
+		 */
+		public Integer getTipo() {
+			return tipo;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

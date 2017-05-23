@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:text>
+	<![CDATA[
+		<script type="text/javascript" src="${pageContext.request.contextPath}/pages/admision/gestionar-pasos-proceso/js/index-pasos-proceso.js"></script>
+		]]>
+</jsp:text>
+</head>
+<body>
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				<s:text name="IU1.5.5-1_TITLE" />
+			</h1>
+		</div>
+	</div>
+	<!-- ############################ BARRA DE PASOS DEL PROCESO #################################### -->
+	<s:set var="varPasoProceso" value="1" />
+	<s:hidden id="idPasoProceso" value="%{#varPasoProceso}" />
+	<s:set var="varEtapaProceso" value="1" />
+	<s:hidden id="idEtapaProceso" value="%{#varEtapaProceso}" />
+	<div class="col-md-8 col-md-offset-2">
+		<s:include value="../gestionar-pasos-proceso/index-pasos-proceso.jsp" />
+	</div>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<s:form id="frmPagoExitoso"
+				action="%{#pagecontext.request.contextPath}/admision/pagar-admision-oxxo!estadoPago"
+				theme="simple" method="post">
+				<div class="row">
+					<div class="form form-horizontal text-left">
+						<div class="form-group">
+							<div class="col-md-12">
+								<s:text name="IU1.5.5-1_LBL1" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-6 control-label" for=""><s:text
+									name="IU1.5.2-1_LBL6" /></label>
+							<div class="col-sm-6">
+								<s:text name="IU1.5.3-1_LBL8" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-6 control-label" for=""><s:text
+									name="IU1.5.2-1_LBL8" /></label>
+							<div class="col-md-6">
+								<s:text name="IU1.5.2-1_LBL12" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</s:form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="row buttons col-md-12">
+			<a class="btn btn-default btn-default-eld"
+				href="${pageContext.request.contextPath}/ceneval/gestionar-examen/new">
+				<s:text name="btnGuardar" />
+			</a>
+		</div>
+	</div>
+</body>
+	</html>
+</jsp:root>

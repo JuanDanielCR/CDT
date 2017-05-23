@@ -1,0 +1,177 @@
+package mx.edu.eld.controlacceso.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import mx.edu.eld.informacionbase.mapeo.Persona;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+import mx.ipn.escom.cdt.util.mapeo.UsuarioELD;
+
+/**
+ * Un usuario es un tipo de {@link Persona} registrado en el sistema. Las
+ * personas que son usuarios del sistema, podran ingresar al mismo con base en
+ * su login y su contraseña.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tau02_usuario")
+@Inheritance(strategy = InheritanceType.JOINED)
+@PrimaryKeyJoinColumn(name = "id_usuario", referencedColumnName = "id_persona")
+public class Usuario extends Persona implements UsuarioELD, Modelo {
+	/**
+	 * Login único de un usuario en el sistema
+	 */
+
+	@Column(name = "tx_login")
+	private String login;
+
+	/**
+	 * Digesto SHA-256 de la contraseña del usuario
+	 */
+	@Column(name = "tx_password")
+	private String password;
+
+	/**
+	 * Contiene las cuentas asociadas al usuario
+	 */
+	@OneToMany
+	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false)
+	private List<Cuenta> cuentas;
+
+	/**
+	 * Contiene los perfiles
+	 */
+	// @ManyToMany
+	// @WhereJoinTable(clause)
+	// @JoinTable(name = "tca03_cuenta", joinColumns = {
+	// @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario",
+	// insertable = false, updatable = false) }, inverseJoinColumns = {
+	// @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil",
+	// insertable = false, updatable = false) })
+	@Transient
+	private List<Perfil> perfiles;
+
+	// @Formula(value="()")
+	@Transient
+	private Boolean multiplePerfil;
+
+	/**
+	 * Contiene la información de acceso del usuario
+	 */
+	@OneToOne
+	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false)
+	private Acceso acceso;
+
+	/**
+	 * @return the login
+	 */
+	public String getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login
+	 *            the login to set
+	 */
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the cuentas
+	 */
+	public List<Cuenta> getCuentas() {
+		return cuentas;
+	}
+
+	/**
+	 * @param cuentas
+	 *            the cuentas to set
+	 */
+	public void setCuentas(List<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
+
+	/**
+	 * @return the perfiles
+	 */
+	public List<Perfil> getPerfiles() {
+		return perfiles;
+	}
+
+	/**
+	 * @param perfiles
+	 *            the perfiles to set
+	 */
+	public void setPerfiles(List<Perfil> perfiles) {
+		this.perfiles = perfiles;
+	}
+
+	/**
+	 * @return the multiplePerfil
+	 */
+	public Boolean getMultiplePerfil() {
+		return multiplePerfil;
+	}
+
+	/**
+	 * @param multiplePerfil
+	 *            the multiplePerfil to set
+	 */
+	public void setMultiplePerfil(Boolean multiplePerfil) {
+		this.multiplePerfil = multiplePerfil;
+	}
+
+	/**
+	 * @return the acceso
+	 */
+	public Acceso getAcceso() {
+		return acceso;
+	}
+
+	/**
+	 * @param acceso
+	 *            the acceso to set
+	 */
+	public void setAcceso(Acceso acceso) {
+		this.acceso = acceso;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+	
+	
+}

@@ -1,0 +1,13 @@
+$(function() {
+	dataTableEMETH.
+("tableAspirantesSeleccionados",4,"acs",4);
+});
+
+function AceptAlumnos() {
+	$.publish("showDlgAceptarAlumnos");
+	$("#dlgAceptAlumnos").removeClass("dlgAceptAlumnos");
+}
+
+function closeAceptAlumnos(){
+	$.publish("closeDlgAceptarAlumnos");
+}

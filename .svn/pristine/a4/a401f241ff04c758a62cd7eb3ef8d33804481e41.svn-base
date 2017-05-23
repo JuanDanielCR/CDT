@@ -1,0 +1,23 @@
+$(function() {
+	$(document).ready(function() {
+		var idPasoActual = $("#idPasoProceso").val();
+		var idEtapa = $("#idEtapaProceso").val();
+
+		var $progressDiv = $("#idProgessBar");
+		var $progressBar = $progressDiv.progressStep({
+			fillColor : "white",
+			strokeColor : "black",
+			activeColor : "#9C002F"
+		});
+
+		$progressBar.addStep("Registro \n de \n Aspirantes");
+		$progressBar.addStep("Pago de Derechos");
+		$progressBar.addStep("Evaluaciones       .");
+		if (idEtapa == 2) {
+			$progressBar.addStep("Entrevista");
+			$progressBar.addStep("Resultados");
+		}
+		$progressBar.setCurrentStep(idPasoActual);
+		$progressBar.refreshLayout();
+	});
+});

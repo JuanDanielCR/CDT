@@ -1,0 +1,444 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import mx.edu.eld.informacionbase.mapeo.CategoriaContacto;
+import mx.edu.eld.informacionbase.mapeo.TipoContacto;
+import mx.edu.eld.informacionbase.mapeo.TipoContacto.EnumTipoContacto;
+import mx.ipn.escom.cdt.util.Constantes;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.mapeo.ContactoELD;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tad20_contacto")
+public class Contacto implements Modelo, ContactoELD {
+	/**
+	 * Identificador del contacto
+	 */
+	@Id
+	@SequenceGenerator(name = "tad20_contacto_id_contacto_seq", sequenceName = "tad20_contacto_id_contacto_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad20_contacto_id_contacto_seq")
+	@Column(name = "id_contacto")
+	private Integer id;
+
+	/**
+	 * Identificador de la persona a la que pertenece el contacto
+	 */
+	@Column(name = "id_aspirante")
+	private Integer idPersona;
+
+	/**
+	 * Identificador del tipo del contacto
+	 */
+	@Column(name = "id_tipo")
+	private Integer idTipo;
+
+	/**
+	 * Identificador de la categoría del contacto
+	 */
+	@Column(name = "id_categoria")
+	private Integer idCategoria;
+
+	/**
+	 * Contacto de la persona
+	 */
+	@Column(name = "tx_acontacto")
+	private String contacto;
+
+	/**
+	 * Propiedad para el almacenamiento de información adicional al contacto,
+	 * ej. lada.
+	 */
+	@Column(name = "tx_contacto_a")
+	private String contactoA;
+
+	/**
+	 * Propiedad para el almacenamiento de infomación adicional al contacto, ej.
+	 * extensión.
+	 */
+	@Column(name = "tx_contacto_b")
+	private String contactoB;
+
+	/**
+	 * Nombre de la persona a quién pertenece el contacto de emergencia
+	 */
+	@Column(name = "tc_emergencia")
+	private String emergencia;
+
+	/**
+	 * Relación de la persona registrada en el sistema con la persona a quién
+	 * pertenece el contacto de emergencia.
+	 */
+	@Column(name = "tx_relacion")
+	private String relacion;
+
+	@Transient
+	private String text;
+
+	/**
+	 * {@link CategoriaContacto} del contacto
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", insertable = false, updatable = false)
+	private CategoriaContacto categoria;
+
+	/**
+	 * {@link TipoContacto} del contacto
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_tipo", referencedColumnName = "id_tipo", insertable = false, updatable = false)
+	private TipoContacto tipo;
+
+	public Contacto() {
+		super();
+	}
+
+	public Contacto(Integer idPersona) {
+		super();
+		this.idPersona = idPersona;
+	}
+
+	public Contacto(Integer idPersona, Integer idTipo) {
+		super();
+		this.idPersona = idPersona;
+		this.idTipo = idTipo;
+	}
+	
+
+	public Contacto(Integer idPersona, Integer idTipo, Integer idCategoria) {
+		super();
+		this.idPersona = idPersona;
+		this.idTipo = idTipo;
+		this.idCategoria = idCategoria;
+	}
+
+	private Contacto(EnumTipoContacto tipoContacto, String email) {
+		this.idTipo = tipoContacto.getIdTipo();
+		this.contacto = email;
+	}
+
+	public static Contacto createEmail(String email) {
+		return new Contacto(EnumTipoContacto.EMAIL, email);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((contactoA == null) ? 0 : contactoA.hashCode());
+		result = prime * result + ((contactoB == null) ? 0 : contactoB.hashCode());
+		result = prime * result + ((contacto == null) ? 0 : contacto.hashCode());
+		result = prime * result + ((idTipo == null) ? 0 : idTipo.hashCode());
+		if (result > Numeros.CERO.getValor()) {
+			result *= Numeros.UNO_NEGATIVO.getValor();
+		}
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equalsValues(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Contacto other = (Contacto) obj;
+		if (this.idTipo != null && other.idTipo != null && this.idTipo.equals(other.idTipo)) {
+			Integer idTipo = this.idTipo;
+			if (idTipo.equals(EnumTipoContacto.TELEFONO.getIdTipo())
+					|| idTipo.equals(EnumTipoContacto.FAX.getIdTipo())) {
+				if (this.contactoA.equals(other.contactoA) && this.contacto.equals(other.contacto)) {
+					if (this.contactoB != null && other.contactoB != null) {
+						if (this.contactoB.equals(other.contactoB)) {
+							return true;
+						} else {
+							return false;
+						}
+					} else {
+						if (this.contactoB != null || other.contactoB != null) {
+							return false;
+						}
+					}
+					return true;
+				} else {
+					return false;
+				}
+			} else if (idTipo.equals(EnumTipoContacto.EMAIL.getIdTipo())
+					|| idTipo.equals(EnumTipoContacto.LINKEDIN.getIdTipo())
+					|| idTipo.equals(EnumTipoContacto.FACEBOOK.getIdTipo())
+					|| idTipo.equals(EnumTipoContacto.TWITTER.getIdTipo())) {
+				if (this.contacto.equals(other.contacto)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (idTipo.equals(EnumTipoContacto.CELULAR.getIdTipo())) {
+				if (this.contactoA.equals(other.contactoA) && this.contacto.equals(other.contacto)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Contacto other = (Contacto) obj;
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Contacto other = new Contacto();
+		other.id = this.id;
+		other.idCategoria = this.idCategoria;
+		other.idPersona = this.idPersona;
+		other.idTipo = this.idTipo;
+		other.contactoA = this.contactoA;
+		other.contactoB = this.contactoB;
+		other.contacto = this.contacto;
+		other.emergencia = this.emergencia;
+		other.relacion = this.relacion;
+		// other.categoria = (CategoriaContacto) this.categoria.clone();
+		// other.tipo = (TipoContacto) this.tipo.clone();
+		return other;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return text != null ? text : Constantes.CADENA_VACIA;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idPersona
+	 */
+	public Integer getIdPersona() {
+		return idPersona;
+	}
+
+	/**
+	 * @param idPersona
+	 *            the idPersona to set
+	 */
+	public void setIdPersona(Integer idPersona) {
+		this.idPersona = idPersona;
+	}
+
+	/**
+	 * @return the idCategoria
+	 */
+	public Integer getIdCategoria() {
+		return idCategoria;
+	}
+
+	/**
+	 * @param idCategoria
+	 *            the idCategoria to set
+	 */
+	public void setIdCategoria(Integer idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/**
+	 * @return the contacto
+	 */
+	public String getContacto() {
+		return contacto;
+	}
+
+	/**
+	 * @param contacto
+	 *            the contacto to set
+	 */
+	public void setContacto(String contacto) {
+		this.contacto = contacto;
+	}
+
+	/**
+	 * @return the contactoA
+	 */
+	public String getContactoA() {
+		return contactoA;
+	}
+
+	/**
+	 * @param contactoA
+	 *            the contactoA to set
+	 */
+	public void setContactoA(String contactoA) {
+		this.contactoA = contactoA;
+	}
+
+	/**
+	 * @return the contactoB
+	 */
+	public String getContactoB() {
+		return contactoB;
+	}
+
+	/**
+	 * @param contactoB
+	 *            the contactoB to set
+	 */
+	public void setContactoB(String contactoB) {
+		this.contactoB = contactoB;
+	}
+
+	/**
+	 * @return the emergencia
+	 */
+	public String getEmergencia() {
+		return emergencia;
+	}
+
+	/**
+	 * @param emergencia
+	 *            the emergencia to set
+	 */
+	public void setEmergencia(String emergencia) {
+		this.emergencia = emergencia;
+	}
+
+	/**
+	 * @return the relacion
+	 */
+	public String getRelacion() {
+		return relacion;
+	}
+
+	/**
+	 * @param relacion
+	 *            the relacion to set
+	 */
+	public void setRelacion(String relacion) {
+		this.relacion = relacion;
+	}
+
+	/**
+	 * @return the categoria
+	 */
+	public CategoriaContacto getCategoria() {
+		return categoria;
+	}
+
+	/**
+	 * @param categoria
+	 *            the categoria to set
+	 */
+	public void setCategoria(CategoriaContacto categoria) {
+		this.categoria = categoria;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public TipoContacto getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(TipoContacto tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+}

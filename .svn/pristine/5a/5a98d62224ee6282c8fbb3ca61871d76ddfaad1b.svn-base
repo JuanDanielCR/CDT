@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:text>
+	<![CDATA[
+		<script type="text/javascript" src="${pageContext.request.contextPath}/pages/admision/gestionar-pasos-proceso/js/index-pasos-proceso.js"></script>
+		]]>
+</jsp:text>
+</head>
+<body>
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU1.6_TITLE" />
+			</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 hidden">
+			<div class="alert alert-success">
+				<s:text name="MSG35" />
+			</div>
+		</div>
+	</div>
+	<!-- ############################ BARRA DE PASOS DEL PROCESO #################################### -->
+	<s:set var="varPasoProceso" value="2" />
+	<s:hidden id="idPasoProceso" value="%{#varPasoProceso}" />
+	<s:set var="varEtapaProceso" value="1" />
+	<s:hidden id="idEtapaProceso" value="%{#varEtapaProceso}" />
+	<div class="col-md-8 col-md-offset-2">
+		<s:include
+			value="../../admision/gestionar-pasos-proceso/index-pasos-proceso.jsp" />
+	</div>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="row">
+				<fieldset class="form-section form-horizontal">
+					<!-- <legend class="form-section">
+						<s:text name="IU1.6_SECCION1" />
+					</legend>  -->
+					<div class="form-group">
+						<div class="col-md-12 text-left">
+							<s:text name="IU1.6_LBL1" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-12 text-left">
+							<ol>
+								<li><s:text name="IU1.6_LBL2" /></li>
+								<li><s:text name="IU1.6_LBL3" /></li>
+							</ol>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-12 text-left">
+							<s:text name="IU1.6_LBL4" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-6">
+							<a class="btn btn-default btn-grid"
+								href="${pageContext.request.contextPath}/ceneval/gestionar-encuesta">
+								<div class="btn-default-eld-grid">
+									<s:if test="%{success eq 1}">
+										<i class="material-icons  md-24 md-eld-success">check_circle</i>
+									</s:if>
+									<s:else>
+										<i class="material-icons  md-24 md-eld-alert">report_problem</i>
+									</s:else>
+									<s:text name="IU1.6_BTN1" />
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6">
+							<a class="btn btn-default btn-grid" href="#">
+								<div class="btn-default-eld-grid">
+									<s:if test="%{success eq 1}">
+										<i class="material-icons  md-24 md-eld-success">check_circle</i>
+									</s:if>
+									<s:else>
+										<i class="material-icons  md-24 md-eld-alert">report_problem</i>
+									</s:else>
+									<s:text name="IU1.6_BTN2" />
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<s:if test="%{success eq 1}">
+							<s:text name="IU1.6_LBL5" />
+						</s:if>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</body>
+	</html>
+</jsp:root>

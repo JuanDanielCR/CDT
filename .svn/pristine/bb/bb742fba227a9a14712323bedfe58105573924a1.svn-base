@@ -1,0 +1,28 @@
+package mx.edu.eld.bs.rules;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.ipn.escom.cdt.util.Numeros;
+
+@Service("reglaNegocioN52")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN52 implements ReglaNegocio{
+ 
+	
+	/**
+	 * Regla de negocio que valida si un ciclo es eliminable.
+	 * @param model
+	 *        {Ciclo} Ciclo que se va a eliminar.
+	 * @return {boolean} True si el ciclo no se  puede eliminar.
+	 */
+	public boolean validate(Ciclo model){
+		if((model.getIdEstatus() != Numeros.CINCO.getValor()) && (model.getEliminable())){
+			return true;
+		}
+		return false;
+	}
+	
+}

@@ -1,0 +1,77 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class EntrevistaRubroId implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5077396069971401696L;
+
+	/**
+	 * Id de la entrevista a realizar
+	 **/
+	@Column(name = "id_entrevista")
+	private Integer idEntrevista;
+
+	/**
+	 * id del rubro a evaluar
+	 **/
+	@Column(name = "id_rubro")
+	private Integer idRubro;
+
+	public EntrevistaRubroId(Integer idEntrevista, Integer idRubro) {
+		super();
+		this.idEntrevista = idEntrevista;
+		this.idRubro = idRubro;
+	}
+
+	public EntrevistaRubroId() {
+		super();
+	}
+
+	/**
+	 * @return the idEntrevista
+	 */
+	public Integer getIdEntrevista() {
+		return idEntrevista;
+	}
+
+	/**
+	 * @param idEntrevista
+	 *            the idEntrevista to set
+	 */
+	public void setIdEntrevista(Integer idEntrevista) {
+		this.idEntrevista = idEntrevista;
+	}
+
+	/**
+	 * @return the idRubro
+	 */
+	public Integer getIdRubro() {
+		return idRubro;
+	}
+
+	/**
+	 * @param idRubro
+	 *            the idRubro to set
+	 */
+	public void setIdRubro(Integer idRubro) {
+		this.idRubro = idRubro;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return idEntrevista + "_" + idRubro;
+	}
+}

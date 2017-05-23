@@ -1,0 +1,28 @@
+/**
+ * 
+ */
+package mx.edu.eld.bs.rules;
+
+import java.util.Date;
+
+import mx.ipn.escom.cdt.util.Numeros;
+
+/**
+ * @author Miguel Duarte
+ *
+ */
+public class ReglaNegocioN6 implements ReglaNegocio {
+
+	/**
+	 * Regla de negocio que valida si un periodo puede ser eliminado
+	 * 
+	 * @param fecha
+	 *            {Date} Fecha de inicio del periodo.
+	 * @return {boolean} Retorna true si la regla es valida en caso contrario
+	 *         retorna false.
+	 */
+	public static boolean validate(Date fecha) {
+		return (new Date().compareTo(fecha) < Numeros.CERO.getValor());
+	}
+
+}

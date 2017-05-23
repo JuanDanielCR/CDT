@@ -1,0 +1,269 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Formula;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Representa las participaciones de un {@link Aspirante} en las
+ * {@link Convocatoria}s de ingreso a la ELD
+ * 
+ * @author hermes
+ */
+@Entity
+@Table(name = "tad04_convocatoria_aspirante")
+public class ConvocatoriaAspirante implements Modelo {
+
+	/**
+	 * Llave compuesta de la relación
+	 */
+	@EmbeddedId
+	private ConvocatoriaAspiranteId id;
+
+	/**
+	 * Id de la convocatoria a la que pertenece un aspirante
+	 **/
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Id del aspirante de una convocatoria
+	 **/
+	@Column(name = "id_aspirante", insertable = false, updatable = false)
+	private Integer idAspirante;
+
+	/**
+	 * Id del estatus que tiene un estudiante en una convocatoria
+	 **/
+	@Column(name = "id_estatus")
+	private Integer idEstatus;
+
+	/**
+	 * Fecha de registro de un estudiante en una convocatoria
+	 **/
+	@Column(name = "fh_registro")
+	private Date registro;
+
+	@Formula(value = "(select i.nu_promedio from tad06_informacion_escolar i where i.id_nivel=1 and i.id_aspirante=id_aspirante)")
+	private Float promedioSecundaria;
+
+	@Formula(value = "(select i.nu_promedio from tad06_informacion_escolar i where i.id_nivel=2 and i.id_aspirante=id_aspirante)")
+	private Float promedioBachillerato;
+
+	@Transient
+	private Float examenCeneval;
+	
+	@Transient
+	private Float examenPsicometrico;
+
+	@Transient
+	private Float promedioEntrevista;
+
+	@ManyToOne
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", updatable = false, insertable = false)
+	private Aspirante aspirante;
+
+	public ConvocatoriaAspirante() {
+		super();
+	}
+
+	public ConvocatoriaAspirante(ConvocatoriaAspiranteId id, Integer idConvocatoria, Integer idAspirante,
+			Integer idEstatus, Date registro) {
+		super();
+		this.id = id;
+		this.idConvocatoria = idConvocatoria;
+		this.idAspirante = idAspirante;
+		this.idEstatus = idEstatus;
+		this.registro = registro;
+	}
+
+	public ConvocatoriaAspirante(Integer idConvocatoria, Integer idEstatus) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+		this.idEstatus = idEstatus;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ConvocatoriaAspiranteId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(ConvocatoriaAspiranteId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the registro
+	 */
+	public Date getRegistro() {
+		return registro;
+	}
+
+	/**
+	 * @param registro
+	 *            the registro to set
+	 */
+	public void setRegistro(Date registro) {
+		this.registro = registro;
+	}
+
+	/**
+	 * @return the idEstatus
+	 */
+	public Integer getIdEstatus() {
+		return idEstatus;
+	}
+
+	/**
+	 * @param idEstatus
+	 *            the idEstatus to set
+	 */
+	public void setIdEstatus(Integer idEstatus) {
+		this.idEstatus = idEstatus;
+	}
+
+	/**
+	 * @return the promedioSecundaria
+	 */
+	public Float getPromedioSecundaria() {
+		return promedioSecundaria;
+	}
+
+	/**
+	 * @param promedioSecundaria
+	 *            the promedioSecundaria to set
+	 */
+	public void setPromedioSecundaria(Float promedioSecundaria) {
+		this.promedioSecundaria = promedioSecundaria;
+	}
+
+	/**
+	 * @return the promedioBachillerato
+	 */
+	public Float getPromedioBachillerato() {
+		return promedioBachillerato;
+	}
+
+	/**
+	 * @param promedioBachillerato
+	 *            the promedioBachillerato to set
+	 */
+	public void setPromedioBachillerato(Float promedioBachillerato) {
+		this.promedioBachillerato = promedioBachillerato;
+	}
+
+	/**
+	 * @return the examenCeneval
+	 */
+	public Float getExamenCeneval() {
+		return examenCeneval;
+	}
+
+	/**
+	 * @param examenCeneval
+	 *            the examenCeneval to set
+	 */
+	public void setExamenCeneval(Float examenCeneval) {
+		this.examenCeneval = examenCeneval;
+	}
+
+	/**
+	 * @return the examenPsicometrico
+	 */
+	public Float getExamenPsicometrico() {
+		return examenPsicometrico;
+	}
+
+	/**
+	 * @param examenPsicometrico
+	 *            the examenPsicometrico to set
+	 */
+	public void setExamenPsicometrico(Float examenPsicometrico) {
+		this.examenPsicometrico = examenPsicometrico;
+	}
+
+	/**
+	 * @return the aspirante
+	 */
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+
+	/**
+	 * @param aspirante
+	 *            the aspirante to set
+	 */
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	@Override
+	public String toString() {
+		return "ConvocatoriaAspirante [idConvocatoria=" + idConvocatoria + ", idAspirante=" + idAspirante
+				+ ", idEstatus=" + idEstatus + ", registro=" + registro + ", promedioSecundaria=" + promedioSecundaria
+				+ ", promedioBachillerato=" + promedioBachillerato + ", examenCeneval=" + examenCeneval
+				+ ", examenPsicometrico=" + examenPsicometrico + "]";
+	}
+
+	/**
+	 * @return the promedioEntrevista
+	 */
+	public Float getPromedioEntrevista() {
+		return promedioEntrevista;
+	}
+
+	/**
+	 * @param promedioEntrevista
+	 *            the promedioEntrevista to set
+	 */
+	public void setPromedioEntrevista(Float promedioEntrevista) {
+		this.promedioEntrevista = promedioEntrevista;
+	}
+}

@@ -1,0 +1,84 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Abstrae la llave compuesta de la relación de los requisitos de ingreso con
+ * una convocatoria específica de la ELD.
+ * 
+ * @author hermes
+ *
+ */
+@Embeddable
+public class ConvocatoriaRequisitoId implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name = "id_convocatoria", nullable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Requisito}
+	 */
+	@Column(name = "id_requisito", nullable = false)
+	private Integer idRequisito;
+	
+	public ConvocatoriaRequisitoId(Integer idConvocatoria, Integer idRequisito){
+		super();
+		this.idConvocatoria = idConvocatoria;
+		this.idRequisito = idRequisito;
+	}
+	
+	
+
+	public ConvocatoriaRequisitoId() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idRequisito
+	 */
+	public Integer getIdRequisito() {
+		return idRequisito;
+	}
+
+	/**
+	 * @param idRequisito
+	 *            the idRequisito to set
+	 */
+	public void setIdRequisito(Integer idRequisito) {
+		this.idRequisito = idRequisito;
+	}
+
+	@Override
+	public String toString() {
+		return idConvocatoria + "_" + idRequisito + "";
+	}
+	
+}

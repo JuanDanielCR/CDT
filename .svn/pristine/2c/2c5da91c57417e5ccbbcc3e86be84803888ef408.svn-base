@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:text>
+	<![CDATA[
+	<script
+		src="${pageContext.request.contextPath}/pages/calendario/gestionar-ciclos/js/index-edit.js"
+		type="text/javascript"></script>
+	]]>
+</jsp:text>
+</head>
+<body>
+
+	<div class="row title">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU1.1-3_TITLE" />
+			</h1>
+		</div>
+	</div>
+
+	<!-- label mensajes obligatorios -->
+	<div class="row">
+		<div class="col-md-12">
+			<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+		</div>
+	</div>
+	
+	<s:set var="dateMin" value="%{getText('mx.edu.eld.dateMinCiclo')}" />
+	<s:set var="dateMax" value="%{getText('mx.edu.eld.dateMaxCiclo')}" />
+
+	<div class="row">
+		<div class="outter-section form-medium text-left ">
+			<div class="col-md-12 text-left">
+				<s:text name="IU1.2-3_LBL1" />
+			</div>
+		</div>
+	</div>
+
+	<s:form id="frmEditarCiclo"
+		action="%{#pageContext.request.contextPath}/calendario/gestionar-ciclos/%{idSel}"
+		theme="simple" method="post">
+		<s:hidden name="_method" value="put" />
+		<fieldset
+			class="form-section form-horizontal form-medium text-justify">
+			<legend class="form-section">
+				<s:text name="IU1.1-3_LBL4" />
+			</legend>
+
+
+			<s:hidden id="valorFechaPasar" name="model.nombre"
+				value="%{model.nombre}" />
+			<s:set var="s" value="%{model.nombre}"></s:set>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-4 control-label"> <s:text
+						name="IU1.1-3_LBL1" />
+				</label>
+				<s:if test="model.nombre eq null">
+					<s:label id="valorFecha" name="model.nombre"
+						value="%{varUnavailable}" cssClass="col-xs-12 col-sm-4 col-md-8" />
+					<s:fielderror fieldName="model.nombre"
+						cssClass="help-block alert-danger" />
+				</s:if>
+				<s:else>
+					<label id="valorFecha" class="col-xs-12 col-sm-4 col-md-8"
+						name="model.nombre" value="%{model.nombre}">
+						${model.nombre} </label>
+					<s:fielderror fieldName="model.nombre"
+						cssClass="col-md-8 error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</s:else>
+			</div>
+
+			<div class="form-group">
+				<label
+					class="col-xs-12 col-sm-4 col-md-4 control-label label-obligatorio"
+					for=""> <s:text name="IU1.1-3_LBL2" />
+				</label>
+				<div class="col-xs-12 col-sm-8 col-md-8">
+					<sj:datepicker id="dpInicio" name="model.inicio"
+						cssClass="form-control date-picker" showOn="focus"
+						inputAppendIcon="calendar" changeYear="true" changeMonth="true"
+						readonly="true" showAnim="fadeIn" minDate="%{dateMin}" maxDate="%{dateMax}" />
+					<s:fielderror fieldName="model.inicio"
+						cssClass="error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+				
+			</div>
+			<div class="form-group">
+				<label
+					class="col-xs-12 col-sm-4 col-md-4 control-label label-obligatorio"
+					for=""> <s:text name="IU1.1-3_LBL3" />
+				</label>
+				<div class="col-xs-12 col-sm-8 col-md-8">					
+					<sj:datepicker id="dpFin" name="model.fin"
+						cssClass="form-control date-picker" showOn="focus"
+						inputAppendIcon="calendar" changeYear="true" changeMonth="true"
+						readonly="true" showAnim="fadeIn" minDate="%{dateMin}" maxDate="%{dateMax}"/>
+						<s:fielderror fieldName="model.fin"
+						cssClass="error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label
+					class="col-xs-12 col-sm-4 col-md-4 control-label label-obligatorio"
+					for=""> <s:text name="IU1.1-4_LBL5" />
+				</label>
+				<div class="col-xs-12 col-sm-8 col-md-8">
+					<sj:datepicker id="dpPublicacion" name="model.publicacion"
+						cssClass="form-control date-picker" showOn="focus"
+						inputAppendIcon="calendar" changeYear="true" changeMonth="true"
+						readonly="true" showAnim="fadeIn" value="%{model.publicacion}" minDate="%{dateMin}" maxDate="%{dateMax}"/>
+						<s:fielderror fieldName="model.publicacion"
+						cssClass="error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+				
+			</div>
+
+		</fieldset>
+
+
+		<div class="row">
+			<div class="outter-section form-medium">
+				<div class="col-md-12 text-right">
+					<s:submit cssClass="btn btn-default btn-default-eld"
+						value="%{getText('mx.com.eld.boton.aceptar')}" />
+					<a
+						href="${pageContext.request.contextPath}/calendario/gestionar-ciclos"
+						class="btn btn-default btn-default-eld"><s:text
+							name="mx.com.eld.boton.cancelar" /></a>
+				</div>
+			</div>
+		</div>
+	</s:form>
+</body>
+	</html>
+</jsp:root>

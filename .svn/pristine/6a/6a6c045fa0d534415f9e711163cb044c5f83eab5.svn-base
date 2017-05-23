@@ -1,0 +1,332 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tad02_aspirante")
+public class Aspirante implements Modelo {
+	/**
+	 * Identificador de aspirante
+	 */
+	@Id
+	@SequenceGenerator(name = "tad02_aspirante_id_aspirante_seq", sequenceName = "tad02_aspirante_id_aspirante_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad02_aspirante_id_aspirante_seq")
+	@Column(name = "id_aspirante")
+	private Integer id;
+
+	/**
+	 * Nombre del aspirante
+	 **/
+	@Column(name = "nb_persona")
+	private String nombre;
+
+	/**
+	 * Primer apellido del aspirante
+	 **/
+	@Column(name = "tx_primer_ap")
+	private String primerApellido;
+
+	/**
+	 * Segundo apellido del aspirante
+	 **/
+	@Column(name = "tx_segundo_ap")
+	private String segundoApellido;
+
+	/**
+	 * Curp del aspirante
+	 **/
+	@Column(name = "tx_curp")
+	private String curp;
+
+	/**
+	 * Contiene las participaciones de un alumno en los procesos de adminisión
+	 * de la ELD.
+	 */
+	@OneToMany
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false)
+	private List<ConvocatoriaAspirante> participaciones;
+
+	/**
+	 * Lista de contactos que registra el aspirante
+	 */
+	@OneToMany
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false)
+	private List<Contacto> contactos;
+
+	/**
+	 * Lista de direcciones registradas por el aspirante en el registro de su
+	 * solicitud de ingreso
+	 */
+	@ManyToMany
+	@JoinTable(name = "tas19_aspirante_direccion", joinColumns = {
+			@JoinColumn(name = "id_aspirante", insertable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_direccion", referencedColumnName = "id_direccion", insertable = false, updatable = false) })
+	private List<DireccionAspirante> direcciones;
+
+	/**
+	 * Contiene la información escolar del {@link Aspirante} de cada uno de los
+	 * niveles académicós que se le han solicitado en las Convocatorias en las
+	 * que ha participado. Es importante mencionar, que esta información
+	 * persiste entre diversas solicitudes de ingreso que realice el aspirante.
+	 */
+	@OneToMany
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false)
+	private List<InformacionEscolar> informacionEscolar;
+
+	/**
+	 * Dirección fical del aspirante
+	 */
+	@Transient
+	private DireccionAspirante fiscal;
+
+	/**
+	 * Domicilio particular del aspirante
+	 */
+	@Transient
+	private DireccionAspirante domicilio;
+
+	@Transient
+	private Entrevista entrevista;
+
+	// TODO: Documentar constructor
+	public Aspirante(String nombre, String primerApellido, String segundoApellido, String curp) {
+		super();
+		this.nombre = nombre;
+		this.primerApellido = primerApellido;
+		this.segundoApellido = segundoApellido;
+		this.curp = curp;
+	}
+
+	// TODO: Documentar constructor
+	public Aspirante() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "nombre", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "^([a-zA-Z 0-9 ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ#\\-$%&() ]{1,100})$", type = ValidatorType.FIELD, message = "%{getText('MSG40')}") }, stringLengthFields = {
+							@StringLengthFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG41', {getText('100')})}", maxLength = "100") })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the primerApellido
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "primerApellido", trim = true, type = ValidatorType.FIELD, key = "MSG39") }, regexFields = {
+					@RegexFieldValidator(regex = "^([a-zA-Z 0-9 ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ#\\-$%&() ]{1,100})$", type = ValidatorType.FIELD, message = "%{getText('MSG40')}") }, stringLengthFields = {
+							@StringLengthFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG41', {getText('100')})}", maxLength = "100") })
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	/**
+	 * @param primerApellido
+	 *            the primerApellido to set
+	 */
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	/**
+	 * @return the segundoApellido
+	 */
+	@Validations(regexFields = {
+			@RegexFieldValidator(regex = "^([a-zA-Z 0-9 ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ#\\-$%&() ]{1,100})$", type = ValidatorType.FIELD, message = "%{getText('MSG40')}") }, stringLengthFields = {
+					@StringLengthFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG41', {getText('100')})}", maxLength = "100") })
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	/**
+	 * @param segundoApellido
+	 *            the segundoApellido to set
+	 */
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
+	}
+
+	/**
+	 * @return the curp
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG39')}") }, regexFields = {
+					@RegexFieldValidator(regex = "^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$", type = ValidatorType.FIELD, message = "%{getText('MSG40')}") }, stringLengthFields = {
+							@StringLengthFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG41', {getText('100')})}", maxLength = "100") })
+	public String getCurp() {
+		return curp;
+	}
+
+	/**
+	 * @param curp
+	 *            the curp to set
+	 */
+	public void setCurp(String curp) {
+		this.curp = curp;
+	}
+
+	/**
+	 * @return the participaciones
+	 */
+	public List<ConvocatoriaAspirante> getParticipaciones() {
+		return participaciones;
+	}
+
+	/**
+	 * @param participaciones
+	 *            the participaciones to set
+	 */
+	public void setParticipaciones(List<ConvocatoriaAspirante> participaciones) {
+		this.participaciones = participaciones;
+	}
+
+	/**
+	 * @return the contactos
+	 */
+	public List<Contacto> getContactos() {
+		return contactos;
+	}
+
+	/**
+	 * @param contactos
+	 *            the contactos to set
+	 */
+	public void setContactos(List<Contacto> contactos) {
+		this.contactos = contactos;
+	}
+
+	/**
+	 * @return the direcciones
+	 */
+	public List<DireccionAspirante> getDirecciones() {
+		return direcciones;
+	}
+
+	/**
+	 * @param direcciones
+	 *            the direcciones to set
+	 */
+	public void setDirecciones(List<DireccionAspirante> direcciones) {
+		this.direcciones = direcciones;
+	}
+
+	/**
+	 * @return the informacionEscolar
+	 */
+	public List<InformacionEscolar> getInformacionEscolar() {
+		return informacionEscolar;
+	}
+
+	/**
+	 * @param informacionEscolar
+	 *            the informacionEscolar to set
+	 */
+	public void setInformacionEscolar(List<InformacionEscolar> informacionEscolar) {
+		this.informacionEscolar = informacionEscolar;
+	}
+
+	/**
+	 * @return the fiscal
+	 */
+	public DireccionAspirante getFiscal() {
+		return fiscal;
+	}
+
+	/**
+	 * @param fiscal
+	 *            the fiscal to set
+	 */
+	public void setFiscal(DireccionAspirante fiscal) {
+		this.fiscal = fiscal;
+	}
+
+	/**
+	 * @return the domicilio
+	 */
+	public DireccionAspirante getDomicilio() {
+		return domicilio;
+	}
+
+	/**
+	 * @param domicilio
+	 *            the domicilio to set
+	 */
+	public void setDomicilio(DireccionAspirante domicilio) {
+		this.domicilio = domicilio;
+	}
+
+	/**
+	 * @return the entrevista
+	 */
+	public Entrevista getEntrevista() {
+		return entrevista;
+	}
+
+	/**
+	 * @param entrevista
+	 *            the entrevista to set
+	 */
+	public void setEntrevista(Entrevista entrevista) {
+		this.entrevista = entrevista;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return nombre + " " + primerApellido + " " + segundoApellido;
+	}
+
+}

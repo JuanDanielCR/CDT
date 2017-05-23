@@ -1,0 +1,94 @@
+package mx.edu.eld.controlacceso.action;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import mx.edu.eld.example.action.MenuAct;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+
+@Namespace("/control-acceso")
+@AllowedMethods({ "cambiarMenu", "welcome" })
+@Results({ @Result(name = MenuAct.MENU, type = "redirectAction", params = { "actionName", "%{action}" }) })
+public class LoginAct extends ActionSupport {
+
+	protected static final String WELCOME = "welcome";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String action;
+
+	private String usuarioAux;
+
+	public static final String MENU = "menu";
+	private static final String MENU_1 = "coordinacion_control_escolar";
+	private static final String MENU_2 = "secretaria_administracion";
+	private static final String MENU_3 = "aspirante";
+	private static final String MENU_4 = "entrevistador";
+	private static final String MENU_5="asistente_s_a";
+
+	public String index() {
+		return "index";
+	}
+
+	public String create() {
+		return "index";
+	}
+
+	/*
+	 * Manda a la pantalla de bienvenda dl usuario
+	 */
+	public String welcome() {
+		return WELCOME;
+	}
+
+	public String cambiarMenu() {
+		System.err.println("----->" + usuarioAux);
+		SessionManager.put("usuario", usuarioAux);
+		if (MENU_1.equals(usuarioAux)) {
+			System.out.println(MENU_1);
+			action = "../entrevistas/gestionar-entrevistas";
+		} else if (MENU_2.equals(usuarioAux)) {
+			System.out.println(MENU_2);
+			action = "../entrevistas/gestionar-entrevistas";
+		} else if (MENU_3.equals(usuarioAux)) {
+			System.out.println(MENU_3);
+			action = "../control-acceso/login!welcome";
+		} else if (MENU_4.equals(usuarioAux)) {
+			System.out.println(MENU_4);
+			action = "../entrevistas/gestionar-entrevistas";
+		}else if (MENU_5.equals(usuarioAux)) {
+			System.out.println(MENU_5);
+			action = "../calendario/gestionar-ciclos";
+		} else {
+			System.out.println("menu");
+			action = "../example/example-a";
+		}
+		return MENU;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public String getUsuarioAux() {
+		if (usuarioAux == null) {
+			usuarioAux = new String();
+		}
+		return usuarioAux;
+	}
+
+	public void setUsuarioAux(String usuarioAux) {
+		this.usuarioAux = usuarioAux;
+	}
+}

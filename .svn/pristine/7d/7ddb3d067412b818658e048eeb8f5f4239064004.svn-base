@@ -1,0 +1,234 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae el catálogo de criterios que la ELD toma en cuenta para el ingreso de
+ * {@link Aspirante}. Un criterio podrá asociarse a una {@link Convocatoria} en
+ * particular y con figurar los periodos y costos.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca06_criterio")
+public class Criterio implements Modelo {
+	/**
+	 * Identificador del criterio
+	 */
+	@Id
+	@SequenceGenerator(name = "tca06_criterio_id_criterio_seq", sequenceName = "tca06_criterio_id_criterio_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tca06_criterio_id_criterio_seq")
+	@Column(name = "id_criterio")
+	private Integer id;
+
+	/**
+	 * id de la fuente a la que pertenece el criterio
+	 **/
+	@Column(name = "id_fuente")
+	private Integer idFuente;
+
+	/**
+	 * Origen del criterio
+	 **/
+	@Column(name = "id_origen")
+	private Integer idOrigen;
+
+	/**
+	 * Nombre del criterio
+	 */
+	@Column(name = "nb_criterio")
+	private String nombre;
+
+	/**
+	 * Indica si el criterio tiene o no periodos asociados
+	 */
+	@Column(name = "st_periodo")
+	private Boolean periodo;
+
+	/**
+	 * Indica si el criterio tiene asociado un costo
+	 */
+	@Column(name = "st_costo")
+	private Boolean costo;
+
+	/**
+	 * Indica si el criterio tiene un documento adjunto
+	 **/
+	@Column(name = "st_adjunto")
+	private Boolean adjunto;
+	
+	/**
+	 * Atributo que indica si un criterio se va asociar.
+	 */
+	@Transient
+	private Boolean asociar;
+
+	public Criterio(Integer id, Integer idFuente, Integer idOrigen, String nombre, Boolean periodo, Boolean costo,
+			Boolean adjunto) {
+		super();
+		this.id = id;
+		this.idFuente = idFuente;
+		this.idOrigen = idOrigen;
+		this.nombre = nombre;
+		this.periodo = periodo;
+		this.costo = costo;
+		this.adjunto = adjunto;
+	}
+
+	public Criterio() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) }, stringLengthFields = {
+					@StringLengthFieldValidator(maxLength = "100", minLength = "1", trim = true, message = "${getText('Longitud')}", type = ValidatorType.FIELD) })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the periodo
+	 */
+	//@Validations(requiredFields = {
+			//@RequiredFieldValidator(message = "${getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Boolean getPeriodo() {
+		return periodo;
+	}
+
+	/**
+	 * @param periodo
+	 *            the periodo to set
+	 */
+	public void setPeriodo(Boolean periodo) {
+		this.periodo = periodo;
+	}
+
+	/**
+	 * @return the costo
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "${getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Boolean getCosto() {
+		return costo;
+	}
+
+	/**
+	 * @param costo
+	 *            the costo to set
+	 */
+	public void setCosto(Boolean costo) {
+		this.costo = costo;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Criterio [id=" + id + ", nombre=" + nombre + ", periodo=" + periodo + ", costo=" + costo + "]";
+	}
+
+	/**
+	 * @return the idFuente
+	 */
+	public Integer getIdFuente() {
+		return idFuente;
+	}
+
+	/**
+	 * @param idFuente
+	 *            the idFuente to set
+	 */
+	public void setIdFuente(Integer idFuente) {
+		this.idFuente = idFuente;
+	}
+
+	/**
+	 * @return the adjunto
+	 */
+	public Boolean getAdjunto() {
+		return adjunto;
+	}
+
+	/**
+	 * @param adjunto
+	 *            the adjunto to set
+	 */
+	public void setAdjunto(Boolean adjunto) {
+		this.adjunto = adjunto;
+	}
+
+	/**
+	 * @return the idOrigen
+	 */
+	public Integer getIdOrigen() {
+		return idOrigen;
+	}
+
+	/**
+	 * @param idOrigen
+	 *            the idOrigen to set
+	 */
+	public void setIdOrigen(Integer idOrigen) {
+		this.idOrigen = idOrigen;
+	}
+
+	/**
+	 * @return the asociar
+	 */
+	public Boolean getAsociar() {
+		return asociar;
+	}
+
+	/**
+	 * @param asociar the asociar to set
+	 */
+	public void setAsociar(Boolean asociar) {
+		this.asociar = asociar;
+	}
+}

@@ -1,0 +1,166 @@
+package mx.edu.eld.admision.action;
+
+import java.util.List;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+import mx.ipn.escom.cdt.util.action.FileUtil;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import mx.edu.eld.admision.bs.AspiranteBs;
+import mx.edu.eld.admision.bs.DatosPersonalesBs;
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.edu.eld.calendario.mapeo.Requisito;
+import mx.edu.eld.convocatoria.bs.RequisitoBs;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * Gestiona los datos principales de un aspirante como son nombre, apellidos y
+ * requsitos necesarios para la convocatoria de la ELD
+ */
+@Namespace("/admision")
+@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"../admision/gestionar-aspirantes" })
+public class GestionarDatosPersonalesAct extends ActionSupportCDT implements ModelDriven<Aspirante>{
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -3472875644375194013L;
+
+	private Integer idSel;
+
+	private Aspirante model;
+
+	private List<Requisito> listRequisitos;
+
+	private List<FileUtil> listDocumentos;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private DatosPersonalesBs datosPersonalesBs;
+	
+	@Autowired
+	private AspiranteBs aspiranteBs;
+
+	@Autowired
+	private RequisitoBs requisitoBs;
+
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	public void validateCreate() {
+
+	}
+
+	public String create() {
+		return SUCCESS;
+	}
+
+	/**
+	 * Permite acceder  a la pantalla donde se actualizaran los datos personales de un aspirante, en caso de que al
+	 * acceder a la pantalla no se tenga un estudiante a modirificar este retornara a la pantalla de registro de aspirantes
+	 * @return
+	 */
+	public String edit() {
+		if (model == null) {
+			addActionError("No existe un aspirante a modificar");
+			return SUCCESS;
+		} else {
+			listRequisitos = requisitoBs.obtenerRequisitosDocumento();
+		}
+		return EDIT;
+	}
+
+	public void validateUpdate() {		
+		model=aspiranteBs.asignarCurp(model);
+	}
+
+	public String update() {
+		datosPersonalesBs.actualizar(model, listDocumentos);
+		return SUCCESS;
+	}
+
+	public Integer getIdSel() {
+		if (SessionManager.get(NombreObjetosSesion.SESSION_MODEL_ID) != null) {
+			idSel = (Integer) SessionManager.get(NombreObjetosSesion.SESSION_MODEL_ID);
+		}
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(Aspirante.class, idSel);
+			SessionManager.put(NombreObjetosSesion.SESSION_MODEL_ID, idSel);
+		}
+		this.idSel = idSel;
+	}
+
+	@VisitorFieldValidator
+	public Aspirante getModel() {
+		if (model == null) {
+			model = new Aspirante();
+		}
+		return model;
+	}
+
+	public void setModel(Aspirante model) {
+		this.model = model;
+	}
+
+	public AspiranteBs getAspiranteBs() {
+		return aspiranteBs;
+	}
+
+	public void setAspiranteBs(AspiranteBs aspiranteBs) {
+		this.aspiranteBs = aspiranteBs;
+	}
+
+	public List<FileUtil> getListDocumentos() {
+		return listDocumentos;
+	}
+
+	public void setListDocumentos(List<FileUtil> listDocumentos) {
+		this.listDocumentos = listDocumentos;
+	}
+
+	public RequisitoBs getRequisitoBs() {
+		return requisitoBs;
+	}
+
+	public void setRequisitoBs(RequisitoBs requisitoBs) {
+		this.requisitoBs = requisitoBs;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public DatosPersonalesBs getDatosPersonalesBs() {
+		return datosPersonalesBs;
+	}
+
+	public void setDatosPersonalesBs(DatosPersonalesBs datosPersonalesBs) {
+		this.datosPersonalesBs = datosPersonalesBs;
+	}
+
+	public List<Requisito> getListRequisitos() {
+		return listRequisitos;
+	}
+
+	public void setListRequisitos(List<Requisito> listRequisitos) {
+		this.listRequisitos = listRequisitos;
+	}
+}

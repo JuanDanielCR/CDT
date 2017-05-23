@@ -1,0 +1,40 @@
+package mx.edu.eld.bs.rules;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service("reglaNegocioN2")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN2 implements ReglaNegocio {
+
+	/**
+	 * Verifica que la fecha inicial sea menor a la fecha final.
+	 * 
+	 * @param inicio
+	 *            {Date} Fecha inicial a comparar.
+	 * @param fin
+	 *            {Date} Fehca final a comparar.
+	 * @return{boolean} True si la fecha inicial es menor a ala fianl.
+	 */
+	public boolean validate(Date inicio, Date fin) {
+		Calendar calInicio = Calendar.getInstance();
+		Calendar calCompara = Calendar.getInstance();
+		calInicio.setTime(inicio);
+		calCompara.setTime(fin);
+		if (calInicio.get(Calendar.YEAR) <= calCompara.get(Calendar.YEAR)) {
+			if (calInicio.get(Calendar.MONTH) == calCompara.get(Calendar.MONTH)) {
+				if (calInicio.get(Calendar.DAY_OF_MONTH) < calCompara.get(Calendar.DAY_OF_MONTH)) {
+					return false;
+				}
+			} else if (calInicio.get(Calendar.MONTH) < calCompara.get(Calendar.MONTH)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+}

@@ -1,0 +1,92 @@
+package mx.edu.eld.admision.bs.exception;
+
+public class InfEscolarLongitudException extends Exception{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public enum campoLongitud{
+		NOMBRE_ESCUELA(1);
+		
+		private Integer id;
+		
+		private campoLongitud(Integer id){
+			this.id = id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+		
+	}
+	
+	private campoLongitud campoLongitud;
+
+	/**
+	 * @param campoLongitud
+	 */
+	public InfEscolarLongitudException(campoLongitud campoLongitud) {
+		super();
+		this.campoLongitud = campoLongitud;
+	}
+
+	/**
+	 * 
+	 */
+	public InfEscolarLongitudException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 * @param enableSuppression
+	 * @param writableStackTrace
+	 */
+	public InfEscolarLongitudException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public InfEscolarLongitudException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param message
+	 */
+	public InfEscolarLongitudException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param cause
+	 */
+	public InfEscolarLongitudException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public campoLongitud getCampoLongitud() {
+		return campoLongitud;
+	}
+
+	public void setCampoLongitud(campoLongitud campoLongitud) {
+		this.campoLongitud = campoLongitud;
+	}	
+
+}

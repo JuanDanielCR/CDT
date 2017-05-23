@@ -1,0 +1,37 @@
+package mx.edu.eld.admision.bs;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+/**
+ * Created by homura on 4/26/17.
+ */
+@Service("aspiranteBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class AspiranteBs extends GenericBs<Aspirante>{
+	
+	private Aspirante aspiranteSel;
+	
+	/**
+	 * Asigna el curp que se tiene en la base del aspirante, y se guarda en el model
+	 * @param model
+	 * @return model
+	 */
+	public Aspirante asignarCurp(Aspirante model){
+		aspiranteSel=genericSearchBs.findById(Aspirante.class, model.getId());		
+		model.setCurp(aspiranteSel.getCurp());
+		return model;
+	}
+	
+	public Aspirante getAspiranteSel() {
+		return aspiranteSel;
+	}
+
+	public void setAspiranteSel(Aspirante aspirante) {
+		this.aspiranteSel = aspirante;
+	}
+	
+}

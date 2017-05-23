@@ -1,0 +1,175 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la información del catálogo de requisitos que la ELD solicita a los
+ * {@link Aspirante} a ingresar.
+ * 
+ * Un requisito el algo con lo que el {@link Aspirante} debe contar para poder
+ * ingresar a la ELD, sin embargo, éste no contribuye con puntuación para
+ * ingresar.
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca04_requisito")
+public class Requisito implements Modelo {
+	/**
+	 * Identificador del requisito
+	 */
+	@Id
+	@SequenceGenerator(name = "tca04_requisito_id_requisito_seq", sequenceName = "tca04_requisito_id_requisito_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tca04_requisito_id_requisito_seq")
+	@Column(name = "id_requisito")
+	private Integer id;
+
+	/**
+	 * tipo de requisito
+	 **/
+	@Column(name = "id_tipo")
+	private Integer idTipo;
+
+	/**
+	 * origen del requisito
+	 **/
+	@Column(name = "id_origen")
+	private Integer idOrigen;
+
+	/**
+	 * fuente del requisito
+	 **/
+	@Column(name = "id_fuente")
+	private Integer idFuente;
+
+	/**
+	 * Nombre del requisito
+	 */
+	@Column(name = "nb_requisito")
+	private String nombre;
+
+	@ManyToOne
+	@JoinColumn(name = "id_tipo", referencedColumnName = "id_tipo", insertable = false, updatable = false)
+	private TipoRequisito tipoRequisito;
+
+	@ManyToOne
+	@JoinColumn(name = "id_origen", referencedColumnName = "id_origen", insertable = false, updatable = false)
+	private OrigenActividad origenActividad;
+
+	@ManyToOne
+	@JoinColumn(name = "id_fuente", referencedColumnName = "id_fuente", insertable = false, updatable = false)
+	private FuenteCriterio fuenteCriterio;
+
+	public Requisito(Integer id, Integer idTipo, Integer idOrigen, Integer idFuente, String nombre) {
+		super();
+		this.id = id;
+		this.idTipo = idTipo;
+		this.idOrigen = idOrigen;
+		this.idFuente = idFuente;
+		this.nombre = nombre;
+	}
+
+	public Requisito() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(type = ValidatorType.FIELD, message = "%{getText('MSG39')}") }, stringLengthFields = {
+					@StringLengthFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG41',{'60'})}", maxLength = "60") }, regexFields = {
+							@RegexFieldValidator(type = ValidatorType.FIELD, message = "%{getText('MSG40')}", regexExpression = "[a-zA-Z]*") })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	@Validations(intRangeFields = {
+					@IntRangeFieldValidator(type = ValidatorType.FIELD, message = "${getText('MSG39')}", min = "1") })
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/**
+	 * @return the idOrigen
+	 */
+	public Integer getIdOrigen() {
+		return idOrigen;
+	}
+
+	/**
+	 * @param idOrigen
+	 *            the idOrigen to set
+	 */
+	public void setIdOrigen(Integer idOrigen) {
+		this.idOrigen = idOrigen;
+	}
+
+	/**
+	 * @return the idFuente
+	 */
+	public Integer getIdFuente() {
+		return idFuente;
+	}
+
+	/**
+	 * @param idFuente
+	 *            the idFuente to set
+	 */
+	public void setIdFuente(Integer idFuente) {
+		this.idFuente = idFuente;
+	}
+}

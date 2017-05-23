@@ -1,0 +1,26 @@
+package mx.edu.eld.bs.rules;
+
+
+/**
+ * 
+ * @author Er-ramani Velasco
+ *
+ */
+public class ReglaNegocioS10 implements ReglaNegocio{
+	
+	/**
+	 * Valida que el formato del correo electrónico sea el correcto.
+	 * @param email	{String} Objeto String con el correo.
+	 * @return {Boolean} true si el correo cumple con el formato,
+	 * 					 falso en caso contrario.
+	 */
+	
+	public static Boolean validate(String correo){
+			if (!correo.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+				return false;
+			}
+			return true;
+
+		}
+
+}

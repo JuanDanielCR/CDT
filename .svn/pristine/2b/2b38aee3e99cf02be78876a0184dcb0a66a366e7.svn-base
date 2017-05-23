@@ -1,0 +1,7 @@
+$(function(){
+	dataTableEMETH.createDataTable("tblAspirantesReprogramar");
+});
+
+function abrirDialogEntrevistador() {
+	$("#myclickdialog").dialog("open");
+}

@@ -1,0 +1,106 @@
+package mx.edu.eld.convocatoria.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterio;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaCriterioBs;
+import mx.edu.eld.convocatoria.bs.exception.MinimoMaximoException;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/convocatoria")
+@Results({ @Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"gestionar-periodo-criterio" }) })
+public class ConfigurarCriterioAct extends ActionSupportCDT implements ModelDriven<ConvocatoriaCriterio> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private ConvocatoriaCriterio model;
+
+	private ConvocatoriaCriterioId idSel;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private ConvocatoriaCriterioBs convocatoriaCriterioBs;
+
+	public String edit() {
+		return EDIT;
+	}
+
+	/**
+	 * se realiza la configuracion del criterio, siempre y cuando se cumplan las
+	 * validaciones correspondientes
+	 */
+	public void validateUpdate() {
+		if (!hasFieldErrors() && !hasActionErrors()) {
+			try {
+				convocatoriaCriterioBs.configurarCriterio(model);
+			} catch (MinimoMaximoException ex) {
+				LOG.error("Error", ex);
+				addFieldError("model.minimo", getText("MSG73"));
+			}
+		}
+	}
+
+	/**
+	 * En caso de operacion exitosa se lanza un action message
+	 * 
+	 * @return
+	 */
+	public String update() {
+		addActionMessage(getText("MSG1", new String[] { getText("AE_EL_CRITERIO"), getText("OP_CONFIGURO") }));
+		return SUCCESS;
+	}
+
+	@Override
+	@VisitorFieldValidator
+	public ConvocatoriaCriterio getModel() {
+		if (model == null) {
+			model = new ConvocatoriaCriterio();
+		}
+		return model;
+	}
+
+	public void setModel(ConvocatoriaCriterio model) {
+		this.model = model;
+	}
+
+	public ConvocatoriaCriterioId getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(ConvocatoriaCriterioId idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(ConvocatoriaCriterio.class, idSel);
+		}
+		this.idSel = idSel;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public ConvocatoriaCriterioBs getConvocatoriaCriterioBs() {
+		return convocatoriaCriterioBs;
+	}
+
+	public void setConvocatoriaCriterioBs(ConvocatoriaCriterioBs convocatoriaCriterioBs) {
+		this.convocatoriaCriterioBs = convocatoriaCriterioBs;
+	}
+}

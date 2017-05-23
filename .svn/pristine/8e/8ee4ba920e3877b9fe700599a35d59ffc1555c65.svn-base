@@ -1,0 +1,106 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+@Entity
+@Table(name = "tad19_aspirante_direccion")
+public class AspiranteDireccion implements Modelo {
+
+	/*
+	 * Id compuesto de la tabla intermedia de la relacion muchos a muchos de un
+	 * estudiante y sus direcciones
+	 */
+	@EmbeddedId
+	private AspiranteDireccionId id;
+
+	/**
+	 * Id de la direccion del aspirante, no se actualiza ni se registra con el
+	 * modelo
+	 **/
+	@Column(name = "id_direccion", insertable = false, updatable = false)
+	private Integer idDireccion;
+
+	/**
+	 * Id del aspirante
+	 **/
+	@Column(name = "id_aspirante", insertable = false, updatable = false)
+	private Integer idAspirante;
+
+	/**
+	 * Identificador del tipo de la dirección
+	 */
+	@Column(name = "id_tipo", insertable = false, updatable = false)
+	private Integer idTipo;
+
+	/**
+	 * TODO: Documentar
+	 */
+	public AspiranteDireccion() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * TODO: Documentar
+	 * @param id
+	 * @param idDireccion
+	 * @param idAspirante
+	 */
+	public AspiranteDireccion(Integer idDireccion, Integer idAspirante, Integer idTipo) {
+		super();
+		this.idDireccion = idDireccion;
+		this.idAspirante = idAspirante;
+		this.idTipo = idTipo;
+		this.id = new AspiranteDireccionId(idDireccion,idAspirante,idTipo);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public AspiranteDireccionId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(AspiranteDireccionId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idDireccion
+	 */
+	public Integer getIdDireccion() {
+		return idDireccion;
+	}
+
+	/**
+	 * @param idDireccion
+	 *            the idDireccion to set
+	 */
+	public void setIdDireccion(Integer idDireccion) {
+		this.idDireccion = idDireccion;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+}

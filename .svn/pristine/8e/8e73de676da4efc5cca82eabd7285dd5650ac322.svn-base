@@ -1,0 +1,13 @@
+$(function() {
+	$('[id^=slcEE]').bind('change', function(event) {
+		var promedio = 0;
+		$('[id^=slcEE]').each(function() {
+			var selectValue = $(this).val();
+			if (selectValue != -1) {
+				promedio += Number(selectValue);
+			}
+		});
+		promedio = promedio / $('[id^=slcEE]').size();
+		$('#idPromedioEvEntr').text(promedio);
+	});
+});

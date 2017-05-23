@@ -1,0 +1,180 @@
+package mx.edu.eld.convocatoria.bs;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN48;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+import mx.edu.eld.calendario.mapeo.Fecha;
+import mx.edu.eld.calendario.mapeo.PeriodoCriterio;
+import mx.edu.eld.calendario.mapeo.PeriodoCriterioId;
+import mx.edu.eld.convocatoria.dao.PeriodoDao;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+@Service("periodoBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class PeriodoBs extends GenericBs<PeriodoCriterio> {
+
+	@Autowired
+	private PeriodoDao periodoDao;
+	
+	@Autowired
+	ReglaNegocioN48 reglaNegocioN48;
+
+	private List<Fecha> listFecha;
+
+	@Transactional(readOnly = true)
+
+	public boolean validarNombrePeriodo(String nombrePeriodo) {
+		return periodoDao.validarNombrePeriodo(nombrePeriodo);
+	}
+	
+	/**
+	 * Une campos separados fecha y hora, para guardarlos como Date.
+	 * 
+	 * @param fechaInicio
+	 * @param horaInicio
+	 * @return fecha concatenada o nulo en caso de que haya una exce
+	 * @throws ParseException
+	 */
+	public Date unirFecha(String f, String h) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy HH:mm");
+		String dateInString = f + " " + h;
+		Date date = sdf.parse(dateInString);
+		return date;
+	}
+
+	/**
+	 * Registra las fechas que unimos, en su atributo correspondiente del model.
+	 * 
+	 * @param model
+	 * @param fecha
+	 * @return
+	 * @throws ParseException
+	 */
+	public PeriodoCriterio registrarFechas(PeriodoCriterio model, Fecha fecha) throws ParseException {
+		// TODO Auto-generated method stub
+		model.setInicio(unirFecha(fecha.getFechaInicio(), fecha.getHoraInicio()));
+		model.setFin(unirFecha(fecha.getFechaFin(), fecha.getHoraFin()));
+		return model;
+	}
+
+	/**
+	 * Valida que la fecha inicial del periodo sea mayor o igual a la fecha en
+	 * que se hace el registro.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public Boolean validarFechaInicial(PeriodoCriterio model) {
+		LocalDateTime fechaHora = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+		Date fecha = java.sql.Timestamp.valueOf(fechaHora);
+		DateFormat hourdateFormat = new SimpleDateFormat("dd/M/yyyy HH:mm");
+		System.out.println("Hora y fecha: " + hourdateFormat.format(fecha));
+
+		if (model.getInicio().before(fecha)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	/**
+	 * Valida que la fecha final del periodo sea mayor que la inicial.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public Boolean validarFechaFinal(PeriodoCriterio model) {
+		if (model.getFin().before(model.getInicio())) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public static boolean validarEliminarPeriodo(Date fechaInicio) {
+		return !(new Date().compareTo(fechaInicio) >= Numeros.CERO.getValor());
+	}
+
+	/**
+	 * Genera un id para Periodo con base en los id Convocatoria y Criterio.
+	 *
+	 * @param idConvocatoriaCriterioSel
+	 * @return
+	 */
+	public PeriodoCriterioId generarId(ConvocatoriaCriterioId idConvocatoriaCriterioSel) {
+		Integer idPeriodo = periodoDao.generarId(idConvocatoriaCriterioSel);
+		return new PeriodoCriterioId(++idPeriodo, idConvocatoriaCriterioSel.getIdConvocatoria(),
+				idConvocatoriaCriterioSel.getIdCriterio());
+	}
+
+	/**
+	 * Guarda los id que estamos obteniendo de sesión, en su atributo
+	 * correspondiente del model.
+	 * 
+	 * @param model
+	 * @param idConvocatoriaCriterioSel
+	 * @return
+	 */
+	public PeriodoCriterio guardarId(PeriodoCriterio model, ConvocatoriaCriterioId idConvocatoriaCriterioSel) {
+		model.setIdConvocatoria(idConvocatoriaCriterioSel.getIdConvocatoria());
+		model.setIdCriterio(idConvocatoriaCriterioSel.getIdCriterio());
+		return model;
+	}
+	
+	/**
+	 * Función que descompone la fecha de model, regresándola a fecha, 
+	 * y así poder mostrar los datos en el edit.
+	 * 
+	 * @param model
+	 * @return
+	 * @throws ParseException
+	 */
+	public Fecha descomponerFecha(PeriodoCriterio model) throws ParseException{
+		Fecha fecha = new Fecha();
+		SimpleDateFormat fechaForm = new SimpleDateFormat("dd/M/yyyy");
+		SimpleDateFormat horaForm = new SimpleDateFormat("HH:mm");
+		fecha.setFechaInicio(fechaForm.format(model.getInicio()));
+		fecha.setHoraInicio(horaForm.format(model.getInicio()));
+		fecha.setFechaFin(fechaForm.format(model.getFin()));
+		fecha.setHoraFin(horaForm.format(model.getFin()));
+		return fecha;		
+	}
+
+	public PeriodoDao getPeriodoDao() {
+		return periodoDao;
+	}
+
+	public void setPeriodoDao(PeriodoDao periodoDao) {
+		this.periodoDao = periodoDao;
+	}
+
+	/**
+	 * @return the listFecha
+	 */
+	public List<Fecha> getListFecha() {
+		return listFecha;
+	}
+
+	/**
+	 * @param listFecha
+	 *            the listFecha to set
+	 */
+	public void setListFecha(List<Fecha> listFecha) {
+		this.listFecha = listFecha;
+	}
+}

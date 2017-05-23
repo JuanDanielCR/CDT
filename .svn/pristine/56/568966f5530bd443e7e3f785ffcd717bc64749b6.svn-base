@@ -1,0 +1,31 @@
+package mx.edu.eld.admision.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Namespace("/admision")
+//@Result(name = "success", type = "redirectAction", params = { "actionName", "../admision/pagar-admision" })
+public class PagarAdmisionAct extends ActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String index() {
+		return "index";
+	}
+//
+//	public void validateCreate() {
+//		System.err.println("vc");
+//	}
+//
+//	public String create() {
+//		System.err.println("create");
+//		return "success";
+//	}
+	public String editNew() {
+		return "editNew";
+	}
+}

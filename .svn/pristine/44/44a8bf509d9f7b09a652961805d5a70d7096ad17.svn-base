@@ -1,0 +1,135 @@
+package mx.edu.eld.admision.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+
+/**
+ * Estado final de la entrevista, el cual será definido por el
+ * {@link Entrevistador}.
+ * 
+ * @author hermes
+ */
+@Entity
+@Table(name = "tad15_estatus_entrevista")
+public class EstatusEntrevista implements Catalogo {
+	/**
+	 * Identificador del elemento del catalogo
+	 */
+	@Id
+	@SequenceGenerator(name = "tad15_estatus_entrevista_id_estatus_seq", sequenceName = "tad15_estatus_entrevista_id_estatus_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad15_estatus_entrevista_id_estatus_seq")
+	@Column(name = "id_estatus")
+	private Integer id;
+
+	/**
+	 * Nombre del elemento del catalogo catálogo
+	 */
+	@Column(name = "nb_estatus")
+	private String nombre;
+
+	/**
+	 * Descripción del elemento del catálogo
+	 */
+	@Column(name = "ds_estatus")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catalogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	public enum estatusEntrevistaEnum {
+		ACEPTADO(1, "Aceptado"), ACEPTADO_CONRESERVAS(2, "Aceptado con reservas"), NO_ACEPTADO(3, "No aceptado");
+
+		private Integer estatus;
+		private String nombre;
+
+		private estatusEntrevistaEnum(Integer estatus, String nombre) {
+			this.estatus = estatus;
+			this.nombre = nombre;
+		}
+
+		/**
+		 * @return the estatus
+		 */
+		public Integer getEstatus() {
+			return estatus;
+		}
+
+		/**
+		 * @return the nombre
+		 */
+		public String getNombre() {
+			return nombre;
+		}
+
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descrpcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descrpcion
+	 *            the descrpcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+}

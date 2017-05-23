@@ -1,0 +1,40 @@
+package mx.edu.eld.ceneval.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+@Namespace("/ceneval")
+public class GestionarExamenAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer success;
+
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	public String show() {
+		return SHOW;
+	}
+
+	/**
+	 * @return the success
+	 */
+	public Integer getSuccess() {
+		return success;
+	}
+
+	/**
+	 * @param success
+	 *            the success to set
+	 */
+	public void setSuccess(Integer success) {
+		this.success = success;
+	}
+
+}

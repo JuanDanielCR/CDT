@@ -1,0 +1,152 @@
+package mx.edu.eld.convocatoria.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import mx.edu.eld.calendario.bs.CicloBs;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaBs;
+import mx.edu.eld.convocatoria.bs.exception.NoExisteCicloException;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/convocatoria")
+@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName", "gestionar-convocatoria" })
+@AllowedMethods({ "vistaPrevia" })
+public class GestionarConvocatoriaAct extends ActionSupportCDT {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private CicloBs cicloBs;
+
+	@Autowired
+	private ConvocatoriaBs convocatoriaBs;
+	
+	private Integer idSel;
+
+	/**
+	 * Lista con el ciclo actual, anterior y futuros
+	 */
+	private List<Ciclo> listCiclos;
+
+	public String index() {
+		try {
+			listCiclos = cicloBs.obtenerCiclos();
+		} catch (NoExisteCicloException e) {
+			listCiclos = null;
+		}
+		return INDEX;
+	}
+
+	public String show() {
+		return SHOW;
+	}
+
+	public String edit() {
+		return EDIT;
+	}
+	
+	
+	public void validateUpdate(){
+		if(!convocatoriaBs.validarPonderaciones(idSel)){
+			addActionError(getText("MSG12"));
+		}	
+	}
+	
+	public String update() {
+		return SUCCESS;
+		
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	/**
+	 * @return the listCiclos
+	 */
+	public List<Ciclo> getListCiclos() {
+		return listCiclos;
+	}
+
+	/**
+	 * @param listCiclos
+	 *            the listCiclos to set
+	 */
+	public void setListCiclos(List<Ciclo> listCiclos) {
+		this.listCiclos = listCiclos;
+	}
+
+	/**
+	 * @return the cicloBs
+	 */
+	public CicloBs getCicloBs() {
+		return cicloBs;
+	}
+
+	/**
+	 * @param cicloBs
+	 *            the cicloBs to set
+	 */
+	public void setCicloBs(CicloBs cicloBs) {
+		this.cicloBs = cicloBs;
+	}
+
+	/**
+	 * @return the idSel
+	 */
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	/**
+	 * @param idSel
+	 *            the idSel to set
+	 */
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+	
+	/**
+	 * 
+	 * @return the {@link ConvocatoriaBs}
+	 */
+	public ConvocatoriaBs getConvocatoriaBs() {
+		return convocatoriaBs;
+	}
+
+	
+	/**
+	 * 
+	 * @param convocatoriaBs
+	 */
+	public void setConvocatoriaBs(ConvocatoriaBs convocatoriaBs) {
+		this.convocatoriaBs = convocatoriaBs;
+	}
+	
+	
+
+}

@@ -1,0 +1,79 @@
+package mx.edu.eld.calendario.mapeo;
+
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+public class Fecha implements Modelo {
+
+	private String fechaInicio;
+
+	private String fechaFin;
+
+	private String horaInicio;
+
+	private String horaFin;
+
+	/**
+	 * @return the horaInicio
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) })
+	public String getHoraInicio() {
+		return horaInicio;
+	}
+
+	/**
+	 * @param horaInicio
+	 *            the horaInicio to set
+	 */
+	public void setHoraInicio(String horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	/**
+	 * @return the horaFin
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) })
+	public String getHoraFin() {
+		return horaFin;
+	}
+
+	/**
+	 * @param horaFin
+	 *            the horaFin to set
+	 */
+	public void setHoraFin(String horaFin) {
+		this.horaFin = horaFin;
+	}
+
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) })
+	public String getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(String fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) })
+	public String getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(String fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	@Override
+	public String toString() {
+		return (new StringBuilder("Fecha inicio: ")).append(fechaInicio).append("\nFecha fin: ").append(fechaFin)
+				.toString();
+	}
+	
+}

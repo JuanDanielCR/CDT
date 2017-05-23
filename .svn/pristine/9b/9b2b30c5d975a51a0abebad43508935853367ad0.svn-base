@@ -1,0 +1,145 @@
+package mx.edu.eld.admision.action;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.edu.eld.admision.mapeo.InformacionEscolar;
+import mx.edu.eld.sepomex.mapeo.Entidad;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/admision")
+@Results({@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName", "../admision/gestionar-informacion-escolar" })})
+public class GestionarInformacionEscolarAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer idSel;
+	
+	private List<Entidad> listEntidad;
+	
+	private InformacionEscolar infoBachillerato;
+	
+	private InformacionEscolar infoSecundaria;
+	
+	/**
+	 * Aspirante al que pertenece la informacion escolar
+	 * 
+	 */
+	private Aspirante aspirante;
+	
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	public String editNew(){
+		poblarEntidad();
+		return EDITNEW;
+	}
+	
+	public String create(){
+		return SUCCESS;
+	}
+	
+	public void validateCreate(){
+		/*getAspirante();
+		System.err.println("obtiene aspirante: "+aspirante);*/
+		Map<String, List<String>> fieldErrors = getFieldErrors();
+		
+		if(infoSecundaria.getNacional()==true){
+			
+		}
+		else if(infoSecundaria.getNacional()==false){
+			fieldErrors.remove("infoSecundaria.promedio");
+			setFieldErrors(fieldErrors);
+			System.err.println("field errors---> " + getFieldErrors());			
+		}
+		if(infoBachillerato.getNacional()==true){
+			
+		}
+		else if(infoBachillerato.getNacional()==false){
+			fieldErrors.remove("infoBachillerato.promedio");
+			setFieldErrors(fieldErrors);
+			System.err.println("field errors---> " + getFieldErrors());	
+		}
+		
+		
+	}
+	
+	private void poblarEntidad() {
+		listEntidad = genericSearchBs.findAll(Entidad.class);
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	public Aspirante getAspirante() {
+		if(SessionManager.get(NombreObjetosSesion.ASPIRANTE) != null){
+			aspirante = (Aspirante) SessionManager.get(NombreObjetosSesion.ASPIRANTE);
+			System.err.println(aspirante.getId()+ "<-- aspiranteIDGet");
+		}
+		return aspirante;
+	}
+
+	public Integer getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(Integer idSel) {
+		this.idSel = idSel;
+	}
+
+	@VisitorFieldValidator
+	public InformacionEscolar getInfoBachillerato() {
+		if (infoBachillerato == null) {
+			infoBachillerato = new InformacionEscolar();
+		}
+		return infoBachillerato;
+	}
+
+	public void setInfoBachillerato(InformacionEscolar infoBachillerato) {
+		this.infoBachillerato = infoBachillerato;
+	}
+
+	@VisitorFieldValidator
+	public InformacionEscolar getInfoSecundaria() {
+		if (infoSecundaria == null) {
+			infoSecundaria = new InformacionEscolar();
+		}
+		return infoSecundaria;
+	}
+
+	public void setInfoSecundaria(InformacionEscolar infoSecundaria) {
+		this.infoSecundaria = infoSecundaria;
+	}
+
+	public List<Entidad> getListEntidad() {
+		return listEntidad;
+	}
+
+	public void setListEntidad(List<Entidad> listEntidad) {
+		this.listEntidad = listEntidad;
+	}	
+
+}

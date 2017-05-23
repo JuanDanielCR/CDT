@@ -1,0 +1,42 @@
+package mx.edu.eld.admision.bs;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.admision.bs.exception.InfEscolarCampoObligatorioException;
+import mx.edu.eld.admision.bs.exception.InfEscolarCampoObligatorioException.campoObligatorio;
+import mx.edu.eld.admision.bs.exception.InfEscolarLongitudException;
+import mx.edu.eld.admision.bs.exception.InfEscolarLongitudException.campoLongitud;
+import mx.edu.eld.admision.bs.exception.InfEscolarRegexException;
+import mx.edu.eld.admision.bs.exception.InfEscolarRegexException.campoErroneo;
+import mx.edu.eld.admision.mapeo.InformacionEscolar;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+@Service("informacionEscolarBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class InformacionEscolarBs extends GenericBs<InformacionEscolar>{
+
+	public InformacionEscolar guardarSecNacional(InformacionEscolar model) throws InfEscolarCampoObligatorioException,InfEscolarRegexException,InfEscolarLongitudException{
+		InformacionEscolar informacionEscolar = new InformacionEscolar();
+		String patron="";
+		
+		
+		if(model.getNombre().equals("")){
+			throw new InfEscolarCampoObligatorioException(campoObligatorio.NOMBRE_ESCUELA);
+		}
+		patron="^([a-zA-Z0-9ñÑáÁéÉíÍóÓúÚäÄëËïÏöÖüÜ# \\$%&()]*)$";
+		if(model.getNombre().matches(patron)==false){
+			throw new InfEscolarRegexException(campoErroneo.NOMBRE_ESCUELA);
+		}
+		if(model.getNombre().length()<1||model.getNombre().length()>100){
+			throw new InfEscolarLongitudException(campoLongitud.NOMBRE_ESCUELA);
+		}
+		if(model.getPromedio()==null){
+			throw new InfEscolarCampoObligatorioException(campoObligatorio.PROMEDIO);
+		}		
+		
+		return informacionEscolar;
+	}
+	
+}

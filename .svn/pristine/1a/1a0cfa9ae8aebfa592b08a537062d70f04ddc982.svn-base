@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- Head -->
+<jsp:text>
+	<![CDATA[
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/components/fullcalendar/fullcalendar.css"></link>
+	<script src="${pageContext.request.contextPath}/resources/components/fullcalendar/lib/moment.min.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/resources/components/fullcalendar/fullcalendar.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/resources/components/fullcalendar/locale-all.js" type="text/javascript"></script>
+	<!--<script src="${pageContext.request.contextPath}/resources/components/fullcalendar/es.js" type="text/javascript"></script>-->
+	<script src="${pageContext.request.contextPath}/pages/entrevistas/gestionar-horario/js/index-editNew.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/resources/scripts/gestionar-mensajes-ajax/gestionar-errores.js" type="text/javascript"></script>
+	<script
+		src="${pageContext.request.contextPath}/pages/convocatoria/gestionar-criterio/js/index.js"
+		type="text/javascript"></script>
+	]]>
+</jsp:text>
+</head>
+<body>
+	<!-- Body -->
+	<!-- Page Title -->
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				<s:text name="IU1.8.3-3_TITLE" />
+			</h1>
+		</div>
+	</div>
+	<s:hidden id="hdnMinTime"
+		value="%{getText('com.sprach.horarioMinTime')}" />
+	<s:hidden id="hdnMaxTime"
+		value="%{getText('com.sprach.horarioMaxTime')}" />
+	<s:hidden id="hdnMinClassTime"
+		value="%{getText('com.sprach.minClassTime')}" />
+	<s:hidden id="hdnMaxClassTime"
+		value="%{getText('com.sprach.maxClassTime')}" />
+	<s:hidden id="hdnIntervalo"
+		value="%{getText('com.sprach.horarioIntervalo')}" />
+	<s:hidden id="hdnFormatoIntervalo"
+		value="%{getText('com.sprach.horarioFormatoIntervalo')}" />
+	<s:hidden id="hdnIdCoach" value="%{idCoachSel}" />
+	<s:hidden id="hdnAdd" value="+" />
+	<s:hidden id="hdnDelete" value="-" />
+	<s:hidden id="hdnHeaderKey" value="-1" />
+	<s:hidden id="hdnHeaderValue" value="Seleccione" />
+	<s:hidden id="hdnMSG2" value="%{getText('MSG2')}" />
+	<s:hidden id="hdnMSG46" value="%{getText('MSG46')}" />
+	<s:hidden id="hdnMSGRango" value="%{mensajeRango}" />
+	<s:hidden id="hdnMSGRangoHoras" value="%{mensajeRangoHoras}" />
+	<s:hidden id="hdnMSGTraslape" value="%{getText('MSGWW')}" />
+	<div class="form form-horizontal form-medium">
+		<div class="form-group text-left">
+			<div class="row">
+				<div class="col-md-12 text-left">
+					<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					<s:text name="Entrevistador: Flores Sanchez Liliana"/>
+				</div>
+			</div>
+		</div>
+		<div class="form-group text-left">
+			<div class="row">
+				<div class="col-md-12">
+					<div id='calendar'></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<a
+					href="${pageContext.request.contextPath}/entrevistas/gestionar-entrevistadores"
+					class="btn btn-default btn-default-eld" id="btnAceptar">Aceptar</a><a
+					href="${pageContext.request.contextPath}/entrevistas/gestionar-entrevistadores"
+					class="btn btn-default btn-default-eld" id="btnCancelar">Cancelar</a>
+			</div>
+		</div>
+	</div>
+
+	<s:form id="frmRegistrarHorario"
+		action="%{#pageContext.request.contextPath}/entrevistas/gestionar-horario"
+		method="post">
+	</s:form>
+	<sj:dialog id="dlgAddEvent" openTopics="showNewEventDialog"
+		modal="true" draggable="false" title="%{getText('IU1.8.3-3_LBL5')}"
+		autoOpen="false" cssClass="hidden" closeTopics="closeNewEventDialog">
+		<form id="frmAgregarEvento" onsubmit="return false;" theme="simple">
+			<div class="container container-dialog">
+				<div class="col-md-12 ">
+					<!-- Dia-->
+					<div class="form-group">
+						<div class="row">
+							<label class="col-md-4 control-label label-obligatorio" for="">
+								<s:text name="IU1.8.3-3_LBL2" />
+							</label>
+							<div class="col-md-8 col-contact">
+								<s:select id="slcDia" name="idDia" cssClass="form-control"
+									list="#{'1':'Domingo','2':'Lunes', '3':'Martes', '4':'Miércoles', '5': 'Jueves','6':'Viernes','7':'Sábado'}"
+									headerKey="-1" headerValue="Seleccione" />
+							</div>
+						</div>
+					</div>
+					<!-- Horario inicio-->
+					<div class="form-group">
+						<div class="row">
+							<label class="col-md-4 control-label label-obligatorio" for=""> <s:text
+									name="IU_LBL10" />
+							</label>
+							<div class="col-md-8 input-min">
+								<div class="input-group col-md-8 input-min clockpicker">
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-time"></span>
+									</div>
+									<s:textfield id="dpkInicio" name="dpkInicio" cssClass="form-control"
+										maxlenght="20" cssErrorClass="field-error" value="10:00" />
+									<s:fielderror fieldName="" cssClass="error" theme="" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Horario final-->
+					<div class="form-group">
+						<div class="row">
+							<label class="col-md-4 control-label label-obligatorio" for=""> <s:text
+									name="IU_LBL11" />
+							</label>
+
+							<div class="col-md-8 input-min">
+								<div class="input-group col-md-8 input-min clockpicker">
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-time"></span>
+									</div>
+									<s:textfield id="dpkFin" name="dpkFin" cssClass="form-control"
+										maxlenght="20" cssErrorClass="field-error" value="10:00" />
+									<s:fielderror fieldName="" cssClass="error" theme="" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+						<div class="col-md-12 buttons-right text-right">
+							<a id="btnAddEvent" class="btn btn-default btn-default-eld"
+								href="#"><s:text name="btnAceptar" /> </a> <a
+								id="btnCancelAddEvent" class="btn btn-default btn-default-eld"
+								href="#"><s:text name="btnCancelar" /> </a>
+						</div>
+					</div>
+			</div>
+		</form>
+	</sj:dialog>
+	<sj:dialog id="dlgRemoveEvent" openTopics="showRemoveEventDialog"
+		modal="true" draggable="false" title="%{getText('IU1.8.3-3_LBL6')}"
+		autoOpen="false" cssClass="hidden"
+		closeTopics="closeRemoveEventDialog">
+		<div class="container container-dialog">
+			<div class="form-group">
+				<label class="col-md-4 control-label label-obligatorio" for="">
+					<s:text name="IU1.8.3-3_LBL7" />
+				</label>
+				<div id="divEliminarEvento" class="col-md-8 col-contact">
+					<!--  -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 buttons-right text-right">
+					<a id="btnRemoveEvent" class="btn btn-default btn-default-eld"
+						href="#"><s:text name="btnAceptar" /> </a> <a
+						id="btnCancelRemoveEvent" class="btn btn-default btn-default-eld"
+						href="#"><s:text name="btnCancelar" /> </a>
+				</div>
+			</div>
+		</div>
+	</sj:dialog>
+</body>
+	</html>
+</jsp:root>

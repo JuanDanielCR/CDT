@@ -1,0 +1,281 @@
+package mx.edu.eld.calendario.bs;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN1;
+import mx.edu.eld.bs.rules.ReglaNegocioN2;
+import mx.edu.eld.bs.rules.ReglaNegocioN52;
+import mx.edu.eld.bs.rules.ReglaNegocioN7;
+import mx.edu.eld.calendario.bs.exception.CicloEliminableException;
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException;
+import mx.edu.eld.calendario.bs.exception.IntersectionCyclePeriodException.condicionesCicloIncumplidas;
+import mx.edu.eld.calendario.dao.CicloDao;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaBs;
+import mx.edu.eld.convocatoria.bs.exception.NoExisteCicloException;
+import mx.ipn.escom.cdt.mail.controller.ContextLoader;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * Bs de la entidad {@link Ciclo}
+ * 
+ * @author Cristian,Luis
+ *
+ */
+
+@Service("cicloBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class CicloBs extends GenericBs<Ciclo> {
+	/**
+	 * Bs Serach generico Utilizado para buscar distintas entidades
+	 */
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	@Autowired
+	private CicloDao cicloDao;
+
+	private ContextLoader contextLoader;
+	
+	/**
+	* 
+	*/
+	@Autowired
+	private ConvocatoriaBs convocatoriaBs;
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	/**
+	 * Regla de negocio N52 valida si un ciclo es eliminable.
+	 */
+	@Autowired
+	private ReglaNegocioN52 reglaNegocioN52;
+
+	@Autowired
+	private ReglaNegocioN2 reglaNegocioN2;
+
+	@Autowired
+	ReglaNegocioN7 reglaNegocioN7;
+
+	@Autowired
+	ReglaNegocioN1 reglaNegocioN1;
+
+	@Transactional(rollbackFor = Exception.class)
+	public void registrarCiclo(Ciclo ciclo) throws IntersectionCyclePeriodException {
+		List<Ciclo> listCiclos;
+		Ciclo model;
+		Convocatoria convocatoria = new Convocatoria();
+		listCiclos = genericSearchBs.findAll(Ciclo.class);
+		reglaNegocioN7 = new ReglaNegocioN7();
+
+		reglaNegocioN7.validate(ciclo.getInicio(), ciclo.getFin(), ciclo.getPublicacion());
+
+		for (Ciclo ciclo2 : listCiclos) {
+			if (reglaNegocioN1.validate(ciclo, ciclo2)) {
+				throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.CICLO_TRASLAPE);
+			}
+		}
+
+		model = save(ciclo);
+		convocatoria.setId(model.getId());
+		convocatoriaBs.save(convocatoria);
+	}
+
+	/**
+	 * Esta funcion se encargara de actualizar la informacion del ciclo escolar
+	 * de ese momento
+	 * 
+	 * @throws IntersectionCyclePeriodException
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void actualizarCiclo(Ciclo ciclo) throws IntersectionCyclePeriodException {
+		List<Ciclo> listCiclo;
+		listCiclo = genericSearchBs.findAll(Ciclo.class);
+		reglaNegocioN7 = new ReglaNegocioN7();
+
+		for (Ciclo ciclo2 : listCiclo) {
+			if (!ciclo.getId().equals(ciclo2.getId()) && (reglaNegocioN1.validate(ciclo, ciclo2))) {
+				throw new IntersectionCyclePeriodException(condicionesCicloIncumplidas.CICLO_TRASLAPE);
+			}
+		}
+
+		update(ciclo);
+	}
+
+	/**
+	 * @param fin
+	 * @param inicio
+	 * @return nombre se retorna el nombre del ciclo escolar con el formato
+	 *         yyyy-yyyy
+	 */
+
+	public String obtenerNombre(Date fin, Date inicio) {
+		String i;
+		String f;
+		String formato;
+		String nombre = new String();
+
+		if (fin != null && inicio != null) {
+			formato = "yyyy";
+			SimpleDateFormat dateformat = new SimpleDateFormat(formato);
+			i = dateformat.format(inicio);
+			f = dateformat.format(fin);
+			nombre = i + "-" + f;
+		}
+		return nombre;
+	}
+
+	/**
+	 * Metodo que invoca al metodo convocatoriaAsociada() de cicloDao que
+	 * retorna un Integer.
+	 * 
+	 * @param idCiclo
+	 *            {Integer} id de un Ciclo
+	 * @return{Integer} Con valor 0 o mayor
+	 */
+	public Integer convocatoriaAsociada(Integer idCiclo) {
+		return convocatoriaAsociada(idCiclo);
+	}
+
+	/**
+	 * Valida que el periodo de un ciclo no aya finalizado.
+	 * 
+	 * @param fin
+	 *            {Date} Fin del ciclo
+	 * @return {Boolean} True sí fin es manor a la fecha actual mediante el
+	 *         metodo validate de ReglaNegocioN2.
+	 */
+	public Boolean cicloComparar(Date fin) {
+		return reglaNegocioN2.validate(fin, new Date());
+	}
+
+	@Transactional(readOnly = true)
+	public Ciclo obtenerCicloActual() {
+		return cicloDao.obtenerCicloActual();
+	}
+
+	/**
+	 * Valida si un ciclo es eliminable mediante el metodo validate de la
+	 * ReglaNegocioN52.
+	 * 
+	 * @param model
+	 *            {Ciclo} Ciclo que se va a eliminar.
+	 *
+	 */
+	public void cicloEliminable(Ciclo model) throws CicloEliminableException {
+		if (reglaNegocioN52.validate(model)) {
+			throw new CicloEliminableException();
+		}
+	}
+
+	/**
+	 * Metodo que elimina las entidades relacionades con un ciclo o convocatoria
+	 */
+	@Transactional
+	public void eliminarCiclo(Integer id) {
+		cicloDao.eliminarConvocatoria(id);
+		delete(genericSearchBs.findById(Ciclo.class, id));
+	}
+
+	@Transactional(readOnly = true)
+	public List<Ciclo> obtenerCiclos() throws NoExisteCicloException {
+		Ciclo cicloActual = obtenerCicloActual();
+		if(cicloActual == null) {
+			List<Ciclo> listCiclosFuturos = cicloDao.obtenerCiclosFuturos(new Date());
+			if(listCiclosFuturos == null) {
+				throw new NoExisteCicloException();
+			} else {
+				return listCiclosFuturos;
+			}
+		}
+		return cicloDao.obtenerCiclos(cicloActual);
+	}
+
+	public ContextLoader getContextLoader() {
+		return contextLoader;
+	}
+
+	public void setContextLoader(ContextLoader contextLoader) {
+		this.contextLoader = contextLoader;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	public ConvocatoriaBs getConvocatoriaBs() {
+		return convocatoriaBs;
+	}
+
+	public void setConvocatoriaBs(ConvocatoriaBs convocatoriaBs) {
+		this.convocatoriaBs = convocatoriaBs;
+	}
+
+	/**
+	 * @return the cicloDao
+	 */
+	public CicloDao getCicloDao() {
+		return cicloDao;
+	}
+
+	/**
+	 * @param cicloDao
+	 *            the cicloDao to set
+	 */
+	public void setCicloDao(CicloDao cicloDao) {
+		this.cicloDao = cicloDao;
+	}
+
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	/**
+	 * @param sessionFactory
+	 *            the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	/**
+	 * @return the reglaNegocioN52
+	 */
+	public ReglaNegocioN52 getReglaNegocioN52() {
+		return reglaNegocioN52;
+	}
+
+	/**
+	 * @param reglaNegocioN52
+	 *            the reglaNegocioN52 to set
+	 */
+	public void setReglaNegocioN52(ReglaNegocioN52 reglaNegocioN52) {
+		this.reglaNegocioN52 = reglaNegocioN52;
+	}
+
+}

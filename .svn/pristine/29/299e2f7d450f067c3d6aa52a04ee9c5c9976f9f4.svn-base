@@ -1,0 +1,18 @@
+package mx.edu.eld.entrevistas.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Namespace("/entrevistas")
+public class GestionarSalonesAct extends ActionSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	// IU1.8.2-4 Gestionar salones
+	public String editNew() {
+		return "editNew";
+	}
+}

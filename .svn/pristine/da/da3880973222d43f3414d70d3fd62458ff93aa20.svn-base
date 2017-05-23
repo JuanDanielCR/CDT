@@ -1,0 +1,31 @@
+$(document).ready(function(){
+	//var idCliente = $("#hdIdCliente").val();
+    var idTipo
+    var idCiclo = $("#hdIdCiclo").val();
+	$("#slcListTipoActividad").change(function(){
+    	idTipo = $("#slcListTipoActividad option:selected").val();
+    	if(idTipo != null){
+    		buscarTipoActividades(idTipo,idCiclo);
+    	}
+    });
+});
+
+function buscarTipoActividades(idTipo,idCiclo){
+	$("#hdnIdTipo").attr("value", idTipo);
+	$("#hdnCiclo").attr("value", idCiclo)
+	var form = $("#hdnActionForm");
+			$.ajax({
+				type: form.attr("method"),
+				url: form.attr("action"),
+				data: form.serialize(),
+				cache: false,
+				dataType: 'html',
+				success: function (data){
+					$("#divActividadesList").html("");
+					$("#divActividadesList").html(data);
+				}, 
+				error: function (data){
+					alert("error:"+data);
+				}
+			});
+}

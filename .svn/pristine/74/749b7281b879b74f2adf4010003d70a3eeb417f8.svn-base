@@ -1,0 +1,256 @@
+package mx.edu.eld.calendario.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Formula;
+
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Catalogo;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la lógica de negocios de las actividades que se pueden asociar a un
+ * {@link Ciclo} y con base en éstas se generará el calendario.
+ * 
+ * @author CDT-ESCOM
+ *
+ */
+@Entity
+@Table(name = "tca10_actividad")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteActividad", query = "DELETE FROM tca11_ciclo_actividad WHERE id_actividad =:idActividad") })
+public class Actividad implements Modelo, Catalogo {
+	/**
+	 * Identificador de la actividad
+	 */
+
+	// @SequenceGenerator(name = "tca07_actividad_id_actividad_seq",
+	// sequenceName = "tca07_actividad_id_actividad_seq", allocationSize = 1)
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
+	// "tca07_actividad_id_actividad_seq")
+	// @Column(name = "id_actividad")
+	@EmbeddedId
+	private ActividadId id;
+
+	/**
+	 * Identificador del {@link TipoActividad} de la actividad
+	 */
+	@Column(name = "id_tipo", updatable = false, insertable = false)
+	private Integer idTipo;
+
+	/*
+	 * Identificador del grupo
+	 */
+	@Column(name = "id_fase", updatable = false, insertable = false)
+	private Integer idFase;
+
+	/*
+	 * Identificador
+	 */
+	@Column(name = "id_actividad", updatable = false, insertable = false)
+	private Integer idActividad;
+
+	/**
+	 * id del origen de la actividad
+	 **/
+	@Column(name = "id_origen")
+	private Integer idOrigen;
+
+	/**
+	 * Nombre de la actividad
+	 */
+	@Column(name = "nb_actividad")
+	private String nombre;
+
+	/**
+	 * Descripción de la actividad
+	 */
+	@Column(name = "ds_actividad")
+	private String descripcion;
+
+	/**
+	 * Estado del elemento del catálogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/*
+	 * Si la actividad esta siendo ocupada en algun ciclo, no debo de poder
+	 * editarla
+	 */
+	@Formula(value = "(select case WHEN (select count(*) from tca11_ciclo_actividad as ci_act where ci_act.id_ciclo!=(select c.id_ciclo from tca01_ciclo as c where c.fh_inicio<=current_date and c.fh_fin>=current_date or c.fh_inicio>=current_date) and ci_act.id_actividad=id_actividad)>0 THEN false WHEN (select count(*) from tca11_ciclo_actividad as ci_act where ci_act.id_ciclo=(select c.id_ciclo from tca01_ciclo as c where c.fh_inicio<=current_date and c.fh_fin>=current_date or c.fh_inicio>=current_date) and ci_act.id_actividad=id_actividad)>0 THEN  true else false end)")
+	private Boolean editable;
+
+	public Actividad(Integer idTipo, Integer idFase, Integer idActividad, Integer idOrigen, String nombre,
+			String descripcion, Boolean activo) {
+		super();
+		this.id = new ActividadId(idTipo, idFase, idActividad);
+		this.idTipo = idTipo;
+		this.idFase = idFase;
+		this.idActividad = idActividad;
+		this.idOrigen = idOrigen;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.activo = activo;
+	}
+
+	public Actividad() {
+		super();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ActividadId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(ActividadId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(fieldName = "idTipo", type = ValidatorType.FIELD, message = "${getText('MSG39')}") }, intRangeFields = {
+					@IntRangeFieldValidator(type = ValidatorType.FIELD, message = "${getText('MSG47')}", min = "1") })
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "nombre", message = "${getText('MSG39')}") }, stringLengthFields = {
+					@StringLengthFieldValidator(minLength = "3", maxLength = "100", fieldName = "nombre", type = ValidatorType.FIELD, trim = true, message = "${getText('MSG41',{'100'})}") })
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(fieldName = "descripcion", message = "${getText('MSG39')}") }, stringLengthFields = {
+					@StringLengthFieldValidator(minLength = "3", maxLength = "255", fieldName = "descripcion", type = ValidatorType.FIELD, trim = true, message = "${getText('MSG41',{'255'})}") })
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	/**
+	 * @return the editable
+	 */
+	public Boolean getEditable() {
+		return editable;
+	}
+
+	/**
+	 * @param editable
+	 *            the editable to set
+	 */
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+	}
+
+	/**
+	 * @return the idFase
+	 */
+	public Integer getIdFase() {
+		return idFase;
+	}
+
+	/**
+	 * @param idFase
+	 *            the idFase to set
+	 */
+	public void setIdFase(Integer idFase) {
+		this.idFase = idFase;
+	}
+
+	/**
+	 * @return the idActividad
+	 */
+	public Integer getIdActividad() {
+		return idActividad;
+	}
+
+	/**
+	 * @param idActividad
+	 *            the idActividad to set
+	 */
+	public void setIdActividad(Integer idActividad) {
+		this.idActividad = idActividad;
+	}
+
+	/**
+	 * @return the idOrigen
+	 */
+	public Integer getIdOrigen() {
+		return idOrigen;
+	}
+
+	/**
+	 * @param idOrigen
+	 *            the idOrigen to set
+	 */
+	public void setIdOrigen(Integer idOrigen) {
+		this.idOrigen = idOrigen;
+	}
+
+}

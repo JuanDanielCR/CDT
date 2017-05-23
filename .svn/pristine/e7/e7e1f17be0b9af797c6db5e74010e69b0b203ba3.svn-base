@@ -1,0 +1,16 @@
+$(function() {
+	dataTableEMETH.createSortedDataTable("tblGestionarCiclos",2,"acs",2);
+});
+var ac = $("#frmEliminarCiclo").attr("action")
+function myclickDialog(idCiclo) {
+	var action = $("#hdnUrlAction").val();
+	action = action + idCiclo
+	$("#frmEliminarCiclo").attr("action", action);
+	$.publish("showDlgDelete");
+	$("#dlgDelete").removeClass("dlgDelete");
+	
+}
+
+function closeDeleteDlg(){
+	$.publish("closeDlgDelete");
+}

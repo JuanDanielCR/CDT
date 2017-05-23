@@ -1,0 +1,148 @@
+package mx.edu.eld.sepomex.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae el modelo de negocios asociado a un Municipio con base en lo
+ * establecido en el MGN provisto por el INEGI.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tsp02_municipio")
+public class Municipio implements Modelo{
+	/**
+	 * Identificador compuesto del Municipio
+	 */
+	@EmbeddedId
+	private MunicipioId id;
+
+	/**
+	 * Clave de la Entidad Federativa a la que pertenece el Municipio
+	 */
+	@Column(name = "id_entidad", insertable = false, updatable = false)
+	private String idEntidad;
+
+	/**
+	 * Clave del Municipio
+	 */
+	@Column(name = "id_municipio", insertable = false, updatable = false)
+	private String idMunicipio;
+
+	/**
+	 * Nombre del municipio
+	 */
+	@Column(name = "nb_municipio")
+	private String nombre;
+
+	/**
+	 * Estado del Municipio en el catalogo
+	 */
+	@Column(name = "st_activo")
+	private Boolean activo;
+
+	/**
+	 * {@link Entidad} a la que pertenece el minicipio
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_entidad", referencedColumnName = "id_entidad", insertable = false, updatable = false)
+	private Entidad entidad;
+
+	/**
+	 * @return the id
+	 */
+	public MunicipioId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(MunicipioId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getIdMunicipio() {
+		return idMunicipio;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setIdMunicipio(String idMunicipio) {
+		this.idMunicipio = idMunicipio;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the activo
+	 */
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	/**
+	 * @return the entidad
+	 */
+	public Entidad getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * @param entidad
+	 *            the entidad to set
+	 */
+	public void setEntidad(Entidad entidad) {
+		this.entidad = entidad;
+	}
+}

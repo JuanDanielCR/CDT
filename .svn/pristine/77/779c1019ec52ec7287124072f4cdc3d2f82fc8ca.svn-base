@@ -1,0 +1,171 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+
+/**
+ * Contiene la información necesaria para programar las Citas para entrevistas
+ * de los {@link Aspirante}s.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tad21_cita")
+public class Cita {
+	/**
+	 * Identificador de la cita
+	 */
+	@EmbeddedId
+	private CitaId id;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Aspirante}
+	 */
+	@Column(name = "id_aspirante", insertable = false, updatable = false)
+	private Integer idAspirante;
+
+	/**
+	 * Identificador del {@link Entrevistador}
+	 */
+	@Column(name = "id_entrevistador", insertable = false, updatable = false)
+	private Integer idEntrevistador;
+
+	/**
+	 * Fecha y hora de la cita
+	 */
+	@Column(name = "fh_cita")
+	private Date cita;
+
+	/**
+	 * Persona que realizará la entrevista al aspirante asociado
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_entrevistador", referencedColumnName = "id_entrevistador", insertable = false, updatable = false)
+	private Entrevistador entrevistador;
+
+	/**
+	 * Aspirante a quién se le realizará la {@link Entrevista}
+	 */
+	@ManyToOne
+	@JoinColumns({@JoinColumn(name = "", referencedColumnName = "", insertable = false, updatable = false),})
+	private Aspirante aspirante;
+
+	/**
+	 * @return the id
+	 */
+	public CitaId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(CitaId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador
+	 *            the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+
+	/**
+	 * @return the cita
+	 */
+	public Date getCita() {
+		return cita;
+	}
+
+	/**
+	 * @param cita
+	 *            the cita to set
+	 */
+	public void setCita(Date cita) {
+		this.cita = cita;
+	}
+
+	/**
+	 * @return the entrevistador
+	 */
+	public Entrevistador getEntrevistador() {
+		return entrevistador;
+	}
+
+	/**
+	 * @param entrevistador the entrevistador to set
+	 */
+	public void setEntrevistador(Entrevistador entrevistador) {
+		this.entrevistador = entrevistador;
+	}
+
+	/**
+	 * @return the aspirante
+	 */
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+
+	/**
+	 * @param aspirante the aspirante to set
+	 */
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}	
+}

@@ -1,0 +1,222 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.edu.eld.sepomex.mapeo.Municipio;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae el modelo de negocio de una Dirección con base en la información que
+ * recomienda INEGI, sin considerar la estructura relacional de datos,
+ * únicamente la información requerida.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tib02_direccion")
+public class Direccion implements Modelo{
+	/**
+	 * Identificador de la dirección.
+	 */
+	@Id
+	@SequenceGenerator(name = "", sequenceName = "")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+	@Column(name = "id_direccion")
+	private Integer id;
+
+	/**
+	 * Clave de la {@link Entidad} en la que se encuentra la dirección.
+	 */
+	@Column(name = "id_entidad")
+	private String idEntidad;
+
+	/**
+	 * Clave del {@link Municipio} en el que se encuentra la dirección.
+	 */
+	@Column(name = "id_municipio")
+	private String idMunicipio;
+
+	/**
+	 * Colonia asociada a la dirección
+	 */
+	@Column(name = "tx_colonia")
+	private String colonia;
+
+	/**
+	 * Calle asociada a la dirección.
+	 */
+	@Column(name = "tx_calle")
+	private String calle;
+
+	/**
+	 * Número exterior de la dirección
+	 */
+	@Column(name = "tx_numero_ext")
+	private String exterior;
+
+	/**
+	 * Número interior de la dirección
+	 */
+	@Column(name = "tx_numero_int")
+	private String interior;
+	
+	/**
+	 * Código Postal 
+	 */
+	@Column(name = "tx_cp")
+	private String cp;
+
+	/**
+	 * Municipio de la Republica Méxicana en la que se ubica la dirección
+	 */
+	@ManyToOne
+	@JoinColumns({
+			@JoinColumn(name = "id_entidad", referencedColumnName = "id_entidad", insertable = false, updatable = false),
+			@JoinColumn(name = "id_municipio", referencedColumnName = "id_municipio", insertable = false, updatable = false) })
+	private Municipio municipio;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idEntidad
+	 */
+	public String getIdEntidad() {
+		return idEntidad;
+	}
+
+	/**
+	 * @param idEntidad
+	 *            the idEntidad to set
+	 */
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	/**
+	 * @return the idMunicipio
+	 */
+	public String getIdMunicipio() {
+		return idMunicipio;
+	}
+
+	/**
+	 * @param idMunicipio
+	 *            the idMunicipio to set
+	 */
+	public void setIdMunicipio(String idMunicipio) {
+		this.idMunicipio = idMunicipio;
+	}
+
+	/**
+	 * @return the colonia
+	 */
+	public String getColonia() {
+		return colonia;
+	}
+
+	/**
+	 * @param colonia
+	 *            the colonia to set
+	 */
+	public void setColonia(String colonia) {
+		this.colonia = colonia;
+	}
+
+	/**
+	 * @return the calle
+	 */
+	public String getCalle() {
+		return calle;
+	}
+
+	/**
+	 * @param calle
+	 *            the calle to set
+	 */
+	public void setCalle(String calle) {
+		this.calle = calle;
+	}
+
+	/**
+	 * @return the exterior
+	 */
+	public String getExterior() {
+		return exterior;
+	}
+
+	/**
+	 * @param exterior
+	 *            the exterior to set
+	 */
+	public void setExterior(String exterior) {
+		this.exterior = exterior;
+	}
+
+	/**
+	 * @return the interior
+	 */
+	public String getInterior() {
+		return interior;
+	}
+
+	/**
+	 * @param interior
+	 *            the interior to set
+	 */
+	public void setInterior(String interior) {
+		this.interior = interior;
+	}
+
+	/**
+	 * @return the municipio
+	 */
+	public Municipio getMunicipio() {
+		return municipio;
+	}
+
+	/**
+	 * @param municipio the municipio to set
+	 */
+	public void setMunicipio(Municipio municipio) {
+		this.municipio = municipio;
+	}
+
+	/**
+	 * @return the CP
+	 */
+	public String getCp() {
+		return cp;
+	}
+
+	/**
+	 * @param cp
+	 */
+	public void setCp(String cp) {
+		this.cp = cp;
+	}
+	
+	
+}

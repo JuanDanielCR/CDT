@@ -1,0 +1,367 @@
+package mx.edu.eld.convocatoria.action;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisito;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisitoId;
+import mx.edu.eld.calendario.mapeo.EstatusCiclo.EstatusCicloEnum;
+import mx.edu.eld.calendario.mapeo.Requisito;
+import mx.edu.eld.calendario.mapeo.TipoRequisito;
+import mx.edu.eld.convocatoria.bs.ConvocatoriaRequisitoBs;
+import mx.edu.eld.convocatoria.bs.RequisitoBs;
+import mx.edu.eld.convocatoria.bs.exception.RequisitoAgregableExecption;
+import mx.ipn.escom.cdt.util.Numeros;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * Accion GestionarRequisitos Casos de uso relacionados: CUPA1.2-5 Agregar
+ * Requisito CUPA1.2-6 Editar Requisito
+ * 
+ * @author Luis
+ *
+ */
+@Namespace("/convocatoria")
+@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"gestionar-convocatoria/%{idConvocatoriaSel}/edit" })
+@AllowedMethods({ "mostrarRequisitos" })
+public class GestionarRequisitoAct extends ActionSupportCDT implements ModelDriven<Requisito> {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Modelo de la entidad {@link Requisito}
+	 */
+	private Requisito model;
+
+	/**
+	 * Id de {@link Convocatoria} asociada a requisito
+	 */
+	private Integer idConvocatoriaSel;
+
+	/**
+	 * Bs de la entidad {@link Requisito} Utilizada para validar el nombre del
+	 * requisito
+	 * 
+	 */
+	@Autowired
+	private RequisitoBs requisitoBs;
+
+	/**
+	 * Bs de la entidad {@link ConvocatoriaRequisito} Utilizada para persistir y
+	 * actualizar una convocatoriaRequisito
+	 */
+		
+	private List<TipoRequisito> listTipoRequisito;
+	
+	@Autowired
+	private ConvocatoriaRequisitoBs convocatoriaRequisitoBs;
+	/**
+	 * Bs Search generico Utilizado para obtener una convocatoriaRequisito
+	 * asociado con su id
+	 */
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	private String msgError="Error";
+
+	/**
+	 * id de convocatoriaRequisito
+	 */
+	private ConvocatoriaRequisitoId idSel;
+
+	/**
+	 * Modelo de la entidad {@link ConvocatoriaRequisito}
+	 */
+	private ConvocatoriaRequisito convocatoriaRequisidoSel;
+
+	/**
+	 * Ciclo de la convocatoria
+	 */
+	private Ciclo ciclo;
+
+	private List<ConvocatoriaRequisito> listConvocatoriaRequisitos;
+	
+	
+	private Integer tRequisitoSel;
+
+	/**
+	 * 
+	 * @return
+	 */
+	@SkipValidation
+	public String mostrarRequisitos() {
+		ciclo = genericSearchBs.findById(Ciclo.class, idConvocatoriaSel);
+		listConvocatoriaRequisitos = requisitoBs.requisitoConvocatoria(idConvocatoriaSel);
+		return "mostrarRequisitos";
+	}
+
+	/**
+	 * Metodo editNew
+	 * 
+	 * @return
+	 */
+	public String editNew() {
+		listTipoRequisito = genericSearchBs.findAll(TipoRequisito.class);
+		return EDITNEW;
+	}
+
+	/**
+	 * Metodo que validad reglas de negocio. Datos obligatorios ,dato
+	 * erroneo,nombre del nuevo requisito ya existente
+	 */
+	public void validateCreate() {
+		if (!hasActionErrors() && !hasActionMessages()) {
+			try {
+				requisitoBs.agregable(model.getNombre());
+			} catch (RequisitoAgregableExecption e) {
+				LOG.error(msgError, e);
+				addFieldError("model.nombre", getText("MSG55", new String[] { model.getNombre() }));
+			}
+		}
+		listTipoRequisito = genericSearchBs.findAll(TipoRequisito.class);
+	}
+
+	/**
+	 * Metodo que persiste la nueva {@link ConvocatoriaRequisito} mediante el
+	 * metodo guardarConvocatoriaRequisito de {@link ConvocatoriaRequisitoBs}
+	 * 
+	 * @return SUCCESS
+	 */
+	public String create() {
+		idConvocatoriaSel = (Integer) SessionManager.get(NombreObjetosSesion.CONVOCATORIA_ID);
+		model.setIdOrigen(Numeros.UNO.getValor());
+		model.setIdFuente(Numeros.UNO.getValor());
+		convocatoriaRequisitoBs.guardarConvocatoriaRequisito(model, idConvocatoriaSel, convocatoriaRequisidoSel);
+		addActionMessage(getText("MSG1", new String[] { getText("AE_EL_REQUISITO"), getText("OP_REGISTRADO") }));
+		return SUCCESS;
+	}
+
+	/**
+	 * Metodo edit que obtiene la {@link ConvocatoriaRequisito} a editar
+	 * 
+	 * @return
+	 */
+	public String edit() {
+		listTipoRequisito = genericSearchBs.findAll(TipoRequisito.class);
+		return EDIT;
+	}
+
+	/**
+	 * Metodo que validad reglas de negocio. Datos obligatorios ,dato
+	 * erroneo,nombre nuevo del requisito ya existente
+	 */
+	public void validateUpdate() {
+		if (!hasActionErrors() && !hasActionMessages()) {
+			try {
+				requisitoBs.agregableUpdate(model.getNombre(), model.getId());
+			} catch (RequisitoAgregableExecption e) {
+				LOG.error(msgError, e);
+				addFieldError("model.nombre", getText("MSG55", new String[] { model.getNombre() }));
+			}
+		}
+		listTipoRequisito = genericSearchBs.findAll(TipoRequisito.class);
+	}
+
+	/**
+	 * Metodo que actualiza la {@link ConvocatoriaRequisito} mediante el metodo
+	 * actualizarConvocatoriaRequisito de {@link ConvocatoriaRequisitoBs}
+	 * 
+	 * @return SUCCESS
+	 */
+	public String update() {
+		idSel = (ConvocatoriaRequisitoId) SessionManager.get(NombreObjetosSesion.CONVOCATORIA_REQUISITO_ID);
+		model.setIdOrigen(Numeros.UNO.getValor());
+		model.setIdFuente(Numeros.UNO.getValor());
+		convocatoriaRequisitoBs.actualizarConvocatoriaRequisito(model, idSel, convocatoriaRequisidoSel);
+		idConvocatoriaSel = idSel.getIdConvocatoria();
+		addActionMessage(getText("MSG1", new String[] { getText("AE_EL_REQUISITO"), getText("OP_ACTUALIZADO") }));
+		return SUCCESS;
+	}
+
+	/**
+	 * Para eliminar un Requisito asociado a una Convocatoria el estatus de la
+	 * convocatoria tiene que estar en Edición o haber sido recientmente creado.
+	 */
+	@SkipValidation
+	public String destroy() {
+		ciclo = genericSearchBs.findById(Ciclo.class, convocatoriaRequisidoSel.getIdConvocatoria());
+		if (ciclo.getIdEstatus().equals(EstatusCicloEnum.EDICION.getEstatus())
+				|| ciclo.getIdEstatus().equals(EstatusCicloEnum.CREADO.getEstatus())) {
+			convocatoriaRequisitoBs.delete(convocatoriaRequisidoSel);
+			addActionMessage(getText("MSG1", new String[] { getText("AE_LA_OPERACION"), getText("OP_EJECUTO") }));
+		} else {
+			addActionError(getText("MSG3"));
+		}
+		return SUCCESS;
+	}
+
+	/**
+	 * @param convocatoriaRequisidoSel
+	 *            the convocatoriaRequisidoSel to set
+	 */
+	public void setConvocatoriaRequisidoSel(ConvocatoriaRequisito convocatoriaRequisidoSel) {
+		this.convocatoriaRequisidoSel = convocatoriaRequisidoSel;
+	}
+
+	/**
+	 * @return the model
+	 */
+	@VisitorFieldValidator
+	public Requisito getModel() {
+		if (model == null) {
+			model = new Requisito();
+		}
+		return model;
+	}
+
+	/**
+	 * @param model
+	 *            the model to set
+	 */
+	public void setModel(Requisito model) {
+		this.model = model;
+	}
+
+	/**
+	 * @return the convocatoriaRequisidoSel
+	 */
+	@VisitorFieldValidator
+	public ConvocatoriaRequisito getConvocatoriaRequisidoSel() {
+		if (convocatoriaRequisidoSel == null) {
+			convocatoriaRequisidoSel = new ConvocatoriaRequisito();
+		}
+		return convocatoriaRequisidoSel;
+	}
+
+	public void setConvocatoriaRequisitoBs(ConvocatoriaRequisitoBs convocatoriaRequisitoBs) {
+		this.convocatoriaRequisitoBs = convocatoriaRequisitoBs;
+	}
+
+	public ConvocatoriaRequisitoId getIdSel() {
+		return idSel;
+	}
+
+	public void setIdSel(ConvocatoriaRequisitoId idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(Requisito.class, idSel.getIdRequisito());
+			convocatoriaRequisidoSel = genericSearchBs.findById(ConvocatoriaRequisito.class, idSel);
+			SessionManager.put(NombreObjetosSesion.CONVOCATORIA_REQUISITO_ID, idSel);
+		}
+		this.idSel = idSel;
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	/**
+	 * @return the idConvocatoriaSel
+	 */
+	public Integer getIdConvocatoriaSel() {
+		return idConvocatoriaSel;
+	}
+
+	/**
+	 * @param idConvocatoriaSel
+	 *            the idConvocatoriaSel to set
+	 */
+	public void setIdConvocatoriaSel(Integer idConvocatoriaSel) {
+		if (idConvocatoriaSel != null) {
+			SessionManager.put(NombreObjetosSesion.CONVOCATORIA_ID, idConvocatoriaSel);
+		}
+		this.idConvocatoriaSel = idConvocatoriaSel;
+	}
+
+	public List<ConvocatoriaRequisito> getListConvocatoriaRequisitos() {
+		return listConvocatoriaRequisitos;
+	}
+
+	public void setListConvocatoriaRequisitos(List<ConvocatoriaRequisito> listConvocatoriaRequisitos) {
+		this.listConvocatoriaRequisitos = listConvocatoriaRequisitos;
+	}
+
+	public void setRequisitoBs(RequisitoBs requisitoBs) {
+		this.requisitoBs = requisitoBs;
+	}
+
+	/**
+	 * @return the requisitoBs
+	 */
+	public RequisitoBs getRequisitoBs() {
+		return requisitoBs;
+	}
+
+	/**
+	 * @return the convocatoriaRequisitoBs
+	 */
+	public ConvocatoriaRequisitoBs getConvocatoriaRequisitoBs() {
+		return convocatoriaRequisitoBs;
+	}
+
+	/**
+	 * @return the ciclo
+	 */
+	public Ciclo getCiclo() {
+		return ciclo;
+	}
+
+	/**
+	 * @param ciclo
+	 *            the ciclo to set
+	 */
+	public void setCiclo(Ciclo ciclo) {
+		this.ciclo = ciclo;
+	}
+
+	/**
+	 * @return the listTipoRequisito
+	 */
+	public List<TipoRequisito> getListTipoRequisito() {
+		return listTipoRequisito;
+	}
+
+	/**
+	 * @param listTipoRequisito the listTipoRequisito to set
+	 */
+	public void setListTipoRequisito(List<TipoRequisito> listTipoRequisito) {
+		this.listTipoRequisito = listTipoRequisito;
+	}
+
+	/**
+	 * @return the tRequisitoSel
+	 */
+	public Integer gettRequisitoSel() {
+		return tRequisitoSel;
+	}
+
+	/**
+	 * @param tRequisitoSel the tRequisitoSel to set
+	 */
+	public void settRequisitoSel(Integer tRequisitoSel) {
+		this.tRequisitoSel = tRequisitoSel;
+	}
+	
+	
+
+}

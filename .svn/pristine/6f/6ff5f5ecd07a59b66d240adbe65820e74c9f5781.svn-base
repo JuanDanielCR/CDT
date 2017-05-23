@@ -1,0 +1,74 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class AspiranteDireccionId implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1486586938137104558L;
+
+	/**
+	 * Id de la direccion del aspirante
+	 **/
+	@Column(name = "id_direccion", nullable = false)
+	private Integer idDireccion;
+
+	/**
+	 * Id del aspirante
+	 **/
+	@Column(name = "id_aspirante", nullable = false)
+	private Integer idAspirante;
+
+	/**
+	 * TODO: Documentar
+	 */
+	public AspiranteDireccionId() {
+		super();
+	}
+
+	/**
+	 * TODO: Documentar
+	 */
+	public AspiranteDireccionId(Integer idDireccion, Integer idAspirante, Integer idTipo) {
+		super();
+		this.idDireccion = idDireccion;
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idDireccion
+	 */
+	public Integer getIdDireccion() {
+		return idDireccion;
+	}
+
+	/**
+	 * @param idDireccion
+	 *            the idDireccion to set
+	 */
+	public void setIdDireccion(Integer idDireccion) {
+		this.idDireccion = idDireccion;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+}

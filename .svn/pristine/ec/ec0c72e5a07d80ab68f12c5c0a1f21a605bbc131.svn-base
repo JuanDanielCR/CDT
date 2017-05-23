@@ -1,0 +1,152 @@
+package mx.edu.eld.convocatoria.bs;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN48;
+import mx.edu.eld.calendario.bs.CicloBs;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaRequisito;
+import mx.edu.eld.calendario.mapeo.Requisito;
+import mx.edu.eld.convocatoria.bs.exception.RequisitoAgregableExecption;
+import mx.edu.eld.convocatoria.dao.RequisitoDao;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+import java.util.logging.Logger;
+
+/**
+ * Bs de la entidad {@link Requisito}
+ * 
+ * @author Luis
+ *
+ */
+@Service("requisitoBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class RequisitoBs extends GenericBs<Requisito> {
+	/**
+	 * Dao de la entidad {@link Requisito} Utilizado validar nuevo nombre de
+	 * requisito
+	 */
+	@Autowired
+	private RequisitoDao requisitoDao;
+	/**
+	 */
+	@Autowired
+	private CicloBs cicloBs;
+
+	private Ciclo ciclo;
+
+	@Autowired
+	ReglaNegocioN48 reglaNegocioN48;
+
+	private Logger logger;
+
+	public void agregable(String nombre) throws RequisitoAgregableExecption {
+		if (reglaNegocioN48.validate(Requisito.class, "nombre", nombre, null)) {
+			throw new RequisitoAgregableExecption();
+		}
+	}
+
+	/**
+	 * Metodo que valida si el nuevo nombre del requisito no exista en otros
+	 * requisitos
+	 * 
+	 * @param nombre
+	 *            {String} Nuevo nombre del requisito
+	 * @param id
+	 *            {Integer} Id del requisito
+	 * @return {Boolean} True si el nombre persiste en el requisito
+	 * @throws RequisitoAgregableExecption
+	 */
+	public Boolean agregableUpdate(String nombre, Integer id) throws RequisitoAgregableExecption {
+		if (reglaNegocioN48.validate(Requisito.class, "nombre", nombre, id)) {
+			throw new RequisitoAgregableExecption();
+		}
+		return true;
+
+	}
+
+	/**
+	 * Obtiene los requisitos que requieren documento de la presente
+	 * convocatoria
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<Requisito> obtenerRequisitosDocumento() {
+		ciclo = cicloBs.obtenerCicloActual();
+		return (ciclo != null) ? requisitoDao.obtenerRequisitosDocumento(ciclo) : null;
+	}
+
+	public RequisitoDao getRequisitoDao() {
+		return requisitoDao;
+	}
+
+	public void setRequisitoDao(RequisitoDao requisitoDao) {
+		this.requisitoDao = requisitoDao;
+	}
+
+	/**
+	 * Obtiene todos los Requisitos que estén asociados a una convocatoria
+	 * mediante el id de la convocatoria.
+	 * 
+	 * @param idConvocatoriaSel
+	 * @return List<ConvocatoriaRequisto> es una lista de
+	 *         RequisitosConvocatoria.
+	 */
+	@Transactional(readOnly = true)
+	public List<ConvocatoriaRequisito> requisitoConvocatoria(Integer idConvocatoriaSel) {
+		return requisitoDao.requisitoConvocatoria(idConvocatoriaSel);
+	}
+
+	public CicloBs getCicloBs() {
+		return cicloBs;
+	}
+
+	public void setCicloBs(CicloBs cicloBs) {
+		this.cicloBs = cicloBs;
+	}
+
+	public Ciclo getCiclo() {
+		return ciclo;
+	}
+
+	public void setCiclo(Ciclo ciclo) {
+		this.ciclo = ciclo;
+	}
+
+	/**
+	 * @return the reglaNegocioN48
+	 */
+	public ReglaNegocioN48 getReglaNegocioN48() {
+		return reglaNegocioN48;
+	}
+
+	/**
+	 * @param reglaNegocioN48
+	 *            the reglaNegocioN48 to set
+	 */
+	public void setReglaNegocioN48(ReglaNegocioN48 reglaNegocioN48) {
+		this.reglaNegocioN48 = reglaNegocioN48;
+	}
+
+	/**
+	 * @return the logger
+	 */
+	public Logger getLogger() {
+		return logger;
+	}
+
+	/**
+	 * @param logger
+	 *            the logger to set
+	 */
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
+}

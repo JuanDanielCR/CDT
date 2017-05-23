@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:text>
+	<![CDATA[
+	<script
+		src="${pageContext.request.contextPath}/pages/ceneval/registrar-folio/js/index-editNew.js"
+		type="text/javascript"></script>
+	]]>
+</jsp:text>
+</head>
+<body>
+	<div class="row title">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU1.6.1_TITLE" />
+			</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 hidden">
+			<div class="alert alert-success">
+				<s:text name="MSG1" />
+			</div>
+		</div>
+		<div class="col-md-12 hidden">
+			<div class="alert alert-danger">
+				<s:text name="MSG17" />
+			</div>
+		</div>
+		<div class="col-md-12 hidden">
+			<div class="alert alert-danger">
+				<s:text name="MSG16" />
+			</div>
+		</div>
+		<div class="col-md-12 hidden">
+			<div class="alert alert-danger">
+				<s:text name="MSG18" />
+			</div>
+		</div>
+		<div class="col-md-12 hidden">
+			<div class="alert alert-danger">
+				<s:text name="MSG15" />
+			</div>
+		</div>
+		<div class="col-md-12 hidden">
+			<div class="alert alert-danger">
+				<s:property value="getText('MSG14', {'XLSX'})" />
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8 col-md-offset-2">
+		<div class="row">
+		<div class="col-md-12 text-left">
+			<span><s:text name="camposObligatorios" /></span>
+		</div>
+	</div>
+	<s:form>
+		<fieldset class="form-section form-horizontal">
+			<legend class="form-section">
+				<s:text name="IU1.6.1_LBL1" />
+			</legend>
+			<div class="form-group">
+				<label class="col-md-4 control-label label-obligatorio"><s:text
+						name="IU1.6.1_LBL2" /></label>
+				<div class="col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control" id="fileName"
+							readonly="true" /> <span class="input-group-btn" id="loadImage">
+							<i class="material-icons md-24 md-eld">file_upload</i>
+						</span>
+					</div>
+				</div>
+			</div>
+			<input type="file" id="fileUpload" class="hidden" accept=".xlsx" />
+		</fieldset>
+	</s:form>
+
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<a
+				href="${pageContext.request.contextPath}/ceneval/planificar-salones/1"
+				class="btn btn-default btn-default-eld"><s:text
+					name="btnAceptar" /></a> <a class="btn btn-default btn-default-eld"><s:text
+					name="btnCancelar" /></a>
+		</div>
+	</div>
+	</div>
+</body>
+	</html>
+</jsp:root>

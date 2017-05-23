@@ -1,0 +1,26 @@
+/**
+ * 
+ */
+package mx.edu.eld.ceneval.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+
+/**
+ * @author 
+ *
+ */
+@Namespace("/ceneval")
+public class GestionarFoliosExamenAct extends ActionSupportCDT {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String show() {
+		return SHOW;
+	}
+
+}

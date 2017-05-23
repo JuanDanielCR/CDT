@@ -1,0 +1,49 @@
+package mx.edu.eld.admision.action;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+
+import mx.edu.eld.admision.mapeo.Aspirante;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+
+@Namespace("/admision")
+@Result(name = "success", type = "redirectAction", params = { "actionName", "../admision/registrar-aspirante" })
+public class RegistrarAspiranteAct extends ActionSupportCDT {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+	private Aspirante model;
+		
+	public String index(){
+		model=(Aspirante)SessionManager.get(NombreObjetosSesion.ASPIRANTE_MODEL);
+		System.err.println("Aspirante Registrrar"+model);
+		return INDEX;
+	}
+	
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	
+	
+	/**
+	 * @return the model
+	 */
+	public Aspirante getModel() {
+		return model;
+	}
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(Aspirante model) {
+		this.model = model;
+	}
+	
+}

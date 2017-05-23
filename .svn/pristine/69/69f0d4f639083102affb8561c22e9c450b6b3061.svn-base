@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<!-- titulo -->
+	<div class="row title">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU1.2-7_TLT"></s:text>
+			</h1>
+		</div>
+	</div>
+
+	<!-- objeto pdf -->
+	<!-- <div class="form-group">
+		<div class="row">
+			<div class="col-md-12 pdf">
+				<object
+					data="${pageContext.request.contextPath}/files/sample-3pp.pdf"
+					type="application/pdf" width="100%" height="100%">
+					<iframe
+						src="${pageContext.request.contextPath}/files/sample-3pp.pdf"
+						width="100%" height="100%" style="border: none;">
+						Este navegador no soporta PDFs. Por favor descarga el PDF para
+						verlo: <a
+							href="${pageContext.request.contextPath}/files/sample-3pp.pdf">Descargar
+							PDF</a>
+					</iframe>
+				</object>
+			</div>
+		</div>
+	</div> -->
+
+	<!-- Propuesta html -->
+	<div class="form form-horizontal form-max">
+		<h3>
+			<strong>En atención a las múltiples solicitudes de
+				estudiantes interesados, la Escuela Libre de Derecho abre una
+				segunda y última convocatoria de selección de ingreso a la Carrera
+				de Abogado correspondiente al ciclo escolar 2017 - 2018.</strong>
+		</h3>
+
+		<br />
+		<h4 class="title-red">PRIMERA ETAPA</h4>
+		<h4 class="title-red">Del lunes 13 al viernes 17 de febrero de
+			2017, en un horario de 10:00 a 16:00 horas</h4>
+		<br />
+
+		<ol>
+			<h3>
+				<strong>
+					<li>VALIDACIÓN DE DOCUMENTOS</li>
+				</strong>
+			</h3>
+			<p class="col-text">Los aspirantes deberan entregar original y
+				copia de los siguientes documentos:</p>
+			<ol>
+				<li class="col-text">Acta de nacimiento.</li>
+				<li class="col-text">Copia CURP.</li>
+				<li class="col-text">Identificación escolar u oficial vigente.</li>
+				<li class="col-text">Certificado de secundaria.</li>
+				<li class="col-text">Certificado de bachillerato o equivalente
+					en el Sistema Educativo Nacional. En el caso de los aspirantes que
+					actualmente cursan el último año de bachillerato o su equivalente,
+					presentarán constancia original de estudios de los dos primeros
+					años con materias, calificaciones y promedio global o historial
+					académico. Si no se cursó en el Sistema Educativo Nacional de
+					México, se deberá tener la revalidación de estudios que emite la
+					Secretaría de Educación Pública de México (SEP).</li>
+				<li class="col-text">Tener un promedio global mínimo de 8.0
+					(ocho punto cero), considerando el promedio de secundaria y
+					bachillerato o su equivalente.</li>
+			</ol>
+
+			<h3>
+				<strong>
+					<li>REGISTRO Y PAGO DE LOS EXÁMENES (EXANI II DEL CENEVAL Y
+						PSICOMÉTRICO)</li>
+				</strong>
+			</h3>
+
+			<p class="col-text">Los aspirantes cuya documentación cumpla
+				todos y cada uno de los requisitos del numeral 1 anterior, en esa
+				misma fecha deberán:</p>
+
+			<ul>
+				<li class="col-text">Pagar la cantidad de <strong>$1,500.00</strong>
+					(<u>únicamente pago en efectivo</u>), que comprende la aplicación
+					del Examen Nacional de Ingreso a la Educación Superior del CENEVAL
+					(EXANI II) y del examen psicométrico.
+				</li>
+				<li class="col-text">Realizar su registro en línea ante el
+					CENEVAL, en la biblioteca de la Escuela.</li>
+			</ul>
+			<br />
+			<h4 class="title-red">SEGUNDA ETAPA</h4>
+			<h4 class="title-red">APLICACIÓN DE LOS EXÁMENES</h4>
+			<h4 class="title-red">
+				Sábado 25 de febrero de 2017 (<u>ÚNICA FECHA</u>)
+			</h4>
+			<br />
+			<ul>
+				<li class="col-text">Los exámenes se aplicarán exclusivamente
+					el sábado 25 de febrero de 2017 (<u>ÚNICA FECHA</u>). El EXANI II,
+					en un horario de 9:00 a 14:00 horas y el psicométrico, de 16:00 a
+					19:00 horas.
+				</li>
+				<li class="col-text">Consulta de resultados del EXANI II,
+					miércoles 15 de marzo de 2017, en la página www.eld.edu.mx</li>
+				<li class="col-text"><strong><u>Para continuar con
+							el proceso de selección, el aspirante deberá obtener en el EXANI
+							II, una calificación mínima de 8.0 (ocho punto cero).</u></strong></li>
+			</ul>
+		</ol>
+		<br />
+		<h4 class="title-red">TERCERA ETAPA</h4>
+		<h4 class="title-red">ENTREVISTA PERSONAL</h4>
+		<h4 class="title-red">Del lunes 27 de marzo al sábado 1 de abril
+			de 2017</h4>
+
+		<br />
+
+		<p class="col-text">
+			<u>Únicamente los aspirantes que aprobaron el EXANI II del
+				CENEVAL con una calificación mínima de 8.0 (ocho punto cero)
+				presentarán entrevista personal</u>, en la semana comprendida del lunes
+			27 de marzo al sábado 1 de abril de 2017, con previa cita.
+		</p>
+
+		<br />
+		<h4 class="title-red">CUARTA ETAPA</h4>
+		<h4 class="title-red">ENTREGA DE RESULTADOS</h4>
+		<h4 class="title-red">Lunes 24 de abril de 2017</h4>
+
+		<br />
+
+		<p class="col-text">
+			Los aspirantes podrán consultar los resultados de su proceso de
+			selección en la página <a href="https://www.eld.edu.mx">www.eld.edu.mx</a>,
+			a partir del lunes 24 de abril de 2017.
+		</p>
+
+		<p class="col-text">
+			<strong><u>El trámite es personal por lo que en todas
+					las etapas es indispensable la presencia del aspirante. Asimismo,
+					para agilizar las gestiones se solicita que los aspirantes no
+					acudan con acompañantes.</u></strong>
+		</p>
+
+	</div>
+
+
+	<!-- Botones -->
+	<div class="form-group">
+		<div class="outter-section">
+			<div class="text-right col-md-12">
+				<a class="btn btn-default btn-default-eld"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-convocatoria">
+					<s:text name="mx.com.eld.boton.aceptar" />
+				</a> <a class="btn btn-default btn-default-eld"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-convocatoria">
+					<s:text name="mx.com.eld.boton.cancelar" />
+				</a>
+			</div>
+		</div>
+	</div>
+</jsp:root>

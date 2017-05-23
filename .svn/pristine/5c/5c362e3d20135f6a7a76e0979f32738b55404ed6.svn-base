@@ -1,0 +1,309 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import mx.edu.eld.calendario.mapeo.Convocatoria;
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * La realización de entrevistas representa la fase final del proceso de
+ * admisión de la ELD. Cuando un {@link Entrevistador} entrevista a un
+ * {@link Aspirante} debe registrar las observaciones y realizar la evaluación
+ * solicitadas por la ELD, con base en las que finalmente se determinará el
+ * ingreso o rechazo de un {@link Aspirante}.
+ * 
+ * @author Hermes
+ *
+ */
+@Entity
+@Table(name = "tad13_entrevista")
+public class Entrevista implements Modelo {
+	/**
+	 * Identificador de la entrevista
+	 */
+	@Id
+	@SequenceGenerator(name = "tad13_entrevista_id_entrevista_seq", sequenceName = "tad13_entrevista_id_entrevista_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad13_entrevista_id_entrevista_seq")
+	@Column(name = "id_entrevista")
+	private Integer id;
+
+	/**
+	 * Identificador de la convocatoria para la cual se realiza la entrevista
+	 */
+	@Column(name = "id_convocatoria")
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del aspirante al que se entrevista
+	 */
+	@Column(name = "id_aspirante")
+	private Integer idAspirante;
+
+	/**
+	 * Identificador del entrevistador que realza la entrevista
+	 */
+	@Column(name = "id_entrevistador")
+	private Integer idEntrevistador;
+
+	/**
+	 * Identificador del estado de la entrevista
+	 */
+	@Column(name = "id_estatus")
+	private Integer idEstatus;
+
+	/**
+	 * Observaciones registradas por el entrevistador
+	 */
+	@Column(name = "tx_observacion")
+	private String observaciones;
+
+	/**
+	 * Convocatoria para la cual se realiza la entrevista
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", insertable = false, updatable = false)
+	private Convocatoria convocatoria;
+
+	/**
+	 * Aspirante a quien se le reaiza la entrevista
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false)
+	private Aspirante aspirante;
+
+	/**
+	 * Entrevistador que realiza la entrevista
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_entrevistador", referencedColumnName = "id_entrevistador", insertable = false, updatable = false)
+	private Entrevistador entrevistador;
+
+	/**
+	 * Estado de la entrevista asignado por el {@link Entrevistador}
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_estatus", referencedColumnName = "id_estatus", insertable = false, updatable = false)
+	private EstatusEntrevista estatus;
+
+	@OneToOne(optional = true)
+	@JoinColumn(name = "id_entrevista", referencedColumnName = "id_recomendacion", insertable = false, updatable = false)
+	private Recomendacion recomendacion;
+
+	@OneToMany
+	@JoinColumn(name = "id_entrevista", referencedColumnName = "id_entrevista", insertable = false, updatable = false)
+	private List<EntrevistaRubro> entrevistaRubros;
+	
+	
+	public Entrevista() {
+		super();
+	}
+
+	public Entrevista(Integer idConvocatoria, Integer idAspirante) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idAspirante
+	 */
+	public Integer getIdAspirante() {
+		return idAspirante;
+	}
+
+	/**
+	 * @param idAspirante
+	 *            the idAspirante to set
+	 */
+	public void setIdAspirante(Integer idAspirante) {
+		this.idAspirante = idAspirante;
+	}
+
+	/**
+	 * @return the idEntrevistador
+	 */
+	public Integer getIdEntrevistador() {
+		return idEntrevistador;
+	}
+
+	/**
+	 * @param idEntrevistador
+	 *            the idEntrevistador to set
+	 */
+	public void setIdEntrevistador(Integer idEntrevistador) {
+		this.idEntrevistador = idEntrevistador;
+	}
+
+	/**
+	 * @return the idEstatus
+	 */
+	public Integer getIdEstatus() {
+		return idEstatus;
+	}
+
+	/**
+	 * @param idEstatus
+	 *            the idEstatus to set
+	 */
+	public void setIdEstatus(Integer idEstatus) {
+		this.idEstatus = idEstatus;
+	}
+
+	/**
+	 * @return the observaciones
+	 */
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	/**
+	 * @param observaciones
+	 *            the observaciones to set
+	 */
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	/**
+	 * @return the convocatoria
+	 */
+	public Convocatoria getConvocatoria() {
+		return convocatoria;
+	}
+
+	/**
+	 * @param convocatoria
+	 *            the convocatoria to set
+	 */
+	public void setConvocatoria(Convocatoria convocatoria) {
+		this.convocatoria = convocatoria;
+	}
+
+	/**
+	 * @return the aspirante
+	 */
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+
+	/**
+	 * @param aspirante
+	 *            the aspirante to set
+	 */
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+
+	/**
+	 * @return the entrevistador
+	 */
+	public Entrevistador getEntrevistador() {
+		return entrevistador;
+	}
+
+	/**
+	 * @param entrevistador
+	 *            the entrevistador to set
+	 */
+	public void setEntrevistador(Entrevistador entrevistador) {
+		this.entrevistador = entrevistador;
+	}
+
+	/**
+	 * @return the estatus
+	 */
+	public EstatusEntrevista getEstatus() {
+		return estatus;
+	}
+
+	/**
+	 * @param estatus
+	 *            the estatus to set
+	 */
+	public void setEstatus(EstatusEntrevista estatus) {
+		this.estatus = estatus;
+	}
+
+	/**
+	 * @return the recomendacion
+	 */
+	public Recomendacion getRecomendacion() {
+		return recomendacion;
+	}
+
+	/**
+	 * @param recomendacion
+	 *            the recomendacion to set
+	 */
+	public void setRecomendacion(Recomendacion recomendacion) {
+		this.recomendacion = recomendacion;
+	}
+
+	/**
+	 * @return the entrevistaRubros
+	 */
+	public List<EntrevistaRubro> getEntrevistaRubros() {
+		return entrevistaRubros;
+	}
+
+	/**
+	 * @param entrevistaRubros
+	 *            the entrevistaRubros to set
+	 */
+	public void setEntrevistaRubros(List<EntrevistaRubro> entrevistaRubros) {
+		this.entrevistaRubros = entrevistaRubros;
+	}
+
+	@Override
+	public String toString() {
+		return "Entrevista [id=" + id + ", idConvocatoria=" + idConvocatoria + ", idAspirante=" + idAspirante
+				+ ", idEntrevistador=" + idEntrevistador + ", idEstatus=" + idEstatus + ", observaciones="
+				+ observaciones + ", convocatoria=" + convocatoria + ", aspirante=" + aspirante + ", entrevistador="
+				+ entrevistador + ", estatus=" + estatus + ", recomendacion=" + recomendacion + ", entrevistaRubros="
+				+ entrevistaRubros + "]";
+	}
+	
+	
+}

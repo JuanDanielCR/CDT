@@ -1,0 +1,59 @@
+package mx.edu.eld.calendario.bs.exception;
+
+public class ActividadFueraCicloException extends Exception {
+
+	/**
+	 * 
+	 */
+	public enum ActividadFueraCiclo{
+		FECHA_INICIO(1),FECHA_FIN(2),PERIODO(3);
+		
+		private Integer id;
+		
+		private ActividadFueraCiclo(Integer id){
+			this.id=id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+	}
+	
+	private static final long serialVersionUID = 34190561241850269L;
+
+	private ActividadFueraCiclo causa;
+	
+	public ActividadFueraCicloException() {
+		super();
+	}
+	
+	public ActividadFueraCicloException(ActividadFueraCiclo causa) {
+		super();
+		this.causa = causa;
+	}
+
+	public ActividadFueraCicloException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public ActividadFueraCicloException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public ActividadFueraCicloException(String message) {
+		super(message);
+	}
+
+	public ActividadFueraCicloException(Throwable cause) {
+		super(cause);
+	}
+
+	public ActividadFueraCiclo getCausa() {
+		return causa;
+	}
+
+	public void setCausa(ActividadFueraCiclo causa) {
+		this.causa = causa;
+	}
+
+}

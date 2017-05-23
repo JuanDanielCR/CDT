@@ -1,0 +1,274 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+
+import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la relación de los requisitos de ingreso con una convocatoria
+ * específica de la ELD.
+ * 
+ * @author hermes
+ *
+ */
+@Entity
+@Table(name = "tca09_convocatoria_criterio")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteConvocatoriaCriterio", query = "DELETE FROM tca09_convocatoria_criterio WHERE id_convocatoria = :idConvocatoriaC") })
+@DynamicInsert(value = true)
+public class ConvocatoriaCriterio implements Modelo,Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la relación
+	 */
+	@EmbeddedId
+	private ConvocatoriaCriterioId id;
+
+	/**
+	 * Identificador de la {@link Convocatoria}
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Criterio}
+	 */
+	@Column(name = "id_criterio", insertable = false, updatable = false)
+	private Integer idCriterio;
+
+	/**
+	 * Costo a aplicar para el {@link Criterio} en la {@link Convocatoria}
+	 * especificada
+	 */
+	@Column(name = "nu_costo")
+	private Float costo;
+
+	/**
+	 * Ponderación a aplicar para el {@link Criterio} en la {@link Convocatoria}
+	 * especificada. La ponderación debe se un valor 0<=x<=100. Además, las
+	 * sumatoria de las ponderaciones de los {@link Criterio} asociados a una
+	 * convocatoria debe ser igual a 100;
+	 */
+	@Column(name = "nu_ponderacion")
+	private Integer ponderacion;
+
+	/**
+	 * Valor minimo con el que se debe cumplir para el {@link Criterio} en la
+	 * {@link Convocatoria} especificada
+	 */
+	@Column(name = "nu_min")
+	private Integer minimo;
+
+	/**
+	 * Valor minimo con el que se debe cumplir para el {@link Criterio} en la
+	 * {@link Convocatoria} especificada
+	 */
+	@Column(name = "nu_max")
+	private Integer maximo;
+
+	/**
+	 * Relación entre la entidad Convocatoria y ConvocatoriaCriterio.
+	 */
+	@ManyToOne
+	@JoinColumn(name = "id_criterio", referencedColumnName = "id_criterio", insertable = false, updatable = false)
+	private Criterio criterio;
+
+	/**
+	 * Relación entre la entidad Periodo y ConvocatoriaCriterio.
+	 */
+	@OneToMany
+	@JoinColumns({
+			@JoinColumn(name = "id_criterio", referencedColumnName = "id_criterio", insertable = false, updatable = false),
+			@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", insertable = false, updatable = false) })
+	private List<PeriodoCriterio> listPeriodos;
+
+	public ConvocatoriaCriterio(ConvocatoriaCriterioId id) {
+		super();
+		this.id = id;
+	}
+
+	public ConvocatoriaCriterio(Integer idConvocatoria) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	public ConvocatoriaCriterio() {
+		super();
+	}
+
+	public ConvocatoriaCriterio(Integer idConvocatoria, Integer idCriterio, Float costo, Integer ponderacion,
+			Integer minimo, Integer maximo) {
+		super();
+		this.id = new ConvocatoriaCriterioId(idConvocatoria, idCriterio);
+		this.idConvocatoria = idConvocatoria;
+		this.idCriterio = idCriterio;
+		this.costo = costo;
+		this.ponderacion = ponderacion;
+		this.minimo = minimo;
+		this.maximo = maximo;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public ConvocatoriaCriterioId getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(ConvocatoriaCriterioId id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the idConvocatoria
+	 */
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	/**
+	 * @param idConvocatoria
+	 *            the idConvocatoria to set
+	 */
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	/**
+	 * @return the idCriterio
+	 */
+	public Integer getIdCriterio() {
+		return idCriterio;
+	}
+
+	/**
+	 * @param idCriterio
+	 *            the idCriterio to set
+	 */
+	public void setIdCriterio(Integer idCriterio) {
+		this.idCriterio = idCriterio;
+	}
+
+	/**
+	 * @return the costo
+	 */
+	@DoubleRangeFieldValidator(message = "${getText('MSG41',{getText('mx.edu.eld.maxRangeNumberCost'),''})}", type = ValidatorType.FIELD, minInclusive = "0.0")
+	@RequiredFieldValidator(type = ValidatorType.FIELD, key = "MSG39")
+	public Float getCosto() {
+		return costo;
+	}
+
+	/**
+	 * @param costo
+	 *            the costo to set
+	 */
+	public void setCosto(Float costo) {
+		this.costo = costo;
+	}
+
+	/**
+	 * @return the ponderacion
+	 */
+	@Validations(intRangeFields = {
+			@IntRangeFieldValidator(message = "${getText('MSG41',{getText('mx.edu.eld.maxRangeNumberWeighing'),''})}", type = ValidatorType.FIELD, min = "0", max = "100") }, requiredFields = {
+					@RequiredFieldValidator(type = ValidatorType.FIELD, key = "MSG39") })
+	public Integer getPonderacion() {
+		return ponderacion;
+	}
+
+	/**
+	 * @param ponderacion
+	 *            the ponderacion to set
+	 */
+	public void setPonderacion(Integer ponderacion) {
+		this.ponderacion = ponderacion;
+	}
+
+	/**
+	 * @return the minimo
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, key = "MSG39") }, intRangeFields = {
+					@IntRangeFieldValidator(message = "${getText('MSG41',{getText('mx.edu.eld.maxRangeNumberWeighing'),''})}", type = ValidatorType.FIELD, min = "0", max = "100") })
+	public Integer getMinimo() {
+		return minimo;
+	}
+
+	/**
+	 * @param minimo
+	 *            the minimo to set
+	 */
+
+	public void setMinimo(Integer minimo) {
+		this.minimo = minimo;
+	}
+
+	/**
+	 * @return the maximo
+	 */
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, key = "MSG39") }, intRangeFields = {
+					@IntRangeFieldValidator(message = "${getText('MSG41',{getText('mx.edu.eld.maxRangeNumberWeighing'),''})}", type = ValidatorType.FIELD, min = "0", max = "100") })
+	public Integer getMaximo() {
+		return maximo;
+	}
+
+	/**
+	 * @param maximo
+	 *            the maximo to set
+	 */
+	public void setMaximo(Integer maximo) {
+		this.maximo = maximo;
+	}
+
+	public Criterio getCriterio() {
+		return criterio;
+	}
+
+	public void setCriterio(Criterio criterio) {
+		this.criterio = criterio;
+	}
+
+	public List<PeriodoCriterio> getListPeriodos() {
+		return listPeriodos;
+	}
+
+	public void setListPeriodos(List<PeriodoCriterio> listPeriodos) {
+		this.listPeriodos = listPeriodos;
+	}
+
+	@Override
+	public String toString() {
+		return "ConvocatoriaCriterio [idConvocatoria=" + idConvocatoria + ", idCriterio=" + idCriterio + ", costo="
+				+ costo + ", ponderacion=" + ponderacion + ", minimo=" + minimo + ", maximo=" + maximo + "]";
+	}
+
+}

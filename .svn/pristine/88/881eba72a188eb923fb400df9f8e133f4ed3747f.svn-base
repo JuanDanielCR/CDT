@@ -1,0 +1,66 @@
+package mx.edu.eld.bs.rules;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import mx.edu.eld.admision.mapeo.Contacto;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+/**
+ * 
+ * 
+ * @author Er-ramani Velasco
+ *
+ */
+
+@Service("reglaNegocioN15")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ReglaNegocioN15 implements ReglaNegocio {
+	
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+	
+	/**
+	 * Verifica que la lista de contactos de una persona contenga al menos
+	 * un contacto de tipo teléfono local, teléfono celular y de emergencia.
+	 * @param idSelPersona
+	 * 					  {Integer} Identificador de la persona. 
+	 * @return {Boolean} true si al menos tiene esos tres tipos de contactos
+	 * 					 false en caso de que no lo cumpla.
+	 */
+	
+	public Boolean validate(Integer idSelPersona){
+		List<Contacto> telefono_local = genericSearchBs.findByExample(new Contacto(idSelPersona, 1));
+		List<Contacto> celular = genericSearchBs.findByExample(new Contacto(idSelPersona, 2));
+		List<Contacto> emergencia = genericSearchBs.findByExample(new Contacto(idSelPersona, null, 3));
+		if (
+		// Busca tipo de contacto Telefono
+		!telefono_local.isEmpty()
+				// Busca tipo de contacto Telefono celular
+				&& !celular.isEmpty()
+				// Busca categoria de contacto emergencia
+				&& !emergencia.isEmpty()) {
+			if ((!telefono_local.contains(emergencia.get(0)) || telefono_local.size()>1) && (!celular.contains(emergencia.get(0)) || celular.size()>1)){
+				return true;
+			} else {
+				return false;
+			}
+		} else
+			return false;		
+	}
+
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+	
+	
+ 
+}

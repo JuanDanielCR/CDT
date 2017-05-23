@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<!-- Head -->
+	<jsp:text>
+		<![CDATA[
+			<script
+				src="${pageContext.request.contextPath}/pages/calendario/gestionar-actividad/js/index-editNew.js"
+				type="text/javascript"></script>
+		]]>
+	</jsp:text>
+</head>
+<body>
+	<s:set var="title" value="%{getText('IU1.1-5_TITLE')}" />
+	<s:set var="btnsi" value="%{getText('btnSi')}" />
+	<s:set var="btnno" value="%{getText('btnNo')}" />
+	<s:set var="txConfirmar" value="%{getText('MSG2')}" />
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="title">${title}</h1>
+		</div>
+	</div>
+
+
+	<!-- label mensajes obligatorios -->
+	<div class="row">
+		<div class="outter-section form-medium text-left">
+			<div class="col-md-12 text-left">
+				<s:text name="IU1.4-2_LBL1" />
+			</div>
+		</div>
+	</div>
+	
+
+	<s:form id="frmRegistrarActividad"
+		action="%{#pagecontext.request.contextPath}/calendario/gestionar-actividad/%{idSel}"
+		method="POST">
+		<s:hidden name="_method" value="PUT"/>
+		
+		<fieldset class="form-section form-horizontal form-medium text-justify">
+			<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+			<legend class="form-section">
+				<s:text name="IU1.1-5_LBL1" />
+			</legend>
+	
+			<div class="form-group">
+				<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+						name="IU1.1-6_LBL1" /></label>
+				<div class="col-md-8">
+					<s:textfield id="txActividad" name="model.nombre" type="text"
+						cssClass="form-control" placeholder="%{getText('IU1.1-6_LBL1')}"
+						maxlength="20" cssErrorClass="field-error" />
+						<!-- Sirve para mostrar un campo de erro al no cumplirse una validacion -->
+					<s:fielderror fieldName="model.nombre" cssClass="error"
+						theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+			</div>
+
+			<!-- Tipo Actividad -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+						name="IU1.1-6_LBL3" /></label>
+				<div class="col-md-8">
+					<s:select id="slcListTipoActividad" name="model.idTipo"
+						headerKey="-1" headerValue="Select" cssClass="form-control"
+						list="tiposActividades" listValue="nombre" listKey="id"
+						required="true" cssErrorClass="field-error" />
+						<!-- Sirve para mostrar un campo de erro al no cumplirse una validacion -->
+					<s:fielderror fieldName="model.idTipo" cssClass="error"
+						theme="%{getText('mx.edu.eld.defaulTheme')}"></s:fielderror>
+				</div>
+			</div>
+			
+			<!--Descripcion de la Actividad -->
+
+			<div class="form-group">
+				<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+						name="IU1.1-6_LBL6" /></label>
+				<div class="col-md-8 input-min">
+						<s:textarea id="txDesActividad" name="model.descripcion" rows="5"
+						type="text" cssClass="form-control"
+						placeholder="%{getText('IU1.1-6_LBL6')}" maxlength="255"
+						cssErrorClass="field-error" />
+						<!-- Sirve para mostrar un campo de error al no cumplirse una validacion -->
+						<s:fielderror fieldName="model.descripcion" cssClass="error"
+						theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>				
+			</div>
+		</fieldset>
+	
+		<div class="row">
+			<div class="outter-section form-medium">
+				<div class="col-md-12 text-right">
+					<s:submit cssClass="btn btn-default btn-default-eld" value="Aceptar" />
+					 <a id="btnCancelar" class="btn btn-default btn-default-eld"
+						href="${pageContext.request.contextPath}/calendario/gestionar-actividad">
+						<s:text name="mx.com.eld.boton.cancelar" />
+					 </a>
+				</div>
+			</div>
+		</div>
+	</s:form>
+</body>
+	</html>
+</jsp:root>

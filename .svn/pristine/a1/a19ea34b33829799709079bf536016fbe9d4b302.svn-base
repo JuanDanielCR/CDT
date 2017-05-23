@@ -1,0 +1,11 @@
+$(function() {
+	dataTableEMETH.createSortedDataTable("tblEntrevistadores",0,"acs",0);
+});
+
+function cerrarDialogEntrevistador() {
+	$("#myclickdialog").dialog("close");
+}
+
+function abrirDialogEntrevistador() {
+	$("#myclickdialog").dialog("open");
+}

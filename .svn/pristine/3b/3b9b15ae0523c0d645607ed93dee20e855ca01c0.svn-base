@@ -1,0 +1,83 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Abstrae la llave compuesta para manejar las direcciones de una persona.
+ * 
+ * @author hermes
+ *
+ */
+@Embeddable
+public class DireccionPersonaId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la {@link Direccion}
+	 */
+	@Column(name = "id_direccion", nullable = false)
+	private Integer idDireccion;
+
+	/**
+	 * Identificador de la {@link Persona}
+	 */
+	@Column(name = "id_persona", nullable = false)
+	private Integer idPersona;
+
+	/**
+	 * Identificador del {@link TipoDireccion}
+	 */
+	@Column(name = "id_tipo", nullable = false)
+	private Integer idTipo;
+
+	/**
+	 * @return the idDireccion
+	 */
+	public Integer getIdDireccion() {
+		return idDireccion;
+	}
+
+	/**
+	 * @param idDireccion
+	 *            the idDireccion to set
+	 */
+	public void setIdDireccion(Integer idDireccion) {
+		this.idDireccion = idDireccion;
+	}
+
+	/**
+	 * @return the idPersona
+	 */
+	public Integer getIdPersona() {
+		return idPersona;
+	}
+
+	/**
+	 * @param idPersona
+	 *            the idPersona to set
+	 */
+	public void setIdPersona(Integer idPersona) {
+		this.idPersona = idPersona;
+	}
+
+	/**
+	 * @return the idTipo
+	 */
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	/**
+	 * @param idTipo
+	 *            the idTipo to set
+	 */
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+}

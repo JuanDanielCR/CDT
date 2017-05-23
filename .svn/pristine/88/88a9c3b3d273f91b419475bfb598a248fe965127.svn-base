@@ -1,0 +1,237 @@
+package mx.edu.eld.informacionbase.mapeo;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la información requerida para el registro de todas las entidades de
+ * datos de la ELD de tipo Persona, ej: Aspirantes, Docentes, Estudiantes,
+ * Usuarios, entre otros.
+ * 
+ * @author hermes
+ * @see
+ */
+@Entity
+@Table(name = "tib03_persona")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Persona implements Modelo {
+	/**
+	 * Identificador de la persona en el sistema
+	 */
+	@Id
+	@SequenceGenerator(name = "tib03_persona_id_persona_seq", sequenceName = "tib03_persona_id_persona_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tib03_persona_id_persona_seq")
+	@Column(name = "id_persona")
+	protected Integer id;
+	/**
+	 * Nombre de la persona
+	 */
+	@Column(name = "nb_persona")
+	protected String nombre;
+	/**
+	 * Primer apellido de la persona
+	 */
+	@Column(name = "tx_primer_ap")
+	protected String primerApellido;
+	/**
+	 * Segundo apellido de la persona
+	 */
+	@Column(name = "tx_segundo_ap")
+	protected String segundoApellido;
+	/**
+	 * CURP de la persona
+	 */
+	@Column(name = "tx_curp")
+	protected String curp;
+
+	/**
+	 * Direcciones que la persona tiene registradas
+	 */
+	@ManyToMany
+	@JoinTable(name = "tib04_direccion_persona", joinColumns = {
+			@JoinColumn(name = "id_persona", referencedColumnName = "id_persona", insertable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_direccion", referencedColumnName = "id_direccion", insertable = false, updatable = false) })
+	protected List<Direccion> direcciones;
+
+	/**
+	 * Medios de {@link Contacto}s registrados para la persona. Dependiendo de
+	 * la persona que se trate, se deberá verificar que tipos de contactos son
+	 * obligatorios.
+	 */
+	@OneToMany
+	@JoinColumn(name = "id_persona", referencedColumnName = "id_persona", insertable = false, updatable = false)
+	protected List<Contacto> contactos;
+
+	/**
+	 * Indica si la persona tiene al menos una {@link Direccion}
+	 */
+	@Transient
+	protected Boolean tieneDireccion;
+
+	/**
+	 * Indica si la persona tiene registrada una {@link Direccion} fiscal
+	 */
+	@Transient
+	protected Boolean tieneDireccionFiscal;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @return the primerApellido
+	 */
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	/**
+	 * @param primerApellido
+	 *            the primerApellido to set
+	 */
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	/**
+	 * @return the segundoApellido
+	 */
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	/**
+	 * @param segundoApellido
+	 *            the segundoApellido to set
+	 */
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
+	}
+
+	/**
+	 * @return the curp
+	 */
+	public String getCurp() {
+		return curp;
+	}
+
+	/**
+	 * @param curp
+	 *            the curp to set
+	 */
+	public void setCurp(String curp) {
+		this.curp = curp;
+	}
+
+	/**
+	 * @return the direcciones
+	 */
+	public List<Direccion> getDirecciones() {
+		return direcciones;
+	}
+
+	/**
+	 * @param direcciones
+	 *            the direcciones to set
+	 */
+	public void setDirecciones(List<Direccion> direcciones) {
+		this.direcciones = direcciones;
+	}
+
+	/**
+	 * @return the tieneDireccion
+	 */
+	public Boolean getTieneDireccion() {
+		return tieneDireccion;
+	}
+
+	/**
+	 * @param tieneDireccion
+	 *            the tieneDireccion to set
+	 */
+	public void setTieneDireccion(Boolean tieneDireccion) {
+		this.tieneDireccion = tieneDireccion;
+	}
+
+	/**
+	 * @return the tieneDireccionFiscal
+	 */
+	public Boolean getTieneDireccionFiscal() {
+		return tieneDireccionFiscal;
+	}
+
+	/**
+	 * @param tieneDireccionFiscal
+	 *            the tieneDireccionFiscal to set
+	 */
+	public void setTieneDireccionFiscal(Boolean tieneDireccionFiscal) {
+		this.tieneDireccionFiscal = tieneDireccionFiscal;
+	}
+
+	/**
+	 * @return the contactos
+	 */
+	public List<Contacto> getContactos() {
+		return contactos;
+	}
+
+	/**
+	 * @param contactos
+	 *            the contactos to set
+	 */
+	public void setContactos(List<Contacto> contactos) {
+		this.contactos = contactos;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return nombre + " " + primerApellido + " " + segundoApellido ;
+	}
+	
+	
+}

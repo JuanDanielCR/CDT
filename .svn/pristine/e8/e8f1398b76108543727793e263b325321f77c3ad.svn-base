@@ -1,0 +1,64 @@
+package mx.edu.eld.admision.mapeo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ * Mapea la llave compuesta que identifica de forma única la evaluación que un
+ * entrevistador asigna a cada uno de los rubros revisados durante la entrevista
+ * a un {@link Aspirante}.
+ * 
+ * @author Hermes
+ *
+ */
+@Embeddable
+public class EvaluacionEntrevistaId implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Identificador de la entrevista
+	 */
+	@Column(name = "id_entrevista", nullable = false)
+	private Integer idEntrevista;
+
+	/**
+	 * Identificador del rubro
+	 */
+	@Column(name = "id_rubro", nullable = false)
+	private Integer idRubro;
+
+	/**
+	 * @return the idEntrevista
+	 */
+	public Integer getIdEntrevista() {
+		return idEntrevista;
+	}
+
+	/**
+	 * @param idEntrevista
+	 *            the idEntrevista to set
+	 */
+	public void setIdEntrevista(Integer idEntrevista) {
+		this.idEntrevista = idEntrevista;
+	}
+
+	/**
+	 * @return the idRubro
+	 */
+	public Integer getIdRubro() {
+		return idRubro;
+	}
+
+	/**
+	 * @param idRubro
+	 *            the idRubro to set
+	 */
+	public void setIdRubro(Integer idRubro) {
+		this.idRubro = idRubro;
+	}
+}

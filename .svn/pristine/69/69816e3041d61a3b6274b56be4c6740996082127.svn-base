@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- Head -->
+<head>
+<jsp:text>
+	<![CDATA[
+
+	]]>
+</jsp:text>
+</head>
+<!-- Body -->
+<body>
+	<!-- Variables -->
+	<s:set var="btnAceptar" value="%{getText('mx.com.eld.boton.aceptar')}" />
+	<s:set var="listOpciones" value="{{'Si',true},{'No',false}}" />
+
+	<!-- Titulo -->
+	<div class="row">
+		<div class="row title">
+			<div class="col-md-12">
+				<h1 class="title">
+					<s:text name="IU1.2-3_TLT1" />
+				</h1>
+			</div>
+		</div>
+
+		<!-- Action errors -->
+		<div class="row">
+			<div class="outter-section form-medium">
+				<div class="col-md-12">
+					<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Label mensajes obligatorios -->
+		<div class="row">
+			<div class="outter-section form-medium text-left">
+				<div class="col-md-12 text-left">
+					<s:text name="IU1.2-3_LBL1" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Formulario de registro -->
+		<s:form id="frmRegistrarCriterio"
+			action="%{#pageContext.request.contextPath}/convocatoria/gestionar-criterio"
+			method="post">
+			<s:hidden id="idConvocatoriaSel" name="idConvocatoriaSel" />
+			<fieldset
+				class="form-section form-horizontal form-medium text-justify">
+				<legend class="form-section">
+					<s:text name="IU1.2-3_LBL2"></s:text>
+				</legend>
+
+				<!-- Nombre Criterio -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for="">
+						<s:text name="IU1.2-3_LBL3" />
+					</label>
+					<div class="col-md-8 ">
+						<s:textfield id="nb_criterio" name="model.nombre"
+							cssClass="form-control campo" maxlenght="20"
+							cssErrorClass="field-error" />
+						<s:fielderror fieldName="model.nombre" cssClass="error"
+							theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					</div>
+				</div>
+
+				<!-- Control radio tiene periodo 
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU_LBL3" /></label>
+					<div class="col-md-8">
+						<div class="col-md-8 col-xs-12 pull-left">
+							<s:set var="varChecked" value="" />
+							<s:iterator value="listOpciones" var="g">
+								<div class="col-md-4 col-xs-6 radio-container">
+									<s:if test="%{#g[1] eq model.periodo}">
+										<input id="periodo_${g[1]}" name="model.periodo" type="radio"
+											value="${g[1]}" checked="checked" /> ${g[0]}
+									</s:if>
+									<s:else>
+										<input id="periodo_${g[1]}" name="model.periodo" type="radio"
+											value="${g[1]}" /> ${g[0]}
+									</s:else>
+								</div>
+							</s:iterator>
+							<div class="col-md-12">
+								<s:fielderror fieldName="model.periodo" cssClass="error"
+									theme="%{getText('mx.edu.eld.defaulTheme')}" />
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				-->
+
+				<!-- Control radio tiene costo -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU_LBL4" /></label>
+					<div class="col-md-8">
+						<div class="col-md-8 col-xs-12 pull-left">
+							<s:set var="varChecked" value="" />
+							<s:iterator value="listOpciones" var="g">
+								<div class="col-md-6 col-xs-6 radio-container">
+									<s:if test="%{#g[1] eq model.costo}">
+										<input id="costo_${g[1]}" name="model.costo" type="radio"
+											value="${g[1]}" checked="checked" /> ${g[0]}
+									</s:if>
+									<s:else>
+										<input id="costo_${g[1]}" name="model.costo" type="radio"
+											value="${g[1]}" /> ${g[0]}
+									</s:else>
+								</div>
+							</s:iterator>
+							<div class="col-md-12">
+								<s:fielderror fieldName="model.costo" cssClass="error"
+									theme="%{getText('mx.edu.eld.defaulTheme')}" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Control radio campo fuente -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU_LBL3" /></label>
+					<div class="col-md-8">
+						<div class="col-md-8 col-xs-12 pull-left">
+							<s:set var="varChecked" value="" />
+							<s:iterator value="listFuentes" var="g">
+								<div class="col-md-6 col-xs-6 radio-container">
+									<s:if test="%{#g.id eq model.idFuente}">
+										<input id="fuente_${g.id}" name="model.idFuente" type="radio"
+											value="${g.id}" checked="checked" /> ${g.nombre}
+									</s:if>
+									<s:else>
+										<input id="fuente_${g.id}" name="model.idFuente" type="radio"
+											value="${g.id}" /> ${g.nombre}
+									</s:else>
+								</div>
+							</s:iterator>
+							<div class="col-md-12">
+								<s:fielderror fieldName="model.idFuente" cssClass="error"
+									theme="%{getText('mx.edu.eld.defaulTheme')}" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- Control radio tiene adjunto -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU_LBL6" /></label>
+					<div class="col-md-8">
+						<div class="col-md-8 col-xs-12 pull-left">
+							<s:set var="varChecked" value="" />
+							<s:iterator value="listOpciones" var="g">
+								<div class="col-md-6 col-xs-6 radio-container">
+									<s:if test="%{#g[1] eq model.adjunto}">
+										<input id="adjunto_${g[1]}" name="model.adjunto" type="radio"
+											value="${g[1]}" checked="checked" /> ${g[0]}
+									</s:if>
+									<s:else>
+										<input id="adjunto_${g[1]}" name="model.adjunto" type="radio"
+											value="${g[1]}" /> ${g[0]}
+									</s:else>
+								</div>
+							</s:iterator>
+							<div class="col-md-12">
+								<s:fielderror fieldName="model.costo" cssClass="error"
+									theme="%{getText('mx.edu.eld.defaulTheme')}" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</fieldset>
+
+			<!-- Botones de aceptar y cancelar -->
+			<div class="row">
+				<div class="outter-section form-medium">
+					<div class="text-right col-md-12">
+						<input id="btnAceptar" type="submit"
+							class="btn btn-default btn-default-eld" value="${btnAceptar}" />
+						<a class="btn btn-default btn-default-eld"
+							href="${pageContext.request.contextPath}/convocatoria/asociar-criterios/new?idConvocatoriaSel=${idConvocatoriaSel}">
+							<s:text name="mx.com.eld.boton.cancelar" />
+						</a>
+					</div>
+				</div>
+			</div>
+		</s:form>
+
+	</div>
+</body>
+	</html>
+</jsp:root>

@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+package mx.edu.eld.convocatoria.bs;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN11;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterio;
+import mx.edu.eld.convocatoria.bs.exception.MinimoMaximoException;
+import mx.edu.eld.convocatoria.dao.ConvocatoriaCriterioDao;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+/**
+ * @author 
+ *
+ */
+@Service("convocatoriaCriterioBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ConvocatoriaCriterioBs extends GenericBs<ConvocatoriaCriterio> {
+
+	@Autowired
+	private ConvocatoriaCriterioDao convocatoriaCriterioDao;
+	
+	@Autowired
+	private ReglaNegocioN11 reglaNegocioN11;
+	
+	/**
+	 * La presente funcion se encarga de actualizar la configuracion para un criterio la cual pasara
+	 * por un proceso de validacion en sus valor maximo y minimo de evaluacion el cual el valor minimo
+	 * no debe ser mayor al maximo sino en dicho caso se arrojara la exception @throws MinimoMaximoException.
+	 * 
+	 * Si se cumple de manera correcta la informacion sera actualizada.
+	 * 
+	 * @param convcri
+	 * @throws MinimoMaximoException
+	 */
+	@Transactional(rollbackFor=Exception.class)
+	public void configurarCriterio(ConvocatoriaCriterio convcri) throws MinimoMaximoException{
+		reglaNegocioN11=new ReglaNegocioN11();
+		
+		if(reglaNegocioN11.validate(convcri.getMinimo(),convcri.getMaximo())){
+			throw new MinimoMaximoException();
+		}
+		update(convcri);
+	}
+	
+	public List<ConvocatoriaCriterio> criteriosConvocatoria(Integer idConvocatoria) {
+		return convocatoriaCriterioDao.criteriosConvocatoria(idConvocatoria);
+	}
+
+	/**
+	 * @return the convocatoriaCriterioDao
+	 */
+	public ConvocatoriaCriterioDao getConvocatoriaCriterioDao() {
+		return convocatoriaCriterioDao;
+	}
+
+	/**
+	 * @param convocatoriaCriterioDao the convocatoriaCriterioDao to set
+	 */
+	public void setConvocatoriaCriterioDao(ConvocatoriaCriterioDao convocatoriaCriterioDao) {
+		this.convocatoriaCriterioDao = convocatoriaCriterioDao;
+	}
+	
+
+}

@@ -1,0 +1,36 @@
+package mx.edu.eld.admision.action;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Namespace("/admision")
+@AllowedMethods({"estadoPago"})
+@Result(name = "success", type = "redirectAction", params = { "actionName",
+"../admision/pagar-admision-oxxo!estadoPago" })
+public class PagarAdmisionOxxoAct extends ActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public String editNew(){
+		return "editNew";
+	}
+	
+	public void validateCreate(){
+		System.err.println("vco");
+	}
+	
+	public String create(){
+		System.err.println("createo");
+		return "success";
+	}
+
+	public String estadoPago(){
+		return "estadoPago";
+	}
+}

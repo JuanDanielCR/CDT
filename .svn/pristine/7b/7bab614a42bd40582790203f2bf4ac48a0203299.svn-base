@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:text>
+	<![CDATA[
+		<script type="text/javascript" src="${pageContext.request.contextPath}/pages/admision/gestionar-direccion/js/index-editNew.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/pages/admision/gestionar-pasos-proceso/js/index-pasos-proceso.js"></script>
+	]]>
+</jsp:text>
+</head>
+<body>
+	<div class="row">
+		<s:set var="title" value="%{getText('IU1.4-4_TITLE')}" />
+
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="title">${title}</h1>
+			</div>
+		</div>
+
+		<!-- ############################ BARRA DE PASOS DEL PROCESO #################################### -->
+		<s:set var="varPasoProceso" value="0" />
+		<s:hidden id="idPasoProceso" value="%{#varPasoProceso}" />
+		<s:set var="varEtapaProceso" value="1" />
+		<s:hidden id="idEtapaProceso" value="%{#varEtapaProceso}" />
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<s:include
+					value="../gestionar-pasos-proceso/index-pasos-proceso.jsp" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="outter-section form-medium text-left">
+				<s:text name="IU1.4-2_LBL1" />
+			</div>
+		</div>
+		<s:form id="frmDireccion"
+			action="%{#pageContext.request.contextPath}/admision/gestionar-direccion"
+			theme="simple" method="post">
+			<fieldset
+				class="form-section form-horizontal form-medium text-justify">
+				<s:actionerror theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				<legend class="form-section">
+					<s:text name="IU1.4-4_TITLE" />
+				</legend>
+
+				<!-- Código Postal -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.4-4_LBL13" /></label>
+					<div class="col-md-8">
+						<s:textfield id="txCp" name="model.codigoPostal" type="text"
+							cssClass="form-control" placeholder="%{getText('IU1.4-4_LBL13')}"
+							maxlength="5" cssErrorClass="field-error" />
+						<s:fielderror id="feTxCp" fieldName="model.codigoPostal"
+							cssClass="error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					</div>
+					<!--<div class="col-md-4"></div>-->
+				</div>
+
+				<!-- div que contiene los elementos de direccion que se activan con el codigo postal -->
+				<div id="divDireccionCp">
+					<!-- no borres este comentario pls, funciona de formas que no comprendemos -->
+
+				</div>
+
+				<!-- Calle -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.4-4_LBL17" /></label>
+					<div class="col-md-8">
+						<s:textfield id="txCalle" name="model.calle" type="text"
+							cssClass="form-control" placeholder="%{getText('IU1.4-4_LBL17')}"
+							maxlength="40" cssErrorClass="field-error" />
+						<s:fielderror id="feTxCalle" fieldName="model.calle"
+							cssClass="error" theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					</div>
+				</div>
+
+				<!-- Número exterior -->
+				<div class="form-group">
+					<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+							name="IU1.4-4_LBL18" /></label>
+					<div class="col-md-8">
+						<s:textfield id="txNumeroExterior" name="model.numeroExterior"
+							type="text" cssClass="form-control"
+							placeholder="%{getText('IU1.4-4_LBL18')}" maxlength="20"
+							cssErrorClass="field-error" />
+						<s:fielderror id="feTxNumeroExterior"
+							fieldName="model.numeroExterior" cssClass="error"
+							theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					</div>
+				</div>
+
+				<!-- Número interior -->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for=""><s:text
+							name="IU1.4-4_LBL19" /></label>
+					<div class="col-md-8">
+						<s:textfield id="txNumeroInterior" name="model.numeroInterior"
+							type="text" cssClass="form-control"
+							placeholder="%{getText('IU1.4-4_LBL19')}" maxlength="20"
+							cssErrorClass="field-error" />
+						<s:fielderror id="feTxNumeroInterior"
+							fieldName="model.numeroInterior" cssClass="error"
+							theme="%{getText('mx.edu.eld.defaulTheme')}" />
+					</div>
+				</div>
+			</fieldset>
+
+
+			<div class="row">
+				<div class="outter-section form-medium text-right">
+					<s:submit id="btnAceptar" cssClass="btn btn-default-eld"
+						title="%{getText('mx.com.eld.boton.aceptar')}"
+						value="%{getText('mx.com.eld.boton.aceptar')}" />
+					<a id="btnCancelar" class="btn btn-default-eld"
+						href="${pageContext.request.contextPath}/admision/registrar-aspirante"><s:text
+							name="mx.com.eld.boton.cancelar" /></a>
+				</div>
+			</div>
+
+		</s:form>
+
+	</div>
+
+	<s:form id="hdnActionForm" method="post"
+		action="%{pageContext.request.contextPath}/admision/gestionar-direccion!direccionCp">
+		<s:hidden id="hdnCP" name="idCP" />
+	</s:form>
+
+</body>
+	</html>
+</jsp:root>

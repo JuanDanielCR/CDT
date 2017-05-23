@@ -1,0 +1,306 @@
+package mx.edu.eld.convocatoria.action;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+
+import mx.edu.eld.bs.rules.ReglaNegocioN48;
+import mx.edu.eld.bs.rules.ReglaNegocioN6;
+import mx.edu.eld.calendario.mapeo.ConvocatoriaCriterioId;
+import mx.edu.eld.calendario.mapeo.Fecha;
+import mx.edu.eld.calendario.mapeo.PeriodoCriterio;
+import mx.edu.eld.calendario.mapeo.PeriodoCriterioId;
+import mx.edu.eld.convocatoria.bs.PeriodoBs;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/convocatoria")
+@Results({
+		@Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+				"gestionar-periodo-criterio" }),
+		@Result(name = ActionSupportCDT.ERROR, type = "redirectAction", params = { "actionName",
+				"gestionar-periodo-criterio" }) })
+public class GestionarPeriodoCriterioAct extends ActionSupportCDT implements ModelDriven<PeriodoCriterio> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private PeriodoBs periodoBs;
+
+	@Autowired
+	private GenericSearchBs genericSearchBs;
+
+	private PeriodoCriterio model;
+
+	private PeriodoCriterioId idSel;
+
+	private ConvocatoriaCriterioId idConvocatoriaCriterioSel;
+
+	private Fecha fecha;
+	
+	@Autowired
+	private ReglaNegocioN48 reglaNegocioN48;
+
+	private List<Fecha> listFecha;
+
+	private List<PeriodoCriterio> listPeriodos;
+
+	public String index() {
+		listPeriodos = genericSearchBs.findAll(PeriodoCriterio.class);
+		// Obtenemos los id Convocatoria y Criterio
+		if (listPeriodos != null && !listPeriodos.isEmpty()) {
+			idConvocatoriaCriterioSel = new ConvocatoriaCriterioId(listPeriodos.get(0).getIdConvocatoria(),
+					listPeriodos.get(0).getIdCriterio());
+		}
+		return INDEX;
+	}
+
+	public String editNew() {
+		return EDITNEW;
+	}
+
+	public void validateCreate() {
+		// Trae los id de convocatoria y criterio que ya están en uso
+		// y así poder guardarlos en la tabla periodo
+		getIdConvocatoriaCriterioSel();
+		model.setId(periodoBs.generarId(idConvocatoriaCriterioSel));
+		System.err.println(getFieldErrors());
+		System.err.println(getActionErrors());
+
+		// Quitamos los errores en los campos inicio y fin, para así poder
+		// construir las fechas
+		Map<String, List<String>> fieldErrors = getFieldErrors();
+		fieldErrors.keySet().remove("model.inicio");
+		fieldErrors.keySet().remove("model.fin");
+		setFieldErrors(fieldErrors);
+
+		if (!hasErrors()) {
+			// Validación para verificar unicidad
+			if (periodoBs.validarNombrePeriodo(model.getNombrePeriodo().trim()) == false) {
+				addFieldError("model.nombrePeriodo",
+						getText(("MSG55"), new String[] { model.getNombrePeriodo().trim() }));
+			}
+			// Mensaje si existe algún error
+			if (getFieldErrors().isEmpty() == false) {
+				addActionError(getText("MSG3"));
+			}
+			// Función para guardar las fechas que creamos, en el model
+			try {
+				model = periodoBs.registrarFechas(model, fecha);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// Validación para que la fecha inicial del registro sea igual o
+			// mayor al día de registro
+			if (periodoBs.validarFechaInicial(model) == false) {
+				addFieldError("fecha.fechaInicio", getText("MSG52"));
+			}
+			// Validación para que la fecha final sea mayor que la inicial
+			if (periodoBs.validarFechaFinal(model) == false) {
+				addFieldError("fecha.fechaFin", getText("MSG51"));
+			}
+		}
+
+		if (hasErrors()) {
+			getIdConvocatoriaCriterioSel();
+		}
+	}
+
+	public String create() {
+		// Guardamos los atributos en el model
+		model = periodoBs.save(model);
+		// Mensaje de éxito
+		addActionMessage(getText("MSG1", new String[] { "Los datos", "agregaron" }));
+		return SUCCESS;
+	}
+
+	public String edit() {
+		System.err.println("Edit" + model.getIdPeriodo() + model.getIdConvocatoria() + model.getIdCriterio());
+		try {
+			fecha = periodoBs.descomponerFecha(model);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (idSel != null) {
+			model = genericSearchBs.findById(PeriodoCriterio.class, idSel);
+		}
+		return EDIT;
+	}
+
+	public void validateUpdate() {
+		System.out.println("----> " + getFieldErrors());
+		Map<String, List<String>> fieldErrors = getFieldErrors();
+		fieldErrors.keySet().remove("model.inicio");
+		fieldErrors.keySet().remove("model.fin");
+		setFieldErrors(fieldErrors);
+		if (!hasErrors()) {
+			System.out.println("---> Validacion: " + periodoBs.validarFechaInicial(model));
+			// Validación para verificar unicidad
+			if (reglaNegocioN48.validate(PeriodoCriterio.class, "nombrePeriodo", model.getNombrePeriodo(), model.getIdPeriodo() + model.getIdConvocatoria() + model.getIdCriterio()) == false) {
+				System.err.println("upd nombre"+model.getIdPeriodo() + model.getIdConvocatoria() + model.getIdCriterio());
+				addFieldError("model.nombrePeriodo", getText("MSG55", new String[] { model.getNombrePeriodo().trim() }));
+			}
+			try {
+				model = periodoBs.registrarFechas(model, fecha);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// Validación para que la fecha inicial del registro sea igual o
+			// mayor al día de registro
+			if (periodoBs.validarFechaInicial(model) == false) {
+				addFieldError("fecha.fechaInicio", getText("MSG52"));
+			}
+			// Validación para que la fecha final sea mayor que la inicial
+			if (periodoBs.validarFechaFinal(model) == false) {
+				addFieldError("fecha.fechaFin", getText("MSG51"));
+			}
+		}
+	}
+
+	public String update() {
+		return SUCCESS;
+	}
+
+	@SkipValidation
+	public String destroy() {
+		if (ReglaNegocioN6.validate(model.getInicio())) {
+			periodoBs.delete(model);
+			addActionMessage(getText("MSG1", new String[] { "La operación", "ejecutó" }));
+		} else {
+			addActionError(getText("MSG3"));
+		}
+		return index();
+	}
+
+	@Override
+	@VisitorFieldValidator
+	public PeriodoCriterio getModel() {
+		if (model == null) {
+			model = new PeriodoCriterio();
+		}
+		return model;
+	}
+
+	public void setModel(PeriodoCriterio model) {
+		this.model = model;
+	}
+
+	/**
+	 * @return the periodoBs
+	 */
+	public PeriodoBs getPeriodoBs() {
+		return periodoBs;
+	}
+
+	/**
+	 * @param periodoBs
+	 *            the periodoBs to set
+	 */
+	public void setPeriodoBs(PeriodoBs periodoBs) {
+		this.periodoBs = periodoBs;
+	}
+
+	/**
+	 * @return the fecha
+	 */
+	@VisitorFieldValidator
+	public Fecha getFecha() {
+		if (fecha == null) {
+			fecha = new Fecha();
+		}
+		return fecha;
+	}
+
+	/**
+	 * @param fecha
+	 *            the fecha to set
+	 */
+	public void setFecha(Fecha fecha) {
+		this.fecha = fecha;
+	}
+
+	public ConvocatoriaCriterioId getIdConvocatoriaCriterioSel() {
+		if (SessionManager.get(NombreObjetosSesion.CONVOCATORIA_CRITERIO_ID) != null) {
+			idConvocatoriaCriterioSel = (ConvocatoriaCriterioId) SessionManager
+					.get(NombreObjetosSesion.CONVOCATORIA_CRITERIO_ID);
+		}
+		return idConvocatoriaCriterioSel;
+	}
+
+	public void setIdConvocatoriaCriterioSel(ConvocatoriaCriterioId idConvocatoriaCriterioSel) {
+
+		if (idConvocatoriaCriterioSel != null) {
+			SessionManager.put(NombreObjetosSesion.CONVOCATORIA_CRITERIO_ID, idConvocatoriaCriterioSel);
+			System.err.println("si" + idConvocatoriaCriterioSel);
+		}
+
+		this.idConvocatoriaCriterioSel = idConvocatoriaCriterioSel;
+	}
+
+	public List<PeriodoCriterio> getListPeriodos() {
+		return listPeriodos;
+	}
+
+	public void setListPeriodos(List<PeriodoCriterio> listPeriodos) {
+		this.listPeriodos = listPeriodos;
+	}
+
+	public List<Fecha> getListFecha() {
+		return listFecha;
+	}
+
+	public void setListFecha(List<Fecha> listFecha) {
+		this.listFecha = listFecha;
+	}
+
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs
+	 *            the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+
+	/**
+	 * @return the idSel
+	 */
+	public PeriodoCriterioId getIdSel() {
+		return idSel;
+	}
+
+	/**
+	 * @param idSel
+	 *            the idSel to set
+	 */
+	public void setIdSel(PeriodoCriterioId idSel) {
+		if (idSel != null) {
+			model = genericSearchBs.findById(PeriodoCriterio.class, idSel);
+		}
+		this.idSel = idSel;
+	}
+
+}

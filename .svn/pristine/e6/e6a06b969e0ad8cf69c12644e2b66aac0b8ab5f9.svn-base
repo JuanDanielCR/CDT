@@ -1,0 +1,420 @@
+package mx.edu.eld.calendario.action;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.AllowedMethods;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.validator.annotations.VisitorFieldValidator;
+import com.sun.media.jfxmedia.logging.Logger;
+
+import mx.edu.eld.calendario.bs.CicloActividadBs;
+import mx.edu.eld.calendario.bs.exception.ActividadFueraCicloException;
+import mx.edu.eld.calendario.bs.exception.ActividadFueraCicloException.ActividadFueraCiclo;
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.edu.eld.calendario.mapeo.Ciclo;
+import mx.edu.eld.calendario.mapeo.CicloActividad;
+import mx.edu.eld.calendario.mapeo.CicloActividadId;
+import mx.edu.eld.calendario.mapeo.TipoActividad;
+import mx.ipn.escom.cdt.util.action.ActionSupportCDT;
+import mx.ipn.escom.cdt.util.action.NombreObjetosSesion;
+import mx.ipn.escom.cdt.util.action.SessionManager;
+import mx.ipn.escom.cdt.util.bs.GenericSearchBs;
+
+@Namespace("/calendario")
+@Results({ @Result(name = ActionSupportCDT.SUCCESS, type = "redirectAction", params = { "actionName",
+		"gestionar-ciclo-actividad" }) })
+@AllowedMethods({ "buscarActividades","deleteConfirm" })
+public class GestionarCicloActividadAct extends ActionSupportCDT implements ModelDriven<CicloActividad> {
+
+	
+	/*
+	 * propiedad para obtener el id de la Actividad, este  es compuesto por (idCiclo, idActividad y idCicloActividad)
+	 */
+	private CicloActividadId idSel; 
+	
+	/*
+	 * propiedad para obtener el id del ciclo con el que se quiere trabajar
+	 */
+	private Integer idCicloSel;
+	
+	/*
+	 * propiedad para almacenar el objeto del ciclo con el que se esta trabajando
+	 */
+	private Ciclo cicloSel;
+	
+	/*
+	 * propiedad para almacenar el modelo CicloActividad
+	 */
+	private CicloActividad model;
+	
+	/*
+	 * propiedad para almacenar la lista de actividades asociadas a los ciclos
+	 */
+	private List<CicloActividad> listCicloActividades;
+	
+	/*
+	 * propiedad para almacenar el catalogo de tipos de actividades
+	 */
+	private List<TipoActividad> listTipoActividad;
+	
+	/*
+	 * propiedad para almacenar el id del tipo de actividad con la que se este trabajando 
+	 */
+	private Integer idTipoSel;
+	
+	/*
+	 * propiedad para almacenar la loista de actividades del modelo actividades
+	 */
+	private List<FaseActividad> listActividades;
+
+	/*
+	 * proxy de de negocio para busquedas genericas
+	 */
+	@Autowired
+	GenericSearchBs genericSearchBs;
+	
+	/*
+	 * proxy de negocio para validaciones pertenecientes al modelo ciloActiviad
+	 */
+	@Autowired
+	CicloActividadBs cicloActividadBs;
+
+	private static final long serialVersionUID = 1L;
+
+	
+	/*
+	 *  tedodo encargado de mostrar de obtener la lista de actividades asociadas al ciclo con el que se esta trabajando
+	 */
+	public String index() {
+		getCicloSel(); //Dado que se llega al index a partir de la gestion de ciclos, esimportante obtener el objeto CicloSel de la session
+		listCicloActividades = genericSearchBs.findAll(CicloActividad.class);
+		return "gestionarCicloActividades";
+	}
+
+	/*
+	 *metodo editNew encargado de obtener la lista del tipo de actividades, ademas de redirigir al formulario de creacion de actividades  
+	 *utilizando el proxy de negocio para ello 
+	 */
+	public String editNew() {
+		getCicloSel(); // recupero el objeto ciclo a partir del idCicloSel de la session ya que en el jsp se van a usar sus propiedades
+		//Se obtienen todos los tipos de actividades existentes
+		listTipoActividad = genericSearchBs.findAll(TipoActividad.class);
+		return EDITNEW;
+	}
+
+	
+	/*
+	 * metodo encargado de verificar que no existan errores de validaciones tanto en el modelo como validaciones de negocio
+	 * y encargado de realizar la asociacion de la actividad al ciclo actual
+	 */
+	public void validateCreate() {
+		getCicloSel(); // actualizo el valor del objeto ciclo, ya que si pasa por el validate create se pierde el objetoCiclo
+
+		//Valida si existen errores
+		if (!hasErrors()) {
+			try {
+				cicloActividadBs.guardar(model, cicloSel);
+			} catch (ActividadFueraCicloException e) {
+				if (e.getCausa().equals(ActividadFueraCiclo.FECHA_INICIO)) {
+					addFieldError("model.inicio", getText("MSG50"));
+				} 
+				else if (e.getCausa().equals(ActividadFueraCiclo.FECHA_FIN)) {
+					addFieldError("model.fin", getText("MSG50"));
+				}
+				listTipoActividad = genericSearchBs.findAll(TipoActividad.class);
+			}
+		} else {
+			Logger.logMsg(Logger.ERROR, "Se obtuvieron erores de validacion en validateCreate de GestionarCicloActividad: ");
+			listTipoActividad = genericSearchBs.findAll(TipoActividad.class);
+			buscarActividades();
+		}
+	}
+
+	
+	/*
+	 * metodo encargado de redirigir al index indicando el status de la operacion de asignacion
+	 */
+	public String create(){
+		//se indica a traves de un mensaje que la operacion de agregado fue satisfactoria
+		addActionMessage(getText("MSG1", Arrays.asList(getText("IU1.1-9_LBL1"),getText("IU1.1-9_LBL2"))));
+		return SUCCESS;
+	}
+
+	
+	/*
+	 * metodo encargado de obtener el catalogo de tipo de actividades y con base en el tipo de actividades seleccionado
+	 * implementa una llamada ajax para obtener las actividades pertenecientes a ese tipo
+	 */
+	public String edit() {
+		/*
+		 * del modelo se obtienen los datos que se van a presentar al formulario
+		 */
+		return EDIT;
+	}
+
+	/*
+	 * metodo encargado de realizar la validacion de modelo y de negocio cuando se esta editando una actividad
+	 */
+	public void validateUpdate() {
+		
+		if(!hasErrors()){
+			try{
+				/*
+				 * Se actualizan los valores de la llave compuesta (GestionaCicloActividadId) ya que hasta aqui solo se actualizaron los valores
+				 * de esta clase (GestionaCicloActividad), de lo contrario no se actualizaria la llave, por lo tanto no se actualizaria el camnbio de la nueva actividad
+				 */
+				/*
+				 * TODO: modificar de acuerdo al nuevo constructor
+				 */
+				//model.setId(new CicloActividadId(model.getIdCiclo(),model.getIdActividad(),model.getId().getIdCicloActividad()));
+				cicloActividadBs.edit(model, model.getCiclo());
+				
+			}catch(ActividadFueraCicloException e){
+				if(e.getCausa().equals(ActividadFueraCiclo.FECHA_INICIO)){
+					addFieldError("model.inicio", getText("MSG50"));
+				}
+				else if(e.getCausa().equals(ActividadFueraCiclo.FECHA_FIN)){
+					addFieldError("model.fin", getText("MSG50"));
+				}
+				listTipoActividad = genericSearchBs.findAll(TipoActividad.class);
+				listActividades = cicloActividadBs.buscarTipoActividades(model.getActividad().getIdTipo());			
+			}
+		}
+		else{
+			Logger.logMsg(Logger.ERROR, "Se obtuvieron erores de validacion en validateUpdate de GestionarCicloActividad: ");
+			listTipoActividad = genericSearchBs.findAll(TipoActividad.class);
+			listActividades = cicloActividadBs.buscarTipoActividades(model.getActividad().getIdTipo());
+		}
+	}
+
+
+	/*
+	 * metodo encargado de realizar la actualizacion de informacion de la actividad, utilizando el proxy de negocio para ello
+	 * */
+	String update() {
+		addActionMessage(getText("MSG1", Arrays.asList(getText("IU1.1-10_LBL1"),getText("IU1.1-10_LBL2"))));
+		return SUCCESS;
+	}
+	
+	
+	/*
+	 * metodo encargado de solicitar confirmacion al usuario para realizar la eliminacion de la actividad
+	 * */
+	public String deleteConfirm(){
+		return DELETECONFIRM;
+	}
+	
+	
+	/*
+	 * metodo encargado de verificar que no existan errores a la hora de la eliminacion de la actividad
+	 */
+	public void validateDestroy(){
+		if(hasErrors()){
+			Logger.logMsg(Logger.ERROR, "Se obtuvieron erores de validacion en validateDestroy de GestionarCicloActividad: ");
+		}
+	}
+
+	
+	/*
+	 * metodo encargado de realizar el borrado de la actividad, utilizando el proxy de negocio para ello
+	 */
+	public String destroy(){
+		cicloActividadBs.delete(model);
+		addActionMessage(getText("MSG1", Arrays.asList(getText("IU1.1-11_LBL1"),getText("IU1.1-11_LBL2"))));
+		return SUCCESS;
+	}
+	
+	/*
+	 * Metodo que se ejecuta mediante una llamada Ajax para obtener las actividades pertenecientes al tipo indicado
+	 * */
+	@SkipValidation
+	public String buscarActividades() {
+		listActividades = cicloActividadBs.buscarTipoActividades(idTipoSel);
+
+		return "actividadesLists";
+	}
+	
+	
+	/* Getters y Setters */
+	/**
+	 * @return the genericSearchBs
+	 */
+	public GenericSearchBs getGenericSearchBs() {
+		return genericSearchBs;
+	}
+
+	/**
+	 * @param genericSearchBs the genericSearchBs to set
+	 */
+	public void setGenericSearchBs(GenericSearchBs genericSearchBs) {
+		this.genericSearchBs = genericSearchBs;
+	}
+	
+	/**
+	 * @return the model
+	 */
+	@VisitorFieldValidator
+	public CicloActividad getModel() {
+		// TODO Auto-generated method stub
+		if (model == null)
+			model = new CicloActividad();
+
+		return model;
+	}
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(CicloActividad model) {
+		this.model = model;
+	}
+
+	
+	/**
+	 * @return the idSel
+	 */
+	public CicloActividadId getIdSel() {
+		if (idSel == null) {
+			idSel = new CicloActividadId();
+		}
+		return idSel;
+	}
+	
+	
+	/**
+	 * @param  idSel the idSel to set
+	 */
+	public void setIdSel(CicloActividadId idSel) {
+		/*
+		 * idSel es un id compuesto por tres identificadores (idCiclo,idActividad,idCicloActividad) por tanto se contruyo un converter que separa 
+		 * los id y se los asigna como enteros al modelo (el converter esta declarado en el archivo xwork-conversion)
+		 * Es importante mencionar que el converter se aplica de forma automatica por eso no se ve la llamada al converter
+		 */
+		this.idSel = idSel;
+		if (idSel != null) {
+			model = genericSearchBs.findById(CicloActividad.class, idSel);
+		}
+	}
+
+
+	/**
+	 * @return the idCicloSel
+	 */
+	public Integer getIdCicloSel() {
+		return idCicloSel;
+	}
+	
+	/**
+	 * @param  idSel the idCicloSel to set
+	 */
+	public void setIdCicloSel(Integer idCicloSel) {
+		if (idCicloSel != null) {
+			cicloSel = genericSearchBs.findById(Ciclo.class, idCicloSel);
+			SessionManager.put(NombreObjetosSesion.CICLO_MODELO, cicloSel);
+		}
+
+		this.idCicloSel = idCicloSel;
+	}
+
+	/**
+	 * @return the cicloSel
+	 */
+	public Ciclo getCicloSel() {
+		if (SessionManager.get(NombreObjetosSesion.CICLO_MODELO) != null) {
+			cicloSel = (Ciclo) SessionManager.get(NombreObjetosSesion.CICLO_MODELO);
+			// Para actualizar los valores de ciclo por si se agregan nuevas
+			// actividades y para que la session se percate de ellas
+			cicloSel = genericSearchBs.findById(Ciclo.class, cicloSel.getId());
+		}
+		return cicloSel;
+	}
+
+	/**
+	 * @param  idSel the idCcicloSel to set
+	 */
+	void setCicloSel(Ciclo cicloSel) {
+		this.cicloSel = cicloSel;
+	}
+
+	/**
+	 * @return the listCicloActividades
+	 */
+	public List<CicloActividad> getListCicloActividades() {
+		return listCicloActividades;
+	}
+
+	/**
+	 * @param listCicloActividades the listCicloActividades to set
+	 */
+	public void setListCicloActividades(List<CicloActividad> listCicloActividades) {
+		this.listCicloActividades = listCicloActividades;
+	}
+
+	/**
+	 * @return the listTipoActividad
+	 */
+	public List<TipoActividad> getListTipoActividad() {
+		return listTipoActividad;
+	}
+
+	/**
+	 * @param listTipoActividad the listTipoActividad to set
+	 */
+	public void setListTipoActividad(List<TipoActividad> listTipoActividad) {
+		this.listTipoActividad = listTipoActividad;
+	}
+
+	/**
+	 * @return the idTipoSel
+	 */
+	public Integer getIdTipoSel() {
+		return idTipoSel;
+	}
+
+	/**
+	 * @param idTipoSel the idTipoSel to set
+	 */
+	public void setIdTipoSel(Integer idTipoSel) {
+		this.idTipoSel = idTipoSel;
+	}
+
+	/**
+	 * @return the cicloActividadBs
+	 */
+	public CicloActividadBs getCicloActividadBs() {
+		return cicloActividadBs;
+	}
+
+	/**
+	 * @param cicloActividadBs the cicloActividadBs to set
+	 */
+	public void setCicloActividadBs(CicloActividadBs cicloActividadBs) {
+		this.cicloActividadBs = cicloActividadBs;
+	}
+
+	
+	/**
+	 * @return the listActividades
+	 */
+	public List<FaseActividad> getListActividades() {
+		if (listActividades == null)
+			listActividades = new ArrayList<>();
+		return listActividades;
+	}
+
+	/**
+	 * @param listActividades the listActividades to set
+	 */
+	public void setListActividades(List<FaseActividad> listActividades) {
+		this.listActividades = listActividades;
+	}
+
+}

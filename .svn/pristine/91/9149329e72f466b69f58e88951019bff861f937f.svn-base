@@ -1,0 +1,85 @@
+package mx.edu.eld.calendario.bs;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mx.edu.eld.calendario.bs.exception.ActividadDuplicatedException;
+import mx.edu.eld.calendario.dao.ActividadDao;
+import mx.edu.eld.calendario.mapeo.FaseActividad;
+import mx.ipn.escom.cdt.util.bs.GenericBs;
+
+@Service("actividadBs")
+@Scope(value = BeanDefinition.SCOPE_SINGLETON)
+public class ActividadBs extends GenericBs<FaseActividad> {
+
+	/*
+	 * proxy dao para realizar operaciones de persistencia conel modelo Actividad
+	 */
+	@Autowired
+	private ActividadDao actividadDao;
+	
+
+	/*
+	 * Valida si existe la actividad que se esta registrando
+	 */
+	public Boolean validaActividadExistente(String actividad){	
+		return actividadDao.buscarExistenciaActividad(actividad);
+	}
+
+	/*
+	 * al momento de guardar la actividad se debe revisar que no exista una actividad con el el mismo nombre  
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public FaseActividad guardar(FaseActividad model) throws ActividadDuplicatedException {
+		FaseActividad actividad;
+		
+		//Valida si la actividad a registrar ya existe
+		if (validaActividadExistente(model.getNombre()))
+			throw new ActividadDuplicatedException();
+		else{
+			//Si no existe actividad con el mismo nombre
+			actividad = save(model);
+		}
+		return actividad;
+	}
+	
+	/*
+	 * metodo encargado de validar que al editar una actvidad el nombre no exista ya registrado en otra actividad
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void editar(String nomActivActual, String nomActivAnterior) throws ActividadDuplicatedException{
+		
+		if(!nomActivActual.equals(nomActivAnterior) && (validaActividadExistente(nomActivActual))){			
+			throw new ActividadDuplicatedException();
+		}
+	}
+	
+	/*
+	 * metodo encargado de validar si la actividad sele aplica un borrado fisico o logico
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void borrar(FaseActividad model){
+		if(model.getEditable()){
+			/*
+			 * primeramente se realiza el borrado del registro de la tabla tca11_ciclo_actividad y posteriormente de la tabla tca07_actividad
+			 */
+			//actividadDao.eliminarActividad(model.getId());
+			/* 
+			 * Se hace un borrado fisico de los datos
+			 */
+			delete(model); 
+		}
+		else{
+			/*
+			 * se hace un borrado logico
+			 */
+			model.setActivo(false);
+			update(model);
+		}
+	}
+}

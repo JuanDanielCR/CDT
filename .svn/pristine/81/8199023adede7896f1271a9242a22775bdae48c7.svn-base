@@ -1,0 +1,59 @@
+package mx.edu.eld.calendario.bs.exception;
+
+public class IntersectionCyclePeriodException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public enum condicionesCicloIncumplidas {
+
+		CICLO_TRASLAPE(6),FECHA_IGUAL(5), FECHA_PUBLICACION(4), FECHA_INICIO(3), _FECHA_FINAL(2), FECHA_PERIODO(1);
+
+		private Integer id;
+
+		private condicionesCicloIncumplidas(Integer id) {
+			this.id = id;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+	}
+
+	private condicionesCicloIncumplidas causa;
+
+	public IntersectionCyclePeriodException(condicionesCicloIncumplidas causa) {
+		super();
+		this.causa = causa;
+	}
+
+	public IntersectionCyclePeriodException() {
+		super();
+	}
+
+	public IntersectionCyclePeriodException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public IntersectionCyclePeriodException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public IntersectionCyclePeriodException(String message) {
+		super(message);
+	}
+
+	public IntersectionCyclePeriodException(Throwable cause) {
+		super(cause);
+	}
+
+	public condicionesCicloIncumplidas getCausa() {
+		return causa;
+	}
+
+	public void setCausa(condicionesCicloIncumplidas causa) {
+		this.causa = causa;
+	}
+}

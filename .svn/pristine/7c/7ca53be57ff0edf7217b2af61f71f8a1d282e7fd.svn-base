@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:s="/struts-tags" xmlns:sj="/struts-jquery-tags">
+	<jsp:directive.page language="java"
+		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- Head -->
+<head>
+<jsp:text>
+	<![CDATA[
+	<script
+		src="${pageContext.request.contextPath}/pages/convocatoria/gestionar-criterio/js/index-asignarPeriodo.js"
+		type="text/javascript"></script>
+	]]>
+</jsp:text>
+</head>
+<!-- Body -->
+<body>
+	<!-- titulo -->
+	<div class="row title">
+		<div class="col-md-12">
+			<h1 class="title">
+				<s:text name="IU_TLT2"></s:text>
+			</h1>
+		</div>
+	</div>
+
+	<!-- Tabla -->
+	<div class="form form-horizontal form-max text-justify">
+		<s:set var="listPeriodos"
+			value="{{'Primer ronda de exámenes','14/06/2017','14/08/2017','11:00 AM','11:00 AM'}}" />
+		<table id="tblPeriodos" class="table table-striped">
+			<thead>
+				<tr>
+					<th data-priority="1"><s:text name="IU_LBL15" /></th>
+					<th data-priority="2"><s:text name="IU_LBL8" /></th>
+					<th data-priority="3"><s:text name="IU_LBL9" /></th>
+					<th data-priority="5"><s:text name="IU_LBL10" /></th>
+					<th data-priority="6"><s:text name="IU_LBL11" /></th>
+					<th data-priority="4"><s:text name="IU_LBL12" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<s:iterator value="listPeriodos" var="periodo">
+					<tr>
+						<td>${periodo[0]}</td>
+						<td>${periodo[1]}</td>
+						<td>${periodo[2]}</td>
+						<td>${periodo[3]}</td>
+						<td>${periodo[4]}</td>
+						<td><a
+							href="${pageContext.request.contextPath}/convocatoria/gestionar-criterio!agregarPeriodoEdit"><i
+								class="material-icons md-24 md-eld">mode_edit</i></a> <a href="#"
+								onclick="myclickDialog()">
+								<i class="material-icons md-24 md-eld">delete</i>
+							</a></td>
+
+					</tr>
+				</s:iterator>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- boton agregar -->
+	<div class="row">
+		<div class="outter-section">
+			<div class="col-md-12">
+				<a class="btn btn-default btn-default-eld" id="btnAgregar"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-criterio!agregarPeriodo">
+					<s:text name="IU_BTN1" />
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Botones de aceptar y cancelar -->
+	<div class="row">
+		<div class="outter-section">
+			<div class="text-right col-md-12">
+				<a class="btn btn-default btn-default-eld"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-convocatoria/1488/edit">
+					<s:text name="mx.com.eld.boton.aceptar" />
+				</a> <a class="btn btn-default btn-default-eld"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-convocatoria/1488/edit">
+					<s:text name="mx.com.eld.boton.cancelar" />
+				</a>
+			</div>
+		</div>
+	</div>
+	<sj:dialog id="myclickdialog" modal="true"
+		title="Eliminar Periodo" autoOpen="false" openTopics="showDlgDelete"
+		closeTopics="closeDlgDelete" resizable="false" draggable="false">
+
+		<div class="row">
+			<div class="col-md-12">
+				<s:text name="IU1.2-2C_LBL8" />
+			</div>
+		</div>
+		<!-- Botones de aceptar y cancelar -->
+		<div class="row">
+			<div class="text-right col-md-12">
+				<a class="btn btn-default btn-default-eld"
+					href="${pageContext.request.contextPath}/convocatoria/gestionar-criterio!asignarPeriodo">
+					<s:text name="IU1.2-2C_LBL9" />
+				</a> <a onclick="closeDeleteDlg()" class="btn btn-default btn-default-eld"><s:text
+							name="IU1.2-2C_LBL10" /></a>
+			</div>
+		</div>
+
+	</sj:dialog>
+</body>
+	</html>
+</jsp:root>

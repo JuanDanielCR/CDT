@@ -1,0 +1,169 @@
+package mx.edu.eld.calendario.mapeo;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
+import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
+/**
+ * Abstrae la lógica de negocios de los periodos aso
+ * 
+ * @author luna
+ *
+ */
+@Entity
+@Table(name = "tca10_periodo")
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "deleteConvocatoriaPeriodo", query = "DELETE FROM tca10_periodo WHERE id_convocatoria = :idConvocatoriaP") })
+public class PeriodoCriterio implements Modelo {
+	@EmbeddedId
+	private PeriodoCriterioId id;
+	/**
+	 * Identificador del periodo
+	 */
+	@Column(name = "id_periodo", insertable = false, updatable = false)
+	private Integer idPeriodo;
+
+	/**
+	 * Identificador de la {@link Convocatoria} asociada
+	 */
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
+	private Integer idConvocatoria;
+
+	/**
+	 * Identificador del {@link Criterio} asociado
+	 */
+	@Column(name = "id_criterio", insertable = false, updatable = false)
+	private Integer idCriterio;
+
+	/**
+	 * Fecha de inicio del periodo
+	 */
+	@Column(name = "fh_inicio")
+	private Date inicio;
+
+	/**
+	 * Fecha de fin
+	 */
+	@Column(name = "fh_fin")
+	private Date fin;
+
+	/**
+	 * Nombre del periodo
+	 */
+	@Column(name = "nb_periodo")
+	private String nombrePeriodo;
+
+	/**
+	 * Boolean para publicación de periodo
+	 */
+	@Column(name = "st_publicacion")
+	private Boolean publicacion;
+
+	public PeriodoCriterio() {
+		super();
+	}
+
+	public PeriodoCriterio(Integer idConvocatoria) {
+		super();
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	public PeriodoCriterioId getId() {
+		return id;
+	}
+
+	public void setId(PeriodoCriterioId id) {
+		this.id = id;
+	}
+
+	public Integer getIdPeriodo() {
+		return idPeriodo;
+	}
+
+	public void setIdPeriodo(Integer idPeriodo) {
+		this.idPeriodo = idPeriodo;
+	}
+
+	public Integer getIdConvocatoria() {
+		return idConvocatoria;
+	}
+
+	public void setIdConvocatoria(Integer idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
+
+	public Integer getIdCriterio() {
+		return idCriterio;
+	}
+
+	public void setIdCriterio(Integer idCriterio) {
+		this.idCriterio = idCriterio;
+	}
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "${getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Date getInicio() {
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "${getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Date getFin() {
+		return fin;
+	}
+
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
+
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(message = "${getText('MSG39')}", trim = true, type = ValidatorType.FIELD) }, stringLengthFields = {
+					@StringLengthFieldValidator(maxLength = "60", minLength = "1", trim = true, message = "${getText('MSG41')}", type = ValidatorType.FIELD) })
+	public String getNombrePeriodo() {
+		return nombrePeriodo;
+	}
+
+	public void setNombrePeriodo(String nombrePeriodo) {
+		this.nombrePeriodo = nombrePeriodo;
+	}
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(message = "${getText('MSG39')}", type = ValidatorType.FIELD) })
+	public Boolean getPublicacion() {
+		return publicacion;
+	}
+
+	public void setPublicacion(Boolean publicacion) {
+		this.publicacion = publicacion;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PeriodoCriterio [idPeriodo=" + idPeriodo + ", idConvocatoria=" + idConvocatoria + ", idCriterio="
+				+ idCriterio + ", inicio=" + inicio + ", fin=" + fin + ", nombrePeriodo=" + nombrePeriodo
+				+ ", publicacion=" + publicacion + "]";
+	}
+
+}

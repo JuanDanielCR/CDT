@@ -1,0 +1,57 @@
+//$(function() {
+//	
+//		$("#btnAceptar").click(function () {	 
+//			if( $("#pago1:radio").is(':checked')) {  
+//				alert("Bien!!!: " + $('#pago1:checked').val());
+//				var urlTarjeta = $('#urlTarjeta1').val();
+//				window.location.href = urlTarjeta;
+//			}else if( $("#pago2:radio").is(':checked')) {
+//				alert("Bien!!!: " + $('#pago2:checked').val()); 
+//			}else if( $("#pago3:radio").is(':checked')) {
+//				alert("Bien!!!: " + $('#pago3:checked').val()); 
+//			}else if( $("#pago4:radio").is(':checked')) {
+//				alert("Bien!!!: " + $('#pago4:checked').val()); 
+//			}else if( $("#pago5:radio").is(':checked')) {
+//				alert("Bien!!!: " + $('#pago5:checked').val()); 
+//			}
+//		});
+//	 });
+
+//$(function(){
+//  $('input[type="radio"]').click(function(){
+//    if ($(this).is(':checked'))
+//    {
+//    	$('#btnAceptar').attr('href', $('#urlTarjeta1').val());
+//    }
+//  });
+//});
+
+$(function() {
+	$('input[type="radio"]').click(function() {
+		if ($("#pago1").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTarjeta1').val());
+		}else if($("#pago2").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTarjeta1').val());
+		}else if($("#pago3").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTarjeta1').val());
+		}else if($("#pago4").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTarjeta2').val());
+		}else if($("#pago5").is(':checked')) {
+			$('#btnAceptar').attr('href', $('#urlTarjeta3').val());
+		}
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
