@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import mx.ipn.escom.cdt.util.mapeo.Modelo;
@@ -27,6 +30,14 @@ public class Horario implements Modelo{
 	private Date tiempoInicio;
 	@Column(name="tm_fin")
 	private Date tiempoFin;
+	
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="id_convocatoria", referencedColumnName="id_convocatoria", insertable=false, updatable=false),
+		@JoinColumn(name="id_entrevistador", referencedColumnName="id_entrevistador", insertable=false, updatable=false)
+	})
+	private ConvocatoriaEntrevistador convocatoriaEntrevistador;
+	
 	
 	public Horario() {
 		super();
@@ -99,6 +110,14 @@ public class Horario implements Modelo{
 
 	public void setTiempoFin(Date tiempoFin) {
 		this.tiempoFin = tiempoFin;
+	}
+
+	public ConvocatoriaEntrevistador getConvocatoriaEntrevistador() {
+		return convocatoriaEntrevistador;
+	}
+
+	public void setConvocatoriaEntrevistador(ConvocatoriaEntrevistador convocatoriaEntrevistador) {
+		this.convocatoriaEntrevistador = convocatoriaEntrevistador;
 	}
 
 	@Override

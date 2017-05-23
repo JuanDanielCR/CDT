@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,6 +36,19 @@ public class Contacto implements Modelo{
 	private String emergencia;
 	@Column(name="tx_relacion")
 	private String relacion;
+	
+	/*Relación One to Many
+	 * Se especifica en la clase correspondiente a Many, para después 
+	 * solo usar el mapped by en la clase correspondiente a One.
+	 * 
+	 * @ManyToOne
+	 * @JoinColumn({nombre_columna_en_la_tabla_actual} name = "nombre",
+	 * 			   {nombre_columna_en_la_tabla_foranea}referencedColumnName="nombre")
+	 * Ejemplo en: https://stackoverflow.com/questions/11244569/what-is-referencedcolumnname-used-for-in-jpa
+	 * */
+	@ManyToOne
+	@JoinColumn(name="id_aspirante", referencedColumnName = "id_aspirante", updatable=false, insertable=false)
+	private Aspirante aspirante;
 	
 	public Contacto() {
 		super();
@@ -105,6 +120,14 @@ public class Contacto implements Modelo{
 	public void setRelacion(String relacion) {
 		this.relacion = relacion;
 	}
+	
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+	
 	@Override
 	public String toString() {
 		return "Contacto [id=" + id + ", idAspirante=" + idAspirante + ", idCategoria=" + idCategoria + ", idTipo="

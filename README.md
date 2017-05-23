@@ -1,2 +1,0 @@
-# CDT
-Spring + Struts + Hibernate

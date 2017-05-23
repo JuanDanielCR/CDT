@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -35,6 +37,14 @@ public class InformacionEscolar implements Modelo{
 	private String idEntidad;
 	@Column(name="id_municipio")
 	private String idMunicipio;
+	
+	@ManyToOne
+	@JoinColumn(name="id_aspirante", referencedColumnName="id_aspirante", insertable=false, updatable=false)
+	private Aspirante aspirante;
+	
+	@ManyToOne
+	@JoinColumn(name="id_nivel", referencedColumnName="id_nivel", insertable=false, updatable=false)
+	private Nivel nivel;
 	
 	public InformacionEscolar() {
 		super();
@@ -112,6 +122,19 @@ public class InformacionEscolar implements Modelo{
 	}
 	public void setIdMunicipio(String idMunicipio) {
 		this.idMunicipio = idMunicipio;
+	}
+	public Aspirante getAspirante() {
+		return aspirante;
+	}
+	public void setAspirante(Aspirante aspirante) {
+		this.aspirante = aspirante;
+	}
+	
+	public Nivel getNivel() {
+		return nivel;
+	}
+	public void setNivel(Nivel nivel) {
+		this.nivel = nivel;
 	}
 	@Override
 	public String toString() {

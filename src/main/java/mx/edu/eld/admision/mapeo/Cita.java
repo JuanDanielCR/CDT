@@ -3,6 +3,9 @@ package mx.edu.eld.admision.mapeo;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import mx.ipn.escom.cdt.util.mapeo.Modelo;
@@ -19,11 +22,27 @@ public class Cita implements Modelo{
 	private Integer idAspirante;
 	@Column(name="id_entrevistador", insertable=false, updatable=false)
 	private Integer idEntrevistador;
-	
-	@Column(name="tad16_convocatoria_entrevistadorid_convocatoria")
-	private Integer idCon;
+
 	@Column(name="fh_cita")
 	private Integer fechaCita;
+	/*
+	 * Relacion Many To One con llave compuesta
+	 * Usamos una sintaxis parecida a la de ManyToMany
+	 * */
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="id_convocatoria", referencedColumnName="id_convocatoria", insertable=false, updatable=false),
+		@JoinColumn(name="id_entrevistador", referencedColumnName="id_entrevistador", updatable=false, insertable=false)
+		})
+	private ConvocatoriaEntrevistador convocatoriaEntrevistador;
+	
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="id_convocatoria", referencedColumnName="id_convocatoria", insertable=false, updatable=false),
+		@JoinColumn(name="id_aspirante", referencedColumnName="id_aspirante", insertable=false, updatable=false)
+	})
+	private ConvocatoriaAspirante convocatoriaAspirante;
+	
 	public Cita() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -35,15 +54,15 @@ public class Cita implements Modelo{
 		this.idConvocatoria = idConvocatoria;
 		this.idAspirante = idAspirante;
 		this.idEntrevistador = idEntrevistador;
-		this.idCon = idCon;
 		this.fechaCita = fechaCita;
 	}
-	public CitaId getId() {
-		return id;
+	public ConvocatoriaEntrevistador getConvocatoriaEntrevistador() {
+		return convocatoriaEntrevistador;
 	}
-	public void setId(CitaId id) {
-		this.id = id;
+	public void setConvocatoriaEntrevistador(ConvocatoriaEntrevistador convocatoriaEntrevistador) {
+		this.convocatoriaEntrevistador = convocatoriaEntrevistador;
 	}
+
 	public Integer getIdConvocatoria() {
 		return idConvocatoria;
 	}
@@ -62,22 +81,29 @@ public class Cita implements Modelo{
 	public void setIdEntrevistador(Integer idEntrevistador) {
 		this.idEntrevistador = idEntrevistador;
 	}
-	public Integer getIdCon() {
-		return idCon;
-	}
-	public void setIdCon(Integer idCon) {
-		this.idCon = idCon;
-	}
 	public Integer getFechaCita() {
 		return fechaCita;
 	}
 	public void setFechaCita(Integer fechaCita) {
 		this.fechaCita = fechaCita;
 	}
+	public CitaId getId() {
+		return id;
+	}
+	public void setId(CitaId id) {
+		this.id = id;
+	}
+	
+	public ConvocatoriaAspirante getConvocatoriaAspirante() {
+		return convocatoriaAspirante;
+	}
+	public void setConvocatoriaAspirante(ConvocatoriaAspirante convocatoriaAspirante) {
+		this.convocatoriaAspirante = convocatoriaAspirante;
+	}
 	@Override
 	public String toString() {
 		return "Cita [id=" + id + ", idConvocatoria=" + idConvocatoria + ", idAspirante=" + idAspirante
-				+ ", idEntrevistador=" + idEntrevistador + ", idCon=" + idCon + ", fechaCita=" + fechaCita + "]";
+				+ ", idEntrevistador=" + idEntrevistador + ", fechaCita=" + fechaCita + "]";
 	}
 	
 	

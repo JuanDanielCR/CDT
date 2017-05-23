@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -23,6 +24,13 @@ public class Recomendacion implements Modelo{
 	private Integer idEntrevista;
 	@Column(name="nb_recomendador")
 	private String nombre;
+	
+	/*
+	 * MappedBy en OneToOne generado con base en el ejemplo:
+	 * http://docs.oracle.com/javaee/6/api/javax/persistence/OneToOne.html
+	 * */
+	@OneToOne(mappedBy="recomendacion")
+	private Entrevista entrevista;
 	
 	public Recomendacion() {
 		super();
@@ -57,6 +65,13 @@ public class Recomendacion implements Modelo{
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public Entrevista getEntrevista() {
+		return entrevista;
+	}
+	public void setEntrevista(Entrevista entrevista) {
+		this.entrevista = entrevista;
 	}
 	@Override
 	public String toString() {

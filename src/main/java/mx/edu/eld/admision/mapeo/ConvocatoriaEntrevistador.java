@@ -1,8 +1,13 @@
 package mx.edu.eld.admision.mapeo;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import mx.ipn.escom.cdt.util.mapeo.Modelo;
@@ -17,11 +22,20 @@ public class ConvocatoriaEntrevistador implements Modelo{
 	@Column(name="id_entrevistador", insertable=false, updatable=false)
 	private Integer idEntrevistador;
 
+	@ManyToOne
+	@JoinColumn(name="id_entrevistador", referencedColumnName="id_entrevistador", insertable=false, updatable=false)
+	private Entrevistador entrevistador;
+	
+	@OneToMany(mappedBy="convocatoriaEntrevistador")
+	private List<Cita>citas;
+	
+	@OneToMany(mappedBy="horario")
+	private List<Horario> horarios;
+	
 	public ConvocatoriaEntrevistador() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 
 	public ConvocatoriaEntrevistador(ConvocatoriaEntrevistadorId id, Integer idConvocatoria, Integer idEntrevistador) {
 		super();
@@ -54,6 +68,34 @@ public class ConvocatoriaEntrevistador implements Modelo{
 	public void setIdEntrevistador(Integer idEntrevistador) {
 		this.idEntrevistador = idEntrevistador;
 	}
+	public List<Cita> getCitas() {
+		return citas;
+	}
+
+
+	public void setCitas(List<Cita> citas) {
+		this.citas = citas;
+	}
+
+
+	public Entrevistador getEntrevistador() {
+		return entrevistador;
+	}
+
+	public void setEntrevistador(Entrevistador entrevistador) {
+		this.entrevistador = entrevistador;
+	}
+	
+	
+	public List<Horario> getHorarios() {
+		return horarios;
+	}
+
+
+	public void setHorarios(List<Horario> horarios) {
+		this.horarios = horarios;
+	}
+
 
 	@Override
 	public String toString() {

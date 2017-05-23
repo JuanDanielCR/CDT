@@ -3,6 +3,9 @@ package mx.edu.eld.admision.mapeo;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import mx.ipn.escom.cdt.util.mapeo.Modelo;
@@ -18,6 +21,13 @@ public class Pago implements Modelo{
 	private Integer fechaPago;
 	@Column(name="nu_monto")
 	private Double monto;
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="id_convocatoria", referencedColumnName="id_convocatoria", insertable=false, updatable=false),
+		@JoinColumn(name="id_aspirante", referencedColumnName="id_aspirante", insertable=false, updatable=false)
+	})
+	private ConvocatoriaAspirante convocatoria;
+	
 	public Pago() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -52,6 +62,13 @@ public class Pago implements Modelo{
 	}
 	public void setMonto(Double monto) {
 		this.monto = monto;
+	}
+	
+	public ConvocatoriaAspirante getConvocatoria() {
+		return convocatoria;
+	}
+	public void setConvocatoria(ConvocatoriaAspirante convocatoria) {
+		this.convocatoria = convocatoria;
 	}
 	@Override
 	public String toString() {

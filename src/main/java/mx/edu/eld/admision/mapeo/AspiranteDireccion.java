@@ -30,11 +30,11 @@ public class AspiranteDireccion implements Modelo{
 	@Column(name="id_aspirante",insertable=false, updatable=false)
 	private Integer idAspirante;
 	
-
+	
 	public AspiranteDireccion() {
 		super();
 	}
-
+	
 	
 	public AspiranteDireccion(AspiranteDireccionId id, Integer idTipo, Integer idDireccion, Integer idAspirante) {
 		super();

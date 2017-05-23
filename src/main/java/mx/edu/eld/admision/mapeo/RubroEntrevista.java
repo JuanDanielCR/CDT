@@ -1,10 +1,13 @@
 package mx.edu.eld.admision.mapeo;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -23,6 +26,9 @@ public class RubroEntrevista implements Modelo{
 	private Integer descripcion;
 	@Column(name="st_rubro")
 	private Boolean estatus;
+	
+	@OneToMany(mappedBy="rubroEntrevista")
+	private List<EntrevistaRubro> entrevistaRubros;
 	
 	public RubroEntrevista() {
 		super();
@@ -57,6 +63,12 @@ public class RubroEntrevista implements Modelo{
 	}
 	public void setEstatus(Boolean estatus) {
 		this.estatus = estatus;
+	}
+	public List<EntrevistaRubro> getEntrevistaRubros() {
+		return entrevistaRubros;
+	}
+	public void setEntrevistaRubros(List<EntrevistaRubro> entrevistaRubros) {
+		this.entrevistaRubros = entrevistaRubros;
 	}
 	@Override
 	public String toString() {

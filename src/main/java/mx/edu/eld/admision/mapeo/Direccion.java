@@ -32,6 +32,7 @@ public class Direccion implements Modelo{
 	@Column(name="tx_calle")
 	private Integer calle;
 	
+	
 	public Direccion(){
 		super();
 	}
@@ -48,14 +49,6 @@ public class Direccion implements Modelo{
 		this.numeroInt = numeroInt;
 		this.cp = cp;
 		this.calle = calle;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Direccion [id=" + id + ", idEntidad=" + idEntidad + ", idMunicipio=" + idMunicipio + ", colonia="
-				+ colonia + ", numeroExt=" + numeroExt + ", numeroInt=" + numeroInt + ", cp=" + cp + ", calle=" + calle
-				+ "]";
 	}
 
 	public Integer getId() {
@@ -121,5 +114,12 @@ public class Direccion implements Modelo{
 	public void setCalle(Integer calle) {
 		this.calle = calle;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Direccion [id=" + id + ", idEntidad=" + idEntidad + ", idMunicipio=" + idMunicipio + ", colonia="
+				+ colonia + ", numeroExt=" + numeroExt + ", numeroInt=" + numeroInt + ", cp=" + cp + ", calle=" + calle
+				+ "]";
+	}
+
 }
