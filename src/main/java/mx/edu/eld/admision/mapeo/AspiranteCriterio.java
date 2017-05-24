@@ -9,28 +9,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import mx.ipn.escom.cdt.util.mapeo.Modelo;
+
 @Entity
-@Table(name="tad04_aspirante_criterio")
-public class AspiranteCriterio implements Modelo{
+@Table(name = "tad04_aspirante_criterio")
+public class AspiranteCriterio implements Modelo {
 	@EmbeddedId
 	private AspiranteCriterioId id;
-	
-	@Column(name="id_convocatoria", insertable=false, updatable=false)
+
+	@Column(name = "id_convocatoria", insertable = false, updatable = false)
 	private Integer idConvocatoria;
-	@Column(name="id_aspirante", insertable=false,updatable=false)
+	@Column(name = "id_aspirante", insertable = false, updatable = false)
 	private Integer idAspirante;
-	@Column(name="id_criterio", insertable=false, updatable=false)
+	@Column(name = "id_criterio", insertable = false, updatable = false)
 	private Integer idCriterio;
-	@Column(name="nu_valor")
+	@Column(name = "nu_valor")
 	private Integer valor;
 
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name="id_convocatoria", referencedColumnName="id_convocatoria", insertable=false, updatable=false),
-		@JoinColumn(name="id_aspirante", referencedColumnName="id_aspirante", insertable=false, updatable=false)
-	})
+			@JoinColumn(name = "id_convocatoria", referencedColumnName = "id_convocatoria", insertable = false, updatable = false),
+			@JoinColumn(name = "id_aspirante", referencedColumnName = "id_aspirante", insertable = false, updatable = false) })
 	private ConvocatoriaAspirante convocatoria;
-	
+
 	public AspiranteCriterio() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -99,6 +99,5 @@ public class AspiranteCriterio implements Modelo{
 		return "AspiranteCriterio [id=" + id + ", idConvocatoria=" + idConvocatoria + ", idAspirante=" + idAspirante
 				+ ", idCriterio=" + idCriterio + ", valor=" + valor + "]";
 	}
-	
-	
+
 }

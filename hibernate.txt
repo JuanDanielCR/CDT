@@ -1,0 +1,15 @@
+HIBERNATE
+
+https://stackoverflow.com/questions/9881611/whats-the-difference-between-jpa-and-hibernate
+http://blog-tothought.rhcloud.com//post/2
+-Documentacion JPA
+
+SPRING
+Inversion de control sencillo
+https://www.genbetadev.com/frameworks/que-es-spring-framework
+
+Java Bean-POJOS-Servlet
+https://stackoverflow.com/questions/13746966/javabean-vs-servlet
+
+STRUTS
+http://www.jtech.ua.es/j2ee/publico/struts-2010-11/sesion01-struts-apuntes.html

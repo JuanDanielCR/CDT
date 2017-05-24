@@ -21,7 +21,7 @@ public class RubroEntrevista implements Modelo{
 	@Column(name="id_rubro")
 	private Integer id;
 	@Column(name="nb_rubro")
-	private String nombre;
+	private String nombre; 
 	@Column(name="ds_rubro")
 	private Integer descripcion;
 	@Column(name="st_rubro")

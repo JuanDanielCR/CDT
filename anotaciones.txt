@@ -1,0 +1,19 @@
+Struts Converters.- Permiten el paso de llaves compuestas (mas de un id) a traves de las url que 
+sigan las conveciones de la arquitectura REST
+	/resources/xwork-conversion.properties 
+
+	Ej:
+	#mx.edu.eld.calendario.mapeo.CicloActividadId=mx.edu.eld.converters.CicloActividadIdConverter
+
+Configuracion Hibernate: 
+	/resources/HibernateSessionFactory.xml
+
+ACTION:
+Unidad de control de Struts.
+	1. Crear un paquete para lo actions un folder
+		mx.edu.eld.admision.action
+	2. Creacion de la clase nombreAct, el sufijo Act indica a struts que esto se trata de un
+	controlador, el sufijo se configura en el arhcivo xml de confirguracion de struts
+
+
+	
