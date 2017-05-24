@@ -16,4 +16,21 @@ Unidad de control de Struts.
 	controlador, el sufijo se configura en el arhcivo xml de confirguracion de struts
 
 
-	
+	3. Especificar el @Namespace("/paquete") que contendrá a los jsp que corresponden con
+	los actions guardados en paquete
+
+	Carpetas: /src/main/resources/    -> converters, configuraciones, tags para los jsp
+			  /src/main/webapp/pages/ -> paquetes para jsp
+			  /src/main/java/         -> controllers
+
+    4. Herencia de ActionSupportCDT, para los Strings usados en las implementaciones de sus
+    metodos
+
+    5. Implementacion de ModelDriven
+
+    6. Implementación de los metodos de la arquitectura Strut REST, cada uno de los metodos
+    devuelve un String
+
+ OGNL
+ Object Graph Navigation Language
+  it is an expression language for getting and setting properties of Java objects,

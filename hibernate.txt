@@ -13,3 +13,7 @@ https://stackoverflow.com/questions/13746966/javabean-vs-servlet
 
 STRUTS
 http://www.jtech.ua.es/j2ee/publico/struts-2010-11/sesion01-struts-apuntes.html
+
+OGNL
+https://commons.apache.org/proper/commons-ognl/language-guide.html
+https://struts.apache.org/docs/ognl.html
