@@ -28,6 +28,8 @@ public class Aspirante implements Modelo {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tad02_aspirante_id_aspirante_seq")
 	@Column(name = "id_aspirante")
 	private Integer id;
+	@Column(name = "nb_persona")
+	private String nombre;
 	@Column(name = "tx_primer_ap")
 	private String primerAp;
 	@Column(name = "tx_segundo_ap")
@@ -79,6 +81,14 @@ public class Aspirante implements Modelo {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getPrimerAp() {

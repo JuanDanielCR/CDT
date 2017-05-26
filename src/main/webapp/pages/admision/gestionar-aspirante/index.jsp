@@ -8,11 +8,33 @@
 <!-- Head -->
 </head>
 <body>
+	<!--Creacion de variables en struts:
+		1. s:set
+		2. s:date
+		3. s:url
+		...
+	-->
+	<s:set var="index">Index</s:set>
+	<s:set var="nuevo">New aspirante</s:set>
+	<s:set var="editar">Edit aspirante</s:set>
+	<s:set var="show">Show aspirante</s:set>
+	
 	<h1 class="title">Aspirante</h1>
+	<!--Sí deseamos usar OGNL con una etiqueta struts:
+		1. Variable en un action: %{var}
+		2. Variable en un jsp: %{#var}
+	-->
 	<s:url var="localeMX" namespace="/example" action="menu">
 		<s:param name="request_locale">es_MX</s:param>
 	</s:url>
-	<s:a href="%{localeMX}">aspirante</s:a>
+	<!--Sí deseamos usar OGNL con una etiqueta HTML:
+		Usar: ${var} 
+	-->
+	<a href="${pageContext.request.contextPath}/admision/gestionar-aspirante">${index}</a><br/>
+	<a href="${pageContext.request.contextPath}/admision/gestionar-aspirante/new">${nuevo}</a><br/>
+	<a href="${pageContext.request.contextPath}/admision/gestionar-aspirante/1/edit">${editar}</a><br/>
+	<a href="${pageContext.request.contextPath}/admision/gestionar-aspirante/1">${show}</a>
+	
 </body>
-	</html>
+</html>
 </jsp:root>

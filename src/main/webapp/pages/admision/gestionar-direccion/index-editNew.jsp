@@ -5,7 +5,10 @@
 		contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- Head -->
+<!--Expresiones OGNL:
+	%{} - usada dentro de tags de struts
+	${} - usada con tags de html
+-->
 </head>
 <body>
 	<h1 class="title">Agregar Dirección</h1>
@@ -14,9 +17,35 @@
 	</s:url>
 	<form action="gestionar-direccion" method="POST">
 		<div class="form-group">
+			<!-- Nombre secundaria -->
+			<div id="idNombreSecundaria" class="form-group ">
+				<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+						name="IU1.4-7_LBL20" /></label>
+				<div class="col-md-8">
+					<s:textfield id="txNombreSecundaria" name="infoSecundaria.nombre"
+						type="text" cssClass="form-control"
+						placeholder="%{getText('IU1.4-7_LBL20')}"
+						cssErrorClass="field-error" />
+						
+					<s:fielderror id="feTxNombreSecundaria"
+						fieldName="infoSecundaria.nombre" cssClass="error"
+						theme="%{getText('mx.edu.eld.defaulTheme')}" />
+				</div>
+			</div>
+			<div id="idSecundariaMunicipio" class="form-group ">
+				<label class="col-md-4 control-label label-obligatorio" for=""><s:text
+						name="IU1.4-7_LBL36" /></label>
+				<div class="col-md-8">
+					<s:select id="slcListMunicipios" name="listMunicipios"
+						headerKey="-1" headerValue="Select" cssClass="form-control"
+						list="#{'1':'Ecatepec de Morelos', '2':'Toluca', '3':'Coacalco'}"
+						value="selectedTipo" required="true" />
+				</div>
+			</div>
 			<div class="row">
-			<div class="col-md-2"><label for="id_entidad">Entidad</label></div>
-			<div class="col-md-6"><s:textfield name="model.idEntidad" id="id_entidad" class="form-control" placeholder="Entidad" maxlength="3" /></div>	
+				<div class="outter-section form-medium text-left">
+					<s:text name="IU1.4-2_LBL1" />
+				</div>
 			</div>
 		</div>
 	</form>

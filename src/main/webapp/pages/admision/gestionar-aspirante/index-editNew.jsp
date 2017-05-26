@@ -8,11 +8,22 @@
 <!-- Head -->
 </head>
 <body>
-	<h1 class="title">Registrar Aspirante </h1>
+	<h1 class="title">Formulario Registrar Aspirante </h1>
 	<s:url var="localeMX" namespace="/example" action="menu">
 		<s:param name="request_locale">es_MX</s:param>
 	</s:url>
-	<s:a href="%{localeMX}">aspirante</s:a>
+	
+	<s:actionerror />
+	
+	<s:form method="POST" action="%{pageContext.request.contextPath}/admision/gestionar-aspirante" id="formAspirante">
+		<s:textfield name="model.nombre" placeholder="Nombre del Aspirante" maxlength="100"></s:textfield><br/>
+		<s:textfield name="model.primerAp" placeholder="Apellido Paterno" maxlength="100"></s:textfield><br/>
+		<s:textfield name="model.segundoAp" placeholder="Apellido Materno" maxlength="100"></s:textfield><br/>
+		<s:textfield name="model.curp" placeholder="CURP" maxlength="18"></s:textfield><br/>
+		<!--<s:submit>%{getText('mx.btnRegistrarAspirante')}</s:submit>-->
+		<s:submit value="Registrar Aspirante"></s:submit>
+	</s:form>
+	<a href="${pageContext.request.contextPath}/admision/gestionar-aspirante">Index</a><br/>
 </body>
 	</html>
 </jsp:root>
