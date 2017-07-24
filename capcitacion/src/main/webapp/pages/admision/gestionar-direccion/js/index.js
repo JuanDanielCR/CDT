@@ -1,0 +1,4 @@
+$(function(){
+	dataTableEMETH.createResponsiveDataTable("tblDirecciones");
+
+});
